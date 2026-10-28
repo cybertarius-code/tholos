@@ -6,7 +6,7 @@ Aplicación de finanzas personales: cuentas, movimientos, pagos recurrentes,
 presupuestos, metas, inversiones y patrimonio neto.
 
 ## Requisitos
-- Ruby 3.4.7
+- Ruby 3.4.12
 - PostgreSQL 17
 
 ## Puesta en marcha
