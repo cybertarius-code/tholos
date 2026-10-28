@@ -1,0 +1,8 @@
+#!/bin/sh
+# Bloquea push directo a main: todo entra por PR
+while read local_ref local_sha remote_ref remote_sha; do
+  if [ "$remote_ref" = "refs/heads/main" ]; then
+    echo "Mn Push directo a main bloqueado. Crea una rama y abre un PR." >&2
+    exit 1
+  fi
+done
