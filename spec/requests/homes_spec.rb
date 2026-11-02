@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe "Homes", type: :request do
   describe "GET root page" do
-    it "returns http success" do
-      get "/"
-      expect(response).to have_http_status(:success)
+    it "redirects to the login page" do
+      get root_path
+      expect(response).to have_http_status(302)
     end
   end
 end
