@@ -1,5 +1,37 @@
 es:
   sessions:
+    new:
+      title: "Iniciar sesión"
+      email_placeholder: "Ingrese su correo electrónico"
+      password_placeholder: "Ingrese su contraseña"
+      submit: "Iniciar sesión"
+      forgot_password: "¿Olvidó su contraseña?"
     create:
       invalid_credentials: "Correo electrónico o contraseña inválidos."
       rate_limit: "Demasiados intentos. Inténtelo de nuevo más tarde."
+    destroy:
+      success: "Sesión cerrada correctamente."
+      button: "Cerrar sesión"
+  passwords:
+    create:
+      email_sent: "Instrucciones de restablecimiento de contraseña enviadas (si existe un usuario con esa dirección de correo electrónico)."
+      rate_limit: "Demasiados intentos. Inténtelo de nuevo más tarde."
+    update:
+      success: "La contraseña se ha restablecido correctamente."
+      failure: "Las contraseñas no coinciden."
+      invalid_link: "El enlace de restablecimiento de contraseña es inválido o ha expirado."
+    edit:
+      title: "Restablecer contraseña"
+      placeholder: "Ingrese nueva contraseña"
+      confirmation_placeholder: "Repita nueva contraseña"
+      autocomplete: "new-password"
+      submit: "Guardar"
+    new:
+      title: "¿Olvidó su contraseña?"
+      placeholder: "Ingrese su correo electrónico"
+      submit: "Enviar instrucciones de restablecimiento"
+    mailer:
+      reset:
+        instructions: "Haga clic en el siguiente enlace para restablecer su contraseña:"
+        link_text: "Restablecer contraseña"
+        expiration: "Este enlace expirará en"
