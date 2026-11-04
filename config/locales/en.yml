@@ -1,4 +1,8 @@
 en:
+  activerecord:
+    errors:
+      messages:
+        record_invalid: "The record failed to validate: %{errors}"
   sessions:
     new:
       title: "Sign in"
