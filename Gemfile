@@ -27,7 +27,7 @@ end
 group :test do
   gem "capybara", "~> 3.40"
   gem "rubocop-rspec", "~> 3.10"
-  gem "selenium-webdriver", "~> 4.51"
+  gem "selenium-webdriver", "~> 4.52"
 end
 
 group :development, :test do
