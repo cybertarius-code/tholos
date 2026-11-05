@@ -28,6 +28,7 @@ module Tholos
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
     config.i18n.default_locale = :es
+    config.time_zone = "Madrid"
 
     # Configuration for the application, engines, and railties goes here.
     #
