@@ -1,8 +1,8 @@
 source "https://rubygems.org"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
 
+gem "bcrypt", "~> 3.1.7"
 gem "bootsnap", require: false
 gem "image_processing", "~> 2.2"
 gem "importmap-rails"
@@ -10,7 +10,9 @@ gem "kamal", require: false
 gem "pg", "~> 1.1"
 gem "propshaft"
 gem "puma", ">= 5.0"
+gem "rack", "~> 3.2.8"
 gem "rails", "~> 8.1.3", ">= 8.1.3.1"
+gem "rails-html-sanitizer", "~> 1.7.2"
 gem "solid_cable"
 gem "solid_cache"
 gem "solid_queue"

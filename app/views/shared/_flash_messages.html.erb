@@ -1,0 +1,4 @@
+<% flash.each do |type, message| %>
+  <% next if message.blank? %>
+  <%= render "shared/flash_message", variant: flash_variant(type), message: message %>
+<% end %>

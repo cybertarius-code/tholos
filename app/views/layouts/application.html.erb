@@ -24,6 +24,9 @@
   </head>
 
   <body>
+    <div id="flash" aria-live="polite" class="pointer-events-none fixed inset-x-4 top-4 z-50 flex flex-col gap-2 sm:left-auto sm:w-96">
+      <%= render "shared/flash_messages" %>
+    </div>
     <main class="container mx-auto mt-28 px-5 flex">
       <%= yield %>
     </main>

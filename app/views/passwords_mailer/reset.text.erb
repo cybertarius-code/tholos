@@ -1,0 +1,5 @@
+<%= t("passwords_mailer.reset.instructions") %>
+
+<%= edit_password_url(@user.password_reset_token) %>
+
+ <%= t("passwords_mailer.reset.expiration") %> <%= distance_of_time_in_words(0, @user.password_reset_token_expires_in) %>.
