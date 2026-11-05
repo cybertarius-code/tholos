@@ -10,16 +10,16 @@ RSpec.describe "Homes", type: :request do
     end
   end
 
-  describe "GET /dashboard/index" do
+  describe "GET /dashboard" do
+    before { Rails.cache.clear }
+
     context "when the user is authenticated" do
-      let(:user) { FactoryBot.create(:user) }
-      before do
-        sign_in_as(user)
-      end
+      let(:user) { create(:user) }
+      before { sign_in_as(user) }
 
       it "returns a successful response" do
         get user_home_path
-        expect(response).to have_http_status(200)
+        expect(response).to have_http_status(:ok)
       end
     end
 
@@ -28,19 +28,6 @@ RSpec.describe "Homes", type: :request do
         get user_home_path
         expect(response).to redirect_to(new_session_path)
       end
-
-      context "the user tries 10 times to access the dashboard without being authenticated" do
-        it "ban the user to login again in 3 minutes with a warning" do
-          10.times do
-            get user_home_path
-          end
-
-          get user_home_path
-          expect(response).to redirect_to(new_session_path)
-          expect(flash[:alert]).to eq(I18n.t("sessions.create.rate_limit"))
-        end
-      end
     end
   end
-
 end

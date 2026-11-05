@@ -39,4 +39,6 @@ en:
         instructions: "Click the link below to reset your password:"
         link_text: "Reset password"
         expiration: "This link will expire in"
-
+  dashboard:
+    index:
+      welcome: "Welcome to the dashboard!"

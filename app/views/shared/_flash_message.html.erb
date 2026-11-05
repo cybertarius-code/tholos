@@ -1,0 +1,19 @@
+<% style = FlashHelper::STYLES.fetch(variant) %>
+<div role="<%= flash_role(variant) %>"
+     data-controller="flash"
+     data-flash-delay-value="<%= style[:delay] %>"
+     data-action="mouseenter->flash#pause mouseleave->flash#resume"
+     data-turbo-temporary
+     class="pointer-events-auto flex items-start gap-3 rounded-[10px] border border-line border-l-4 <%= style[:border] %>
+            bg-surface p-4 text-ink shadow-lg transition duration-200 motion-reduce:transition-none
+            data-[state=closed]:-translate-y-2 data-[state=closed]:opacity-0">
+  <span class="<%= style[:icon] %>"><%= flash_icon(variant) %></span>
+  <p class="flex-1 text-sm leading-5"><%= message %></p>
+  <button type="button" data-action="flash#close" aria-label="Dismiss"
+          class="-m-1 rounded p-1 text-ink/60 hover:text-ink focus-visible:outline-2">
+    <svg class="size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+         stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+    </svg>
+  </button>
+</div>

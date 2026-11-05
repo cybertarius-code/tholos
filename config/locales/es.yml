@@ -15,7 +15,8 @@ es:
       rate_limit: "Demasiados intentos. Inténtelo de nuevo más tarde."
     destroy:
       success: "Sesión cerrada correctamente."
-      button: "Cerrar sesión"
+      sign_out: "Cerrar sesión"
+
   passwords:
     create:
       email_sent: "Instrucciones de restablecimiento de contraseña enviadas (si existe un usuario con esa dirección de correo electrónico)."
@@ -39,3 +40,6 @@ es:
         instructions: "Haga clic en el siguiente enlace para restablecer su contraseña:"
         link_text: "Restablecer contraseña"
         expiration: "Este enlace expirará en"
+  dashboard:
+    index:
+      welcome: "Bienvenido al panel de control!"
