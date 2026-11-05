@@ -21,9 +21,3 @@ RSpec.shared_context "authentication helpers" do
     cookies.delete(:session_id)
   end
 end
-
-RSpec.configure do |config|
-  # Incluye estos helpers automáticamente en pruebas de tipo request y controller
-  config.include_context "authentication helpers", type: :request
-  config.include_context "authentication helpers", type: :controller
-end
