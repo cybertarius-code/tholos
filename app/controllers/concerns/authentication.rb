@@ -4,7 +4,6 @@ module Authentication
   included do
     before_action :require_authentication
     helper_method :authenticated?
-    before_action :set_current_household
   end
 
   class_methods do
@@ -27,7 +26,7 @@ module Authentication
     end
 
     def find_session_by_cookie
-      Session.find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
+      Session.includes(:user).find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
     end
 
     def request_authentication

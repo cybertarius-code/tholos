@@ -3,6 +3,11 @@ es:
     errors:
       messages:
         record_invalid: "La validación falló: %{errors}"
+      models:
+        user:
+          attributes:
+            email_address:
+              taken: "ya ha sido tomado"
   sessions:
     new:
       title: "Iniciar sesión"
@@ -16,7 +21,6 @@ es:
     destroy:
       success: "Sesión cerrada correctamente."
       sign_out: "Cerrar sesión"
-
   passwords:
     create:
       email_sent: "Instrucciones de restablecimiento de contraseña enviadas (si existe un usuario con esa dirección de correo electrónico)."
@@ -43,3 +47,6 @@ es:
   dashboard:
     index:
       welcome: "Bienvenido al panel de control!"
+  households:
+    new:
+      title: "Finanzas de"

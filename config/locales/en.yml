@@ -3,6 +3,11 @@ en:
     errors:
       messages:
         record_invalid: "The record failed to validate: %{errors}"
+      model:
+        user:
+          attributes:
+            email_address:
+              taken: "Email has already been taken"
   sessions:
     new:
       title: "Sign in"
@@ -42,3 +47,6 @@ en:
   dashboard:
     index:
       welcome: "Welcome to the dashboard!"
+  households:
+    new:
+      title: "Household finances"

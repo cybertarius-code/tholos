@@ -3,7 +3,8 @@ class Membership < ApplicationRecord
   belongs_to :household
 
   validates :user_id, presence: true
+  validates :user_id, uniqueness: { scope: :household_id }
   validates :household_id, presence: true
 
-  enum :role, [ admin: 0, owner: 1, member: 2 ],
+  enum :role, { admin: "admin", owner: "owner", member: "member" }, default: :owner
 end

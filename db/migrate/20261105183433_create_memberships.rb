@@ -7,6 +7,6 @@ class CreateMemberships < ActiveRecord::Migration[8.1]
       t.boolean :is_admin, null: false, default: false
       t.timestamps
     end
-    add_index :memberships, [:user_id, :household_id], unique: true
+    add_index :memberships, [ :user_id, :household_id ], unique: true
   end
 end

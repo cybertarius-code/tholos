@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe "Homes", type: :request do
-  include_context "authentication helpers"
-
   describe "GET root page" do
     it "redirects to the login page" do
       get root_path
@@ -14,7 +12,7 @@ RSpec.describe "Homes", type: :request do
     before { Rails.cache.clear }
 
     context "when the user is authenticated" do
-      let(:user) { create(:user) }
+      let(:user) { create(:user, :with_household) }
       before { sign_in_as(user) }
 
       it "returns a successful response" do

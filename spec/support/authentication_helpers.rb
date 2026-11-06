@@ -1,23 +1,15 @@
-RSpec.shared_context "authentication helpers" do
-  # Simula el login inyectando la cookie firmada directamente
+module AuthenticationHelpers
   def sign_in_as(user)
-    # Crea una sesión real en la base de datos asociada al usuario
-    session = user.sessions.create!
+    session = user.sessions.create!(user_agent: "rspec", ip_address: "127.0.0.1")
 
-    # Inyecta el ID de la sesión en el jar de cookies de la prueba
-    # Usamos ActionDispatch::TestRequest para firmar correctamente la cookie como lo hace Rails
-    ActionDispatch::TestRequest.create.cookie_jar.tap do |cookie_jar|
-      cookie_jar.signed[:session_id] = session.id
-      cookies[:session_id] = cookie_jar[:session_id]
-    end
+    jar = ActionDispatch::TestRequest.create.cookie_jar
+    jar.signed[:session_id] = session.id
+    cookies[:session_id] = jar[:session_id]
 
-    # Adicionalmente, exponemos la sesión actual en el objeto Current de Rails 8
-    Current.session = session
+    session
   end
 
-  # Simula el logout eliminando la sesión y la cookie
   def sign_out
-    Current.session&.destroy!
-    cookies.delete(:session_id)
+    delete session_path
   end
 end
