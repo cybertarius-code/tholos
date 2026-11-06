@@ -73,4 +73,5 @@ RSpec.configure do |config|
   # config.include_context "authentication helpers", type: :controller
   config.include FactoryBot::Syntax::Methods
   config.include ActiveSupport::Testing::TimeHelpers
+  config.include AuthenticationHelpers, type: :request
 end

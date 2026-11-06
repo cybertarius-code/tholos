@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "Authentication Flow", type: :system do
   let(:password) { "password1234" }
-  let(:user) { create(:user, password: password) }
+  let(:user) { create(:user, :with_household, password: password) }
 
   before { driven_by(:rack_test) }
 

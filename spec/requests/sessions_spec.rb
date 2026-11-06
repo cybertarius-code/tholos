@@ -1,12 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe "Sessions", type: :request do
-  include_context "authentication helpers"
-
   describe "POST /session" do
     before { Rails.cache.clear }
 
-    let(:user) { create(:user) }
+    let(:user) { create(:user, :with_household) }
 
     context "with valid credentials" do
       it "creates a new session and redirects to the dashboard" do
@@ -50,7 +48,7 @@ RSpec.describe "Sessions", type: :request do
   end
 
   describe "DELETE /sessions/:id" do
-    let(:user) { create(:user) }
+    let(:user) { create(:user, :with_household) }
 
     before do
       sign_in_as(user)
