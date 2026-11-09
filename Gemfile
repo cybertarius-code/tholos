@@ -12,6 +12,7 @@ gem "propshaft"
 gem "puma", ">= 5.0"
 gem "rack", "~> 3.2.8"
 gem "rails", "~> 8.1.3", ">= 8.1.3.1"
+gem 'rails-i18n', '>= 8.1'
 gem "rails-html-sanitizer", "~> 1.7.2"
 gem "solid_cable"
 gem "solid_cache"
