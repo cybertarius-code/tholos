@@ -1,0 +1,9 @@
+---
+es:
+  date:
+    formats:
+      short: "%-d %b %Y"
+  number:
+    precision:
+      format:
+        delimiter: "."

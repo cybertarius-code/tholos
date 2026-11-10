@@ -1,0 +1,14 @@
+---
+en:
+  sessions:
+    create:
+      invalid_credentials: Invalid email address or password.
+      rate_limit: Too many attempts. Please try again later.
+    destroy:
+      success: Signed out successfully.
+    new:
+      email_placeholder: Enter your email address
+      forgot_password: Forgot password?
+      password_placeholder: Enter your password
+      submit: Sign in
+      title: Sign in

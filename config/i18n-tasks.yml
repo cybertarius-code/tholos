@@ -1,0 +1,34 @@
+# Configuración de i18n-tasks: https://github.com/glebm/i18n-tasks
+base_locale: es
+locales: [es, en]
+
+data:
+  read:
+    - config/locales/%{locale}.yml
+    - config/locales/**/*.%{locale}.yml
+  # Cada dominio de claves vive en su propio fichero por locale.
+  write:
+    - ["{date,number}.*", "config/locales/formats.%{locale}.yml"]
+    - ["dashboard.*", "config/locales/dashboards.%{locale}.yml"]
+    - ["households.*", "config/locales/household.%{locale}.yml"]
+    - ["{passwords,passwords_mailer}.*", "config/locales/passwords.%{locale}.yml"]
+    - ["sessions.*", "config/locales/sessions.%{locale}.yml"]
+    - "config/locales/%{locale}.yml"
+  yaml:
+    write:
+      line_width: -1
+
+search:
+  paths:
+    - app/
+  exclude:
+    - app/assets/images
+    - app/assets/fonts
+    - app/assets/videos
+    - app/assets/builds
+
+# Claves que Rails/rails-i18n consumen de forma implícita (no aparecen como t("...") en el código).
+ignore_unused:
+  - "activerecord.*"
+  - "date.*"
+  - "number.*"
