@@ -29,7 +29,7 @@ RSpec.describe "Authentication Flow", type: :system do
     # puts page.html
 
     # 5. Close the session and is redirected to the login page
-    click_button I18n.t("sessions.destroy.sign_out")
+    click_button I18n.t("shared.sign_out")
     expect(page).to have_current_path(new_session_path)
 
     # 6. Dashboard is not accessible anymore, and
