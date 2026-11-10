@@ -1,0 +1,5 @@
+---
+es:
+  dashboard:
+    index:
+      welcome: "¡Bienvenido al panel de control!"

@@ -1,52 +1,13 @@
+---
 en:
   activerecord:
     errors:
       messages:
-        record_invalid: "The record failed to validate: %{errors}"
-      model:
+        record_invalid: 'The record failed to validate: %{errors}'
+      models:
         user:
           attributes:
             email_address:
-              taken: "Email has already been taken"
-  sessions:
-    new:
-      title: "Sign in"
-      email_placeholder: "Enter your email address"
-      password_placeholder: "Enter your password"
-      submit: "Sign in"
-      forgot_password: "Forgot password?"
-    create:
-      invalid_credentials: "Invalid email address or password."
-      rate_limit: "Too many attempts. Please try again later."
-    destroy:
-      success: "Signed out successfully."
-      button: "Sign out"
-  passwords:
-    create:
-      email_sent: "Password reset instructions sent (if user with that email address exists)."
-      rate_limit: "Too many attempts. Please try again later."
-    update:
-      success: "Password has been reset."
-      failure: "Passwords did not match."
-      invalid_link: "Password reset link is invalid or has expired."
-    edit:
-      title: "Reset password"
-      placeholder: "Enter new password"
-      confirmation_placeholder: "Repeat new password"
-      autocomplete: "new-password"
-      submit: "Save"
-    new:
-      title: "Forgot your password?"
-      placeholder: "Enter your email address"
-      submit: "Send reset instructions"
-    mailer:
-      reset:
-        instructions: "Click the link below to reset your password:"
-        link_text: "Reset password"
-        expiration: "This link will expire in"
-  dashboard:
-    index:
-      welcome: "Welcome to the dashboard!"
-  households:
-    new:
-      title: "Household finances"
+              taken: has already been taken
+  shared:
+    sign_out: Sign out

@@ -27,6 +27,7 @@ module Tholos
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
+    config.i18n.available_locales = [ :es, :en ]
     config.i18n.default_locale = :es
     config.time_zone = "Madrid"
 

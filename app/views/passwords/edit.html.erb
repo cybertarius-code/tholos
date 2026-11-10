@@ -11,7 +11,7 @@
     </div>
 
     <div class="my-5">
-      <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: t("passwords.edit.confirmation_placeholder"), maxlength: 72, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-solid focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
+      <%= form.password_field :password_confirmation, required: true, autocomplete: t("passwords.edit.autocomplete"), placeholder: t("passwords.edit.confirmation_placeholder"), maxlength: 72, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-solid focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
     </div>
 
     <div class="inline">
