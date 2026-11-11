@@ -7,6 +7,7 @@ gem "bootsnap", require: false
 gem "image_processing", "~> 2.2"
 gem "importmap-rails"
 gem "kamal", require: false
+gem "money-rails"
 gem "pg", "~> 1.1"
 gem "propshaft"
 gem "puma", ">= 5.0"
@@ -22,8 +23,10 @@ gem "tailwindcss-rails"
 gem "thruster", require: false
 gem "turbo-rails"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem "view_component", ">= 4.23"
 
 group :development do
+  gem "lookbook", ">= 2.3.15"
   gem "web-console"
 end
 

@@ -1,0 +1,6 @@
+<p class="mb-4 text-sm text-slate-600">La vista oscura depende de US-0006, todavía pendiente.</p>
+<div class="flex flex-col gap-2">
+  <p>Gasto: <%= render MoneyComponent.new(cents: -123_450, currency: "EUR") %></p>
+  <p>Ingreso: <%= render MoneyComponent.new(cents: 250_000, currency: "EUR") %></p>
+  <p>Sin variación: <%= render MoneyComponent.new(cents: 0, currency: "EUR") %></p>
+</div>

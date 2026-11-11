@@ -1,0 +1,17 @@
+<section class="overflow-hidden rounded-lg border border-line bg-surface shadow-sm">
+  <% if header? %>
+    <header class="border-b border-line px-5 py-4">
+      <%= header %>
+    </header>
+  <% end %>
+  <% if body? %>
+    <div class="px-5 py-4">
+      <%= body %>
+    </div>
+  <% end %>
+  <% if footer? %>
+    <footer class="border-t border-line px-5 py-4">
+      <%= footer %>
+    </footer>
+  <% end %>
+</section>

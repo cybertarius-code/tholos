@@ -1,0 +1,10 @@
+<section class="mx-auto flex max-w-lg flex-col items-center px-6 py-12 text-center">
+  <span aria-hidden="true" class="mb-4 text-4xl text-ink"><%= @icon %></span>
+  <h2 class="text-xl font-semibold text-ink"><%= @title %></h2>
+  <p class="mt-2 text-sm text-slate-600"><%= @text %></p>
+  <% if @action_label.present? %>
+    <div class="mt-6">
+      <%= render ButtonComponent.new(href: @action_href) do %><%= @action_label %><% end %>
+    </div>
+  <% end %>
+</section>

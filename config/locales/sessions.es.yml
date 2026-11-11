@@ -7,8 +7,10 @@ es:
     destroy:
       success: Sesión cerrada correctamente.
     new:
+      email_label: Correo electrónico
       email_placeholder: Ingrese su correo electrónico
       forgot_password: "¿Olvidó su contraseña?"
+      password_label: Contraseña
       password_placeholder: Ingrese su contraseña
       submit: Iniciar sesión
       title: Iniciar sesión

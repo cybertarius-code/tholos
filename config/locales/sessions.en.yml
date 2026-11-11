@@ -7,8 +7,10 @@ en:
     destroy:
       success: Signed out successfully.
     new:
+      email_label: Email address
       email_placeholder: Enter your email address
       forgot_password: Forgot password?
+      password_label: Password
       password_placeholder: Enter your password
       submit: Sign in
       title: Sign in

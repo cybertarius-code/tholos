@@ -1,0 +1,21 @@
+<p class="mb-4 text-sm text-slate-600">La vista oscura depende de US-0006, todavía pendiente.</p>
+<div class="max-w-md">
+  <%= form_with url: "#" do |form| %>
+    <%= render FormFieldComponent.new(
+      form: form,
+      attribute: :email_address,
+      label: "Correo electrónico",
+      input_type: :email,
+      help_text: "Usaremos esta dirección para iniciar sesión.",
+      input_options: { placeholder: "nombre@ejemplo.com" }
+    ) %>
+    <%= render FormFieldComponent.new(
+      form: form,
+      attribute: :password,
+      label: "Contraseña",
+      input_type: :password,
+      error: "La contraseña es demasiado corta.",
+      input_options: { autocomplete: "new-password" }
+    ) %>
+  <% end %>
+</div>
