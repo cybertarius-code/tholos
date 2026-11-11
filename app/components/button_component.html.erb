@@ -1,0 +1,5 @@
+<% if @href %>
+  <%= tag.a content, **component_attributes %>
+<% else %>
+  <%= tag.button content, **component_attributes %>
+<% end %>
