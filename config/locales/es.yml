@@ -9,5 +9,19 @@ es:
           attributes:
             email_address:
               taken: ya ha sido tomado
+  coming_soon:
+    message: Esta sección estará disponible en una próxima fase.
+    title: Disponible en una próxima fase
+  navigation:
+    accounts: Cuentas
+    budget: Presupuesto
+    dashboard: Dashboard
+    goals: Metas
+    more: Más
+    movements: Movimientos
+    net_worth: Patrimonio
+    primary: Principal
+    quick_movement: "+ Movimiento"
+    settings: Ajustes
   shared:
     sign_out: Cerrar sesión
