@@ -13,7 +13,7 @@ RSpec.describe "Authentication Flow", type: :system do
     expect(page).to have_content("Tholos")
 
     # 2. Tries to access the dashboard without being logged in,and is redirected to the login page
-    visit user_home_path
+    visit dashboard_path
     expect(page).to have_current_path(new_session_path)
 
     # 3. Login with valid credentials
@@ -22,8 +22,8 @@ RSpec.describe "Authentication Flow", type: :system do
     click_button I18n.t("sessions.new.submit")
 
     # 4. Once logged in, the user is redirected to the dashboard
-    expect(page).to have_current_path(user_home_path)
-    expect(page).to have_content(I18n.t("dashboard.index.welcome"))
+    expect(page).to have_current_path(dashboard_path)
+    expect(page).to have_content(I18n.t("dashboard.show.welcome"))
 
     # puts page.current_path
     # puts page.html
@@ -34,7 +34,7 @@ RSpec.describe "Authentication Flow", type: :system do
 
     # 6. Dashboard is not accessible anymore, and
     #  the user is redirected to the login page
-    visit user_home_path
+    visit dashboard_path
     expect(page).to have_current_path(new_session_path)
   end
 end
