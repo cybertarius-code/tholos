@@ -1,0 +1,10 @@
+<div class="my-5">
+  <%= @form.label @attribute, @label, for: @input_id, class: "block text-sm font-medium text-ink" %>
+  <%= input_html %>
+  <% if @help_text.present? %>
+    <p id="<%= help_id %>" class="mt-1 text-sm text-slate-600"><%= @help_text %></p>
+  <% end %>
+  <% if @error.present? %>
+    <p id="<%= error_id %>" class="mt-1 text-sm text-error" role="alert"><%= @error %></p>
+  <% end %>
+</div>
