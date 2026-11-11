@@ -1,0 +1,6 @@
+<p class="mb-4 text-sm text-slate-600">La vista oscura depende de US-0006, todavía pendiente.</p>
+<div class="flex flex-wrap gap-3">
+  <% %i[neutral success warning error].each do |variant| %>
+    <%= render BadgeComponent.new(variant: variant) do %><%= variant.to_s.humanize %><% end %>
+  <% end %>
+</div>

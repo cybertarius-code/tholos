@@ -1,0 +1,9 @@
+<p class="mb-4 text-sm text-slate-600">La vista oscura depende de US-0006, todavía pendiente.</p>
+<%= render EmptyStateComponent.new(
+  icon: "○",
+  title: "Todavía no hay movimientos",
+  text: "Cuando registres un movimiento, aparecerá aquí.",
+  action_label: "Añadir movimiento",
+  action_href: "#"
+) %>
+<%= render EmptyStateComponent.new(icon: "⌂", title: "Sin cuentas", text: "Crea tu primera cuenta para continuar.") %>

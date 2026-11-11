@@ -1,0 +1,13 @@
+<p class="mb-4 text-sm text-slate-600">La vista oscura depende de US-0006, todavía pendiente.</p>
+<div class="flex flex-wrap items-center gap-3">
+  <% %i[primary secondary danger ghost].each do |variant| %>
+    <%= render ButtonComponent.new(variant: variant) do %><%= variant.to_s.humanize %><% end %>
+  <% end %>
+</div>
+<div class="mt-4 flex flex-wrap items-center gap-3">
+  <% %i[small medium large].each do |size| %>
+    <%= render ButtonComponent.new(size: size) do %><%= size.to_s.humanize %><% end %>
+  <% end %>
+  <%= render ButtonComponent.new(disabled: true) { "Deshabilitado" } %>
+  <%= render ButtonComponent.new(href: "#") { "Enlace" } %>
+</div>

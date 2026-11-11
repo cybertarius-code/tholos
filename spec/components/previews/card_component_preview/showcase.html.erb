@@ -1,0 +1,6 @@
+<p class="mb-4 text-sm text-slate-600">La vista oscura depende de US-0006, todavía pendiente.</p>
+<%= render CardComponent.new do |card| %>
+  <% card.with_header { "Resumen mensual" } %>
+  <% card.with_body { "Ingresos, gastos y balance del periodo." } %>
+  <% card.with_footer { "Actualizado hoy" } %>
+<% end %>
