@@ -11,7 +11,7 @@ RSpec.describe "Current.household", type: :request do
     end
 
     it "es el hogar del usuario" do
-      get user_home_path
+      get dashboard_path
 
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("Casa Tholos")
@@ -23,7 +23,7 @@ RSpec.describe "Current.household", type: :request do
   context "sin sesión" do
     it "no asigna hogar y redirige al login" do
       # `/` es pública (US-0003); se prueba con una ruta protegida
-      get user_home_path
+      get dashboard_path
 
       expect(response).to redirect_to(new_session_path)
     end
@@ -33,7 +33,7 @@ RSpec.describe "Current.household", type: :request do
     before { sign_in_as(user) }
 
     it "falla con un error explícito (404) en vez de navegar sin hogar" do
-      get user_home_path
+      get dashboard_path
 
       expect(response).to have_http_status(:not_found)
     end

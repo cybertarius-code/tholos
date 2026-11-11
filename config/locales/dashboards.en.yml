@@ -1,5 +1,6 @@
 ---
 en:
   dashboard:
-    index:
+    show:
+      empty: Your movements, accounts, and financial summary will appear here.
       welcome: Welcome to the dashboard!

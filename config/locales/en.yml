@@ -9,5 +9,19 @@ en:
           attributes:
             email_address:
               taken: has already been taken
+  coming_soon:
+    message: This section will be available in a future phase.
+    title: Coming in a future phase
+  navigation:
+    accounts: Accounts
+    budget: Budget
+    dashboard: Dashboard
+    goals: Goals
+    more: More
+    movements: Movements
+    net_worth: Net worth
+    primary: Main
+    quick_movement: "+ Movement"
+    settings: Settings
   shared:
     sign_out: Sign out

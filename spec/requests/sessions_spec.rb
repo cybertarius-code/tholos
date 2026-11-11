@@ -9,9 +9,9 @@ RSpec.describe "Sessions", type: :request do
     context "with valid credentials" do
       it "creates a new session and redirects to the dashboard" do
         post session_path, params: { email_address: user.email_address, password: user.password }
-        expect(response).to redirect_to(user_home_path)
+        expect(response).to redirect_to(dashboard_path)
         follow_redirect!
-        expect(response.body).to include(I18n.t("dashboard.index.welcome"))
+        expect(response.body).to include(I18n.t("dashboard.show.welcome"))
       end
     end
 

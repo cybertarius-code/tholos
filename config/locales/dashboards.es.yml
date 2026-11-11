@@ -1,5 +1,6 @@
 ---
 es:
   dashboard:
-    index:
+    show:
+      empty: Tus movimientos, cuentas y resumen financiero aparecerán aquí.
       welcome: "¡Bienvenido al panel de control!"
