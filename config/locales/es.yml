@@ -23,5 +23,11 @@ es:
     primary: Principal
     quick_movement: "+ Movimiento"
     settings: Ajustes
+  settings:
+    theme:
+      dark: Oscuro
+      label: Apariencia
+      light: Claro
+      system: Sistema
   shared:
     sign_out: Cerrar sesión

@@ -1,14 +1,38 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
+  --color-background: #f8fafc;
   --color-surface: #ffffff;
-  --color-line: #E3DACB;
+  --color-line: #7f8ea3;
   --color-ink: #1F2A33;
+  --color-accent: #1F4E79;
   --color-success: #2F684F;
   --color-error: #A8372C;
-  --color-warning: #8A6212;
+  --color-warning: #76540F;
   --color-info: #1F4E79;
   --color-expense: #A8372C;
   --color-income: #2F684F;
 }
+
+:root {
+  color-scheme: light;
+}
+
+:root.dark {
+  color-scheme: dark;
+  --color-background: #020617;
+  --color-surface: #0f172a;
+  --color-line: #64748b;
+  --color-ink: #f1f5f9;
+  --color-accent: #93c5fd;
+  --color-success: #6ee7b7;
+  --color-error: #fca5a5;
+  --color-warning: #fcd34d;
+  --color-info: #93c5fd;
+  --color-expense: #fca5a5;
+  --color-income: #6ee7b7;
+}
+
 @source "../../components/**/*.{rb,erb}";
 @source "../../../spec/components/previews/**/*.{rb,erb}";

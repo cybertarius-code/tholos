@@ -1,9 +1,9 @@
 class ButtonComponent < ViewComponent::Base
   VARIANTS = {
-    primary: "bg-ink text-white hover:bg-slate-700",
-    secondary: "border border-line bg-surface text-ink hover:bg-stone-50",
-    danger: "bg-error text-white hover:bg-red-800",
-    ghost: "bg-transparent text-ink hover:bg-stone-100"
+    primary: "bg-ink text-white hover:bg-slate-700 dark:bg-slate-700 dark:text-slate-100 dark:hover:bg-slate-600",
+    secondary: "border border-line bg-surface text-ink hover:bg-stone-50 dark:hover:bg-slate-800",
+    danger: "bg-error text-white hover:bg-red-800 dark:text-slate-950 dark:hover:bg-red-300",
+    ghost: "bg-transparent text-ink hover:bg-stone-100 dark:hover:bg-slate-800"
   }.freeze
 
   SIZES = {
