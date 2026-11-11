@@ -1,4 +1,19 @@
 module ApplicationHelper
+  THEMES = %w[system light dark].freeze
+
+  def theme_preference
+    preference = cookies[:theme]
+    THEMES.include?(preference) ? preference : "system"
+  end
+
+  def dark_theme?
+    theme_preference == "dark"
+  end
+
+  def system_theme?
+    theme_preference == "system"
+  end
+
   def nav_link_to(label, path)
     active = current_page?(path)
 

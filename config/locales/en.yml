@@ -23,5 +23,11 @@ en:
     primary: Main
     quick_movement: "+ Movement"
     settings: Settings
+  settings:
+    theme:
+      dark: Dark
+      label: Appearance
+      light: Light
+      system: System
   shared:
     sign_out: Sign out

@@ -1,10 +1,10 @@
 <div class="mx-auto md:w-2/3 w-full">
   <% if alert = flash[:alert] %>
-    <p class="py-2 px-3 bg-red-50 mb-5 text-red-500 font-medium rounded-lg inline-block" id="alert"><%= alert %></p>
+    <p class="py-2 px-3 bg-red-50 mb-5 text-error font-medium rounded-lg inline-block dark:bg-slate-800" id="alert"><%= alert %></p>
   <% end %>
 
   <% if notice = flash[:notice] %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-success font-medium rounded-lg inline-block dark:bg-slate-800" id="notice"><%= notice %></p>
   <% end %>
 
   <h1 class="font-bold text-4xl"><%= t("sessions.new.title") %></h1>
@@ -44,8 +44,8 @@
         <% end %>
       </div>
 
-      <div class="mt-4 text-sm text-gray-500 sm:mt-0">
-        <%= link_to t("sessions.new.forgot_password"), new_password_path, class: "text-gray-700 underline hover:no-underline" %>
+      <div class="mt-4 text-sm text-gray-500 dark:text-slate-400 sm:mt-0">
+        <%= link_to t("sessions.new.forgot_password"), new_password_path, class: "text-gray-700 underline hover:no-underline dark:text-slate-200" %>
       </div>
     </div>
   <% end %>

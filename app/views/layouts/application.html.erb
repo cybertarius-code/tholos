@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html class="<%= 'dark' if dark_theme? %>">
   <head>
     <title><%= content_for(:title) || "Tholos" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Tholos">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+
+    <% if system_theme? %>
+      <script>document.documentElement.classList.toggle("dark", window.matchMedia("(prefers-color-scheme: dark)").matches);</script>
+    <% end %>
 
     <%= yield :head %>
 
@@ -23,7 +28,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-dvh overflow-x-hidden bg-slate-50 text-ink dark:bg-slate-950 dark:text-slate-100">
+  <body class="min-h-dvh overflow-x-hidden bg-background text-ink">
     <div id="flash" aria-live="polite" class="pointer-events-none fixed inset-x-4 top-4 z-50 flex flex-col gap-2 sm:left-auto sm:w-96">
       <%= render "shared/flash_messages" %>
     </div>
