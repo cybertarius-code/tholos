@@ -16,14 +16,14 @@ RSpec.describe "Homes", type: :request do
       before { sign_in_as(user) }
 
       it "returns a successful response" do
-        get user_home_path
+        get dashboard_path
         expect(response).to have_http_status(:ok)
       end
     end
 
     context "when the user is not authenticated" do
       it "redirects to the login page" do
-        get user_home_path
+        get dashboard_path
         expect(response).to redirect_to(new_session_path)
       end
     end
