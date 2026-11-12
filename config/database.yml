@@ -87,6 +87,8 @@ test:
 production:
   primary: &primary_production
     <<: *default
+    # TCP a localhost: por el socket local PostgreSQL exige autenticación peer (usuario del sistema)
+    host: localhost
     database: tholos_production
     username: tholos
     password: <%= ENV["THOLOS_DATABASE_PASSWORD"] %>

@@ -6,7 +6,6 @@ gem "bcrypt", "~> 3.1.7"
 gem "bootsnap", require: false
 gem "image_processing", "~> 2.2"
 gem "importmap-rails"
-gem "kamal", require: false
 gem "money-rails"
 gem "pg", "~> 1.1"
 gem "propshaft"
@@ -20,7 +19,6 @@ gem "solid_cache"
 gem "solid_queue"
 gem "stimulus-rails"
 gem "tailwindcss-rails"
-gem "thruster", require: false
 gem "turbo-rails"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "view_component", ">= 4.23"

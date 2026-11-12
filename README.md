@@ -24,8 +24,9 @@ bin/brakeman --no-pager
 ```
 
 ## Despliegue
+Nativo en el VPS (rbenv + Puma bajo systemd, detrás de Caddy). Primera instalación: nota KB-0004 de la bóveda.
 ```bash
-bin/kamal deploy
+ssh deploy@172.104.236.233 'cd ~/apps/tholos && git pull --ff-only && bin/deploy'
 ```
 
 ## Documentación
