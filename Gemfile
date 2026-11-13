@@ -14,6 +14,7 @@ gem "rack", "~> 3.2.8"
 gem "rails", "~> 8.1.3", ">= 8.1.3.1"
 gem "rails-i18n", ">= 8.1"
 gem "rails-html-sanitizer", "~> 1.7.2"
+gem "ruby-vips", "~> 2.3"
 gem "solid_cable"
 gem "solid_cache"
 gem "solid_queue"
@@ -22,7 +23,6 @@ gem "tailwindcss-rails"
 gem "turbo-rails"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "view_component", ">= 4.23"
-
 group :development do
   gem "lookbook", ">= 2.3.15"
   gem "web-console"
