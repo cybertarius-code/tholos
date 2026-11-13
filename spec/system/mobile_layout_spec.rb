@@ -5,11 +5,19 @@ RSpec.describe "Mobile layout", type: :system do
   let(:user) { create(:user, :with_household, password: password) }
 
   before do
-    page.driver.browser.manage.window.resize_to(390, 844)
+    # headless Chrome enforce un ancho mínimo de ventana de 500 px;
+    # la emulación CDP sí permite un viewport real de 390 px.
+    page.driver.browser.execute_cdp(
+      "Emulation.setDeviceMetricsOverride",
+      width: 390, height: 844, deviceScaleFactor: 2, mobile: true
+    )
   end
 
   def expect_no_horizontal_scroll
-    expect(page.evaluate_script("document.documentElement.scrollWidth <= window.innerWidth")).to be(true)
+    scroll_width, inner_width = page.evaluate_script(
+      "document.documentElement.scrollWidth + ',' + window.innerWidth"
+    ).split(",").map(&:to_i)
+    expect(scroll_width).to be <= inner_width
   end
 
   it "recorre landing, login, dashboard y logout sin scroll horizontal" do
