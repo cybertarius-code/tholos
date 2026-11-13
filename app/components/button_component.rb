@@ -27,7 +27,7 @@ class ButtonComponent < ViewComponent::Base
   def component_attributes
     attributes = @html_attributes.except(:class)
     attributes[:class] = class_names(
-      "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
+      "inline-flex min-h-11 items-center justify-center rounded-md font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2",
       VARIANTS.fetch(@variant),
       SIZES.fetch(@size),
       @disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer",
