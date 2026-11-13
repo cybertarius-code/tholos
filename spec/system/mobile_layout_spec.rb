@@ -23,6 +23,7 @@ RSpec.describe "Mobile layout", type: :system do
   it "recorre landing, login, dashboard y logout sin scroll horizontal" do
     visit root_path
     expect(page).to have_current_path(root_path)
+    expect(page.evaluate_script("window.innerWidth")).to eq(390)
     expect_no_horizontal_scroll
 
     visit new_session_path
@@ -36,7 +37,7 @@ RSpec.describe "Mobile layout", type: :system do
     expect_no_horizontal_scroll
 
     find("nav summary", text: I18n.t("navigation.more")).click
-    click_button I18n.t("shared.sign_out")
+    find("details").click_button(I18n.t("shared.sign_out"))
     expect(page).to have_current_path(new_session_path)
     expect_no_horizontal_scroll
   end
