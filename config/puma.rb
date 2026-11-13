@@ -29,7 +29,12 @@ threads_count = ENV.fetch("RAILS_MAX_THREADS", 3)
 threads threads_count, threads_count
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
-port ENV.fetch("PORT", 3000)
+# Producción: socket Unix detrás de Caddy (ADR-0013 en la bóveda). Desarrollo: puerto TCP.
+if ENV["PUMA_SOCKET"]
+  bind "unix://#{ENV.fetch("PUMA_SOCKET")}"
+else
+  port ENV.fetch("PORT", 3000)
+end
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart

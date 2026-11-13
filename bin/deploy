@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Despliegue en el servidor de producción. Uso, desde tu equipo:
+#   ssh deploy@172.104.236.233 'cd ~/apps/tholos && git pull --ff-only && bin/deploy'
+# Requiere ~/.config/tholos/env (RAILS_MASTER_KEY, THOLOS_DATABASE_PASSWORD, PUMA_SOCKET…) y tholos.service.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+ENV_FILE="${THOLOS_ENV_FILE:-$HOME/.config/tholos/env}"
+[[ -f "$ENV_FILE" ]] || { echo "Falta $ENV_FILE" >&2; exit 1; }
+set -a; source "$ENV_FILE"; set +a
+export PATH="$HOME/.rbenv/shims:$PATH"
+
+bundle install --quiet
+bin/rails db:prepare
+bin/rails assets:precompile
+bin/rails assets:clean
+sudo systemctl restart tholos
+
+for _ in {1..30}; do
+  if curl -fsS --unix-socket "$PUMA_SOCKET" http://localhost/up >/dev/null 2>&1; then
+    echo "Tholos desplegado: $(git rev-parse --short HEAD)"
+    exit 0
+  fi
+  sleep 1
+done
+echo "Tholos no responde en $PUMA_SOCKET. Revisar: sudo journalctl -u tholos -n 50" >&2
+exit 1
