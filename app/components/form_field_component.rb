@@ -24,7 +24,7 @@ class FormFieldComponent < ViewComponent::Base
     options = @input_options.except(:id, :aria, :class)
     options[:id] = @input_id
     options[:class] = class_names(
-      "mt-2 block w-full rounded-md border border-line px-3 py-2 shadow-sm focus:outline-blue-600",
+      "mt-2 block w-full rounded-md border border-line px-3 py-2 text-base shadow-sm focus:outline-blue-600",
       @input_options[:class]
     )
 

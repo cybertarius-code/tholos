@@ -4,7 +4,7 @@
     <%= nav_link_to(t("navigation.movements"), movements_path) %>
     <%= nav_link_to(t("navigation.accounts"), accounts_path) %>
     <details class="relative">
-      <summary class="cursor-pointer list-none rounded-lg px-3 py-2 text-center text-sm font-medium text-slate-700 hover:bg-stone-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:text-slate-200 dark:hover:bg-slate-800">
+      <summary class="flex min-h-11 cursor-pointer list-none items-center justify-center rounded-lg px-3 py-2 text-center text-sm font-medium text-slate-700 hover:bg-stone-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:text-slate-200 dark:hover:bg-slate-800">
         <%= t("navigation.more") %>
       </summary>
       <div class="absolute bottom-full right-0 mb-2 w-52 rounded-lg border border-line bg-surface p-2 shadow-lg dark:bg-slate-900">
@@ -12,7 +12,7 @@
         <%= nav_link_to(t("navigation.goals"), goals_path) %>
         <%= nav_link_to(t("navigation.net_worth"), net_worth_path) %>
         <%= nav_link_to(t("navigation.settings"), settings_path) %>
-        <%= button_to t("shared.sign_out"), session_path, method: :delete, class: "mt-1 w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-stone-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:text-slate-200 dark:hover:bg-slate-800" %>
+        <%= button_to t("shared.sign_out"), session_path, method: :delete, class: "mt-1 flex min-h-11 w-full items-center rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-stone-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:text-slate-200 dark:hover:bg-slate-800" %>
       </div>
     </details>
   </div>

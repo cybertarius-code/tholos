@@ -1,3 +1,74 @@
-<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="256" cy="256" r="256" fill="red"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" width="512" height="563">
+  <defs>
+    <linearGradient id="walletGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e4a6e"/>
+      <stop offset="100%" style="stop-color:#0d2b4a"/>
+    </linearGradient>
+    <linearGradient id="arrowGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#2a9d8f"/>
+      <stop offset="50%" style="stop-color:#3ab7a8"/>
+      <stop offset="100%" style="stop-color:#1d7a6f"/>
+    </linearGradient>
+    <linearGradient id="coinOuter" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e4a6e"/>
+      <stop offset="100%" style="stop-color:#0f2f4a"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Wallet body - rounded bottom pouch shape -->
+  <path d="M45 75 
+           C45 65, 55 58, 70 58 
+           L130 58 
+           C145 58, 155 65, 155 78 
+           L155 155 
+           C155 175, 140 190, 100 195 
+           C60 190, 45 175, 45 155 
+           Z" 
+        fill="url(#walletGrad)"/>
+  
+  <!-- Inner pocket / card area -->
+  <path d="M58 78 
+           L142 78 
+           C147 78, 150 82, 150 88 
+           L150 128 
+           C150 135, 145 140, 138 140 
+           L62 140 
+           C55 140, 50 135, 50 128 
+           L50 88 
+           C50 82, 53 78, 58 78 Z" 
+        fill="#2a9d8f" opacity="0.75"/>
+  
+  <!-- Lighter card highlight -->
+  <rect x="62" y="90" width="76" height="38" rx="5" fill="#4ecdc4" opacity="0.45"/>
+  
+  <!-- Gold clasp on the right side of wallet -->
+  <rect x="122" y="148" width="26" height="11" rx="5.5" fill="#c9a227"/>
+  <rect x="125" y="150.5" width="20" height="6" rx="3" fill="#e0b83a"/>
+  
+  <!-- Main upward trend line (thick teal) -->
+  <path d="M58 138 
+           C75 120, 90 105, 105 90 
+           C120 75, 135 58, 152 38" 
+        fill="none" 
+        stroke="url(#arrowGrad)" 
+        stroke-width="16" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+  
+  <!-- Arrow head -->
+  <polygon points="140,55 168,28 158,62" fill="#1d7a6f"/>
+  <polygon points="148,42 175,25 162,55" fill="#2a9d8f"/>
+  
+  <!-- Coin outer ring -->
+  <circle cx="92" cy="52" r="30" fill="url(#coinOuter)"/>
+  
+  <!-- Coin white face -->
+  <circle cx="92" cy="52" r="21" fill="#ffffff"/>
+  
+  <!-- Gold vertical bar (stylized mark) -->
+  <rect x="87" y="40" width="10" height="24" rx="3.5" fill="#d4a017"/>
+  
+  <!-- Soft highlight on coin -->
+  <circle cx="82" cy="43" r="5" fill="#ffffff" opacity="0.35"/>
 </svg>

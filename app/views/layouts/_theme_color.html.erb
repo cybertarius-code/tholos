@@ -1,0 +1,6 @@
+<% if system_theme? %>
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#020617">
+<% else %>
+  <meta name="theme-color" content="<%= dark_theme? ? "#020617" : "#f8fafc" %>">
+<% end %>
