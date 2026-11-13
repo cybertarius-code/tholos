@@ -13,6 +13,14 @@ RSpec.describe "Mobile layout", type: :system do
     )
   end
 
+  after do
+    # La emulación sobrevive a la navegación: hay que limpiarla
+    # para no afectar a otros system specs del mismo navegador.
+    page.driver.browser.execute_cdp("Emulation.clearDeviceMetricsOverride")
+  rescue Selenium::WebDriver::Error::WebDriverError
+    nil
+  end
+
   def expect_no_horizontal_scroll
     scroll_width, inner_width = page.evaluate_script(
       "document.documentElement.scrollWidth + ',' + window.innerWidth"
