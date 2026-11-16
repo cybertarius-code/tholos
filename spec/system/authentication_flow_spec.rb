@@ -37,4 +37,15 @@ RSpec.describe "Authentication Flow", type: :system do
     visit dashboard_path
     expect(page).to have_current_path(new_session_path)
   end
+
+  it "muestra un único mensaje flash tras un login fallido" do
+    visit new_session_path
+    fill_in "email_address", with: user.email_address
+    fill_in "password", with: "wrong-password-1"
+    click_button I18n.t("sessions.new.submit")
+
+    expect(page).to have_current_path(new_session_path)
+    expect(page).to have_css("[role='alert']", count: 1)
+    expect(page).to have_content(I18n.t("sessions.create.invalid_credentials"))
+  end
 end
