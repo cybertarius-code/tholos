@@ -24,6 +24,27 @@ en:
     quick_movement: "+ Movement"
     settings: Settings
   settings:
+    passwords:
+      confirm_label: Confirm new password
+      current_label: Current password
+      new_label: New password
+      submit: Change password
+      title: Change password
+      update:
+        failure: Password could not be updated. Check that the new passwords match.
+        success: Password updated. Other sessions have been signed out.
+        wrong_current: The current password is incorrect.
+    security:
+      title: Security
+    sessions:
+      close: Sign out
+      current: Current session
+      destroy:
+        success: Session signed out.
+      title: Active sessions
+      unknown_browser: Browser
+      unknown_device: Unknown device
+      unknown_system: OS
     theme:
       dark: Dark
       label: Appearance
