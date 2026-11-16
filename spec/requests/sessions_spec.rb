@@ -58,7 +58,8 @@ RSpec.describe "Sessions", type: :request do
       delete session_path(user)
       expect(response).to redirect_to(new_session_path)
       follow_redirect!
-      expect(flash[:alert]).to eq(I18n.t("sessions.destroy.success"))
+      expect(flash[:success]).to eq(I18n.t("sessions.destroy.success"))
+      expect(flash[:error]).to be_nil
     end
   end
 end

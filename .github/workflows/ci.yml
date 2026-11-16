@@ -101,7 +101,7 @@ jobs:
         if: failure()
         with:
           name: screenshots
-          path:
+          path: |
             tmp/screenshots
             tmp/capybara
           if-no-files-found: ignore
