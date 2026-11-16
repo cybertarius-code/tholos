@@ -37,6 +37,24 @@ RSpec.describe "Settings", type: :request do
       expect(Session.exists?(current_session.id)).to be true
     end
 
+    it "does not change the password when password_challenge is missing" do
+      other = user.sessions.create!(user_agent: "otro-dispositivo", ip_address: "10.0.0.1")
+
+      patch settings_password_path, params: {
+        user: {
+          password: new_password,
+          password_confirmation: new_password
+        }
+      }
+
+      expect(response).to redirect_to(settings_sessions_path)
+      expect(flash[:error]).to eq(I18n.t("settings.passwords.update.wrong_current"))
+      expect(user.reload.authenticate(password)).to be_truthy
+      expect(user.authenticate(new_password)).to be_falsey
+      expect(Session.exists?(other.id)).to be true
+      expect(Session.exists?(current_session.id)).to be true
+    end
+
     it "shows an error and keeps the password when the current one is wrong" do
       patch settings_password_path, params: {
         user: {

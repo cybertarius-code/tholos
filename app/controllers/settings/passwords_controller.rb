@@ -17,7 +17,7 @@ module Settings
 
     private
       def user_params
-        params.require(:user).permit(:password, :password_confirmation, :password_challenge)
+        params.require(:user).permit(:password, :password_confirmation, :password_challenge).with_defaults(password_challenge: "")
       end
   end
 end
