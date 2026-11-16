@@ -1,0 +1,60 @@
+<section class="rounded-xl border border-line bg-surface p-6 dark:bg-slate-900">
+  <h1 class="text-2xl font-semibold text-ink dark:text-slate-100"><%= t("settings.security.title") %></h1>
+
+  <div class="mt-6 grid gap-8 lg:grid-cols-2">
+    <div>
+      <h2 class="text-lg font-medium text-ink dark:text-slate-100"><%= t("settings.passwords.title") %></h2>
+      <%= form_with model: Current.user, url: settings_password_path, method: :patch, class: "contents" do |form| %>
+        <%= render FormFieldComponent.new(
+          form: form,
+          attribute: :password_challenge,
+          label: t("settings.passwords.current_label"),
+          input_type: :password,
+          input_options: { required: true, autocomplete: "current-password" }
+        ) %>
+        <%= render FormFieldComponent.new(
+          form: form,
+          attribute: :password,
+          label: t("settings.passwords.new_label"),
+          input_type: :password,
+          input_options: { required: true, autocomplete: "new-password" }
+        ) %>
+        <%= render FormFieldComponent.new(
+          form: form,
+          attribute: :password_confirmation,
+          label: t("settings.passwords.confirm_label"),
+          input_type: :password,
+          input_options: { required: true, autocomplete: "new-password" }
+        ) %>
+        <%= render ButtonComponent.new(type: "submit", size: :medium) do %>
+          <%= t("settings.passwords.submit") %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div>
+      <h2 class="text-lg font-medium text-ink dark:text-slate-100"><%= t("settings.sessions.title") %></h2>
+      <ul class="mt-4 divide-y divide-line">
+        <% @sessions.each do |session| %>
+          <li class="flex items-center justify-between gap-4 py-3">
+            <div class="min-w-0">
+              <p class="truncate text-sm font-medium text-ink dark:text-slate-100">
+                <%= user_agent_summary(session.user_agent) %>
+                <% if session.id == Current.session.id %>
+                  <span class="ml-2 rounded-full bg-ink px-2 py-0.5 text-xs text-white dark:bg-slate-100 dark:text-slate-900"><%= t("settings.sessions.current") %></span>
+                <% end %>
+              </p>
+              <p class="text-sm text-slate-600 dark:text-slate-400">
+                <%= session.ip_address %> · <%= l(session.updated_at, format: :short) %>
+              </p>
+            </div>
+            <% unless session.id == Current.session.id %>
+              <%= button_to t("settings.sessions.close"), settings_session_path(session), method: :delete,
+                    class: "shrink-0 rounded-lg px-3 py-2 text-sm font-medium text-error hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:hover:bg-slate-800" %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</section>

@@ -26,7 +26,12 @@ module Authentication
     end
 
     def find_session_by_cookie
-      Session.includes(:user).find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
+      return unless (session_id = cookies.signed[:session_id])
+
+      session = Session.includes(:user).find_by(id: session_id)
+      # "Último uso" = revision aproximadamente una vez por hora
+      session.touch if session && session.updated_at < 1.hour.ago
+      session
     end
 
     def request_authentication

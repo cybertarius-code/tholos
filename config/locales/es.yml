@@ -24,6 +24,27 @@ es:
     quick_movement: "+ Movimiento"
     settings: Ajustes
   settings:
+    passwords:
+      confirm_label: Confirmar nueva contraseña
+      current_label: Contraseña actual
+      new_label: Nueva contraseña
+      submit: Cambiar contraseña
+      title: Cambiar contraseña
+      update:
+        failure: No se pudo actualizar la contraseña. Comprueba que las nuevas coincidan.
+        success: Contraseña actualizada. Las demás sesiones se han cerrado.
+        wrong_current: La contraseña actual no es correcta.
+    security:
+      title: Seguridad
+    sessions:
+      close: Cerrar sesión
+      current: Sesión actual
+      destroy:
+        success: Sesión cerrada.
+      title: Sesiones activas
+      unknown_browser: Navegador
+      unknown_device: Dispositivo desconocido
+      unknown_system: SO
     theme:
       dark: Oscuro
       label: Apariencia

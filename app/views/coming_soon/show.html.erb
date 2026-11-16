@@ -1,6 +1,9 @@
 <section class="rounded-xl border border-line bg-surface p-6 dark:bg-slate-900">
   <h1 class="text-2xl font-semibold text-ink dark:text-slate-100"><%= t("navigation.#{@section}") %></h1>
   <% if @section == "settings" %>
+    <p class="mt-4">
+      <%= link_to t("settings.security.title"), settings_sessions_path, class: "text-accent underline hover:no-underline" %>
+    </p>
     <div class="mt-6 max-w-sm">
       <label for="theme-preference" class="block text-sm font-medium text-ink"><%= t("settings.theme.label") %></label>
       <select id="theme-preference"
