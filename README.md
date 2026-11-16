@@ -16,6 +16,9 @@ bin/dev
 ```
 Abrir http://localhost:3000
 
+## Datos de demostración
+`bin/rails db:seed` crea el usuario demo `demo@tholos.local` con su hogar "Hogar Demo" (contraseña local definida en `db/seeds/demo.rb`, solo para desarrollo; los seeds abortan en producción). Es idempotente: se puede ejecutar varias veces.
+
 ## Tests y calidad
 ```bash
 bundle exec rspec
