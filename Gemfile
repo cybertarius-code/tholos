@@ -39,7 +39,7 @@ group :development, :test do
   gem "bundler-audit", require: false
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "factory_bot_rails", "~> 6.5"
-  gem "i18n-tasks", "~> 1.0", require: false
+  gem "i18n-tasks", "~> 1.2", require: false
   gem "rspec-rails", "~> 8.1"
   gem "rubocop-rails-omakase", require: false
 end
