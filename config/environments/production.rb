@@ -63,7 +63,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: "smtp.resend.com",
-    port: 587,
+    port: 2587, # Akamai blocks outbound 25/465/587; Resend also listens on 2587 (STARTTLS)
     user_name: "resend",
     password: Rails.application.credentials.dig(:resend, :api_key),
     authentication: :plain,
