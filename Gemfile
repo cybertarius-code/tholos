@@ -4,6 +4,7 @@ source "https://rubygems.org"
 
 gem "bcrypt", "~> 3.1.7"
 gem "bootsnap", require: false
+gem "csv_importer", github: "cybertarius-code/csv_importer", tag: "v0.2.0"
 gem "image_processing", "~> 2.2"
 gem "importmap-rails"
 gem "money-rails"
