@@ -1,3 +1,12 @@
+GIT
+  remote: https://github.com/cybertarius-code/csv_importer.git
+  revision: ddf3e8f0c685c86d612ffa24f02c847ec56532b0
+  tag: v0.2.0
+  specs:
+    csv_importer (0.2.0)
+      activerecord (>= 7.0)
+      csv
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -106,6 +115,7 @@ GEM
       addressable
       base64
       ssrf_filter (~> 1.5)
+    csv (3.3.7)
     date (3.6.0)
     debug (1.11.1)
       irb (~> 1.10)
@@ -455,6 +465,7 @@ DEPENDENCIES
   brakeman
   bundler-audit
   capybara (~> 3.40)
+  csv_importer!
   debug
   factory_bot_rails (~> 6.5)
   i18n-tasks (~> 1.2)

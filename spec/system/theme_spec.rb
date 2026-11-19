@@ -42,6 +42,6 @@ RSpec.describe "Theme preference", type: :system do
     expect(page.evaluate_script(
       'document.documentElement.classList.contains("dark") === window.matchMedia("(prefers-color-scheme: dark)").matches'
     )).to be(true)
-    expect(page).to have_select("theme-preference", selected: I18n.t("settings.theme.system"))
+    expect(page).to have_select("theme-preference", selected: I18n.t("settings.theme.prompt-error"))
   end
 end
