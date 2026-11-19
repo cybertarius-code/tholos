@@ -12,12 +12,19 @@ RSpec.describe "Navigation", type: :request do
     expect(response.body).to include(I18n.t("dashboard.show.empty"))
   end
 
-  %i[ movements accounts budget goals net_worth settings ].each do |section|
+  %i[ movements budget goals net_worth settings ].each do |section|
     it "renders #{section} as coming soon" do
       get public_send("#{section}_path")
 
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(I18n.t("coming_soon.title"))
     end
+  end
+
+  it "renders accounts as a real section, not coming soon" do
+    get accounts_path
+
+    expect(response).to have_http_status(:ok)
+    expect(response.body).not_to include(I18n.t("coming_soon.title"))
   end
 end

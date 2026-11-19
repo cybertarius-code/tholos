@@ -20,3 +20,32 @@ RSpec.describe FormFieldComponent, type: :component do
     expect(rendered_content).to include("No es válido.")
   end
 end
+
+RSpec.describe FormFieldComponent, "other input types", type: :component do
+  let(:form) { ActionView::Helpers::FormBuilder.new(:account, Account.new, vc_test_controller.view_context, {}) }
+
+  it "renders a select with its choices" do
+    render_inline(described_class.new(form: form, attribute: :kind, label: "Tipo", input_type: :select,
+                                      choices: [ [ "Corriente", "checking" ], [ "Ahorro", "savings" ] ]))
+
+    expect(page).to have_select("Tipo", options: %w[Corriente Ahorro])
+  end
+
+  it "requires choices for a select" do
+    expect { described_class.new(form: form, attribute: :kind, label: "Tipo", input_type: :select) }
+      .to raise_error(ArgumentError, /choices/)
+  end
+
+  it "renders a checkbox with its label after the input" do
+    render_inline(described_class.new(form: form, attribute: :include_in_net_worth, label: "Patrimonio", input_type: :checkbox))
+
+    expect(page).to have_field("Patrimonio", type: "checkbox")
+  end
+
+  it "passes label options to the label" do
+    render_inline(described_class.new(form: form, attribute: :opening_amount, label: "Saldo", input_type: :number,
+                                      label_options: { data: { account_form_target: "amountLabel" } }))
+
+    expect(page).to have_css('label[data-account-form-target="amountLabel"]', text: "Saldo")
+  end
+end

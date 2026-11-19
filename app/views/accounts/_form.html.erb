@@ -1,0 +1,64 @@
+<%= form_with model: account, class: "max-w-xl", data: {
+      controller: "account-form",
+      account_form_liability_kinds_value: Account::LIABILITY_KINDS.to_json,
+      account_form_balance_label_value: account_opening_amount_label(false),
+      account_form_debt_label_value: account_opening_amount_label(true)
+    } do |form| %>
+  <% if account.errors[:base].any? %>
+    <p class="mb-4 text-sm text-error" role="alert"><%= account.errors[:base].to_sentence %></p>
+  <% end %>
+
+  <%= render FormFieldComponent.new(
+    form: form, attribute: :name, label: t("activerecord.attributes.account.name"),
+    error: account.errors[:name].first,
+    input_options: { required: true, maxlength: 100, autofocus: account.new_record? }
+  ) %>
+
+  <%= render FormFieldComponent.new(
+    form: form, attribute: :kind, label: t("activerecord.attributes.account.kind"),
+    input_type: :select, choices: account_kind_options,
+    error: account.errors[:kind].first,
+    input_options: { data: { account_form_target: "kind", action: "account-form#update" } }
+  ) %>
+
+  <div class="grid gap-x-4 sm:grid-cols-2">
+    <%= render FormFieldComponent.new(
+      form: form, attribute: :opening_amount, label: account_opening_amount_label(account.liability?),
+      input_type: :number,
+      error: account.errors[:opening_amount].first || account.errors[:opening_balance].first,
+      input_options: { step: "0.01", inputmode: "decimal" },
+      label_options: { data: { account_form_target: "amountLabel" } }
+    ) %>
+
+    <%= render FormFieldComponent.new(
+      form: form, attribute: :opening_date, label: t("activerecord.attributes.account.opening_date"),
+      input_type: :date,
+      error: account.errors[:opening_date].first,
+      input_options: { required: true }
+    ) %>
+  </div>
+
+  <%= render FormFieldComponent.new(
+    form: form, attribute: :currency, label: t("activerecord.attributes.account.currency"),
+    help_text: (t("accounts.form.currency_locked") if account.movements?),
+    error: account.errors[:currency].first,
+    input_options: { required: true, maxlength: 3, autocapitalize: "characters", class: "uppercase sm:w-32",
+                     disabled: account.persisted? && account.movements? }
+  ) %>
+
+  <%= render FormFieldComponent.new(
+    form: form, attribute: :include_in_net_worth, label: t("activerecord.attributes.account.include_in_net_worth"),
+    input_type: :checkbox
+  ) %>
+
+  <%= render FormFieldComponent.new(
+    form: form, attribute: :notes, label: t("activerecord.attributes.account.notes"),
+    input_type: :text_area, error: account.errors[:notes].first,
+    input_options: { rows: 3 }
+  ) %>
+
+  <div class="flex flex-wrap gap-3">
+    <%= render ButtonComponent.new(type: "submit") do %><%= t("accounts.form.submit") %><% end %>
+    <%= render ButtonComponent.new(variant: :secondary, href: account.persisted? ? account_path(account) : accounts_path) do %><%= t("accounts.form.cancel") %><% end %>
+  </div>
+<% end %>

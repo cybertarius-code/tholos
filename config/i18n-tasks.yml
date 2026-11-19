@@ -8,6 +8,7 @@ data:
     - config/locales/**/*.%{locale}.yml
   # Cada dominio de claves vive en su propio fichero por locale.
   write:
+    - ["{accounts,activerecord.attributes.account,activerecord.errors.models.account,activerecord.models.account}.*", "config/locales/accounts.%{locale}.yml"]
     - ["{date,number}.*", "config/locales/formats.%{locale}.yml"]
     - ["dashboard.*", "config/locales/dashboards.%{locale}.yml"]
     - ["households.*", "config/locales/household.%{locale}.yml"]
@@ -32,3 +33,6 @@ ignore_unused:
   - "activerecord.*"
   - "date.*"
   - "number.*"
+  # Claves dinámicas: t("accounts.kinds.#{kind}")
+  - "accounts.kinds.*"
+  - "accounts.classifications.*"
