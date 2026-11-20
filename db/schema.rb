@@ -10,9 +10,51 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_06_113220) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_20_110200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "accounts", force: :cascade do |t|
+    t.bigint "household_id", null: false
+    t.string "name", null: false
+    t.string "kind", null: false
+    t.string "currency", limit: 3, null: false
+    t.bigint "opening_balance_cents", default: 0, null: false
+    t.date "opening_date", null: false
+    t.string "status", default: "open", null: false
+    t.boolean "include_in_net_worth", default: true, null: false
+    t.text "notes"
+    t.integer "position", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["household_id", "status"], name: "index_accounts_on_household_id_and_status"
+    t.index ["id", "currency"], name: "index_accounts_on_id_and_currency", unique: true
+    t.index ["id", "household_id"], name: "index_accounts_on_id_and_household_id", unique: true
+    t.check_constraint "kind::text = ANY (ARRAY['checking'::character varying, 'savings'::character varying, 'cash'::character varying, 'ewallet'::character varying, 'credit_card'::character varying, 'loan'::character varying, 'investment'::character varying, 'other'::character varying]::text[])", name: "accounts_kind_check"
+    t.check_constraint "status::text = ANY (ARRAY['open'::character varying, 'closed'::character varying]::text[])", name: "accounts_status_check"
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.bigint "household_id", null: false
+    t.bigint "parent_id"
+    t.string "name", null: false
+    t.string "kind", null: false
+    t.string "report_group"
+    t.string "color", null: false
+    t.string "icon", null: false
+    t.integer "position", default: 0, null: false
+    t.datetime "archived_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index "household_id, parent_id, lower((name)::text)", name: "index_categories_on_household_parent_lower_name", unique: true, nulls_not_distinct: true
+    t.index ["household_id", "kind", "position"], name: "index_categories_on_household_id_and_kind_and_position"
+    t.index ["id", "household_id"], name: "index_categories_on_id_and_household_id", unique: true
+    t.index ["id", "kind"], name: "index_categories_on_id_and_kind", unique: true
+    t.index ["parent_id"], name: "index_categories_on_parent_id"
+    t.check_constraint "kind::text = ANY (ARRAY['expense'::character varying, 'income'::character varying]::text[])", name: "categories_kind_check"
+    t.check_constraint "parent_id IS NULL OR report_group IS NULL", name: "categories_report_group_only_on_parents"
+    t.check_constraint "report_group IS NULL OR (report_group::text = ANY (ARRAY['essentials'::character varying, 'lifestyle'::character varying, 'growth'::character varying, 'work'::character varying, 'finance'::character varying, 'other'::character varying]::text[]))", name: "categories_report_group_check"
+  end
 
   create_table "households", force: :cascade do |t|
     t.string "name", null: false
@@ -41,6 +83,36 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_113220) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "transactions", force: :cascade do |t|
+    t.bigint "household_id", null: false
+    t.bigint "account_id", null: false
+    t.bigint "category_id"
+    t.bigint "amount_cents", null: false
+    t.string "currency", limit: 3, null: false
+    t.date "date", null: false
+    t.string "status", default: "cleared", null: false
+    t.string "payee"
+    t.text "notes"
+    t.bigint "transfer_id"
+    t.boolean "adjustment", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index "transfer_id, ((amount_cents > 0))", name: "transactions_un_lado_por_signo", unique: true, where: "(transfer_id IS NOT NULL)"
+    t.index ["account_id", "date"], name: "index_transactions_on_account_id_and_date"
+    t.index ["category_id", "date"], name: "index_transactions_on_category_id_and_date"
+    t.index ["household_id", "date"], name: "index_transactions_on_household_id_and_date"
+    t.check_constraint "amount_cents <> 0", name: "transactions_importe_no_cero"
+    t.check_constraint "num_nonnulls(transfer_id, NULLIF(adjustment, false), category_id) <= 1", name: "transactions_un_solo_tipo"
+    t.check_constraint "status::text = ANY (ARRAY['scheduled'::character varying, 'pending'::character varying, 'cleared'::character varying]::text[])", name: "transactions_status_check"
+  end
+
+  create_table "transfers", force: :cascade do |t|
+    t.bigint "household_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["household_id"], name: "index_transfers_on_household_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email_address", null: false
     t.string "password_digest", null: false
@@ -49,7 +121,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_06_113220) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "accounts", "households"
+  add_foreign_key "categories", "categories", column: ["parent_id", "kind"], primary_key: ["id", "kind"], name: "categories_parent_kind_fk", on_delete: :restrict
+  add_foreign_key "categories", "households"
   add_foreign_key "memberships", "households"
   add_foreign_key "memberships", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "transactions", "accounts", column: ["account_id", "currency"], primary_key: ["id", "currency"], name: "transactions_account_currency_fk", on_delete: :restrict
+  add_foreign_key "transactions", "accounts", column: ["account_id", "household_id"], primary_key: ["id", "household_id"], name: "transactions_account_household_fk", on_delete: :restrict
+  add_foreign_key "transactions", "categories", column: ["category_id", "household_id"], primary_key: ["id", "household_id"], name: "transactions_category_household_fk", on_delete: :restrict
+  add_foreign_key "transactions", "households"
+  add_foreign_key "transactions", "transfers", on_delete: :restrict
+  add_foreign_key "transfers", "households"
 end

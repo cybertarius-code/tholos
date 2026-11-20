@@ -3,11 +3,22 @@ Rails.application.routes.draw do
   root "homes#index"
   get "dashboard", to: "dashboard#show", as: :dashboard
   get "movimientos", to: "coming_soon#show", defaults: { section: "movements" }, as: :movements
-  get "cuentas", to: "coming_soon#show", defaults: { section: "accounts" }, as: :accounts
   get "presupuesto", to: "coming_soon#show", defaults: { section: "budget" }, as: :budget
   get "metas", to: "coming_soon#show", defaults: { section: "goals" }, as: :goals
   get "patrimonio", to: "coming_soon#show", defaults: { section: "net_worth" }, as: :net_worth
   get "ajustes", to: "coming_soon#show", defaults: { section: "settings" }, as: :settings
+  resources :accounts, path: "cuentas", path_names: { new: "nueva", edit: "editar" } do
+    resource :closure, only: [ :create, :destroy ], path: "cierre", module: :accounts
+  end
+  # La lista (GET /movimientos) sigue en el placeholder hasta US-0106
+  resources :transactions, path: "movimientos", only: %i[ new create edit update destroy ],
+    path_names: { new: "nuevo", edit: "editar" }
+  resources :categories, path: "ajustes/categorias", except: :show, path_names: { new: "nueva", edit: "editar" } do
+    scope module: :categories do
+      resource :archive, only: [ :create, :destroy ], path: "archivo"
+      resource :position, only: :update, path: "posicion"
+    end
+  end
   resources :homes, only: [ :index, :show ]
   resource :session
   resources :passwords, param: :token

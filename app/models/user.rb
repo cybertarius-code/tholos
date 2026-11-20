@@ -14,6 +14,7 @@ class User < ApplicationRecord
       # shortcut: users no tiene columna de nombre; se usa la parte local del email hasta que exista
       household = Household.create!(name: household_name.presence || "#{I18n.t('households.new.title')} #{user.email_address.split('@').first.capitalize}")
       Membership.create!(user: user, household: household, role: :owner)
+      household.seed_default_categories!
       user
     end
   end

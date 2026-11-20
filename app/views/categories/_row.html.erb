@@ -1,0 +1,22 @@
+<div class="flex items-center gap-3">
+  <%= render CategoryIconComponent.new(color: category.color, icon: category.icon, size: category.root? ? :medium : :small) %>
+  <div class="min-w-0 flex-1">
+    <p class="break-words text-sm font-medium text-ink"><%= category.name %></p>
+    <% if category.report_group.present? %>
+      <p class="text-xs text-slate-600 dark:text-slate-400"><%= category_report_group_label(category.report_group) %></p>
+    <% end %>
+  </div>
+  <div class="flex shrink-0 items-center">
+    <% { "up" => [ "↑", first ], "down" => [ "↓", last ] }.each do |direction, (arrow, disabled)| %>
+      <%= form_with url: category_position_path(category), method: :patch do %>
+        <%= hidden_field_tag :direction, direction, id: nil %>
+        <%= render ButtonComponent.new(variant: :ghost, size: :small, type: "submit", disabled: disabled,
+              class: "min-w-11", aria: { label: t("categories.index.move_#{direction}", name: category.name) }) do %>
+          <span aria-hidden="true"><%= arrow %></span>
+        <% end %>
+      <% end %>
+    <% end %>
+    <%= render ButtonComponent.new(variant: :ghost, size: :small, href: edit_category_path(category),
+          aria: { label: t("categories.index.edit_named", name: category.name) }) do %><%= t("categories.index.edit") %><% end %>
+  </div>
+</div>

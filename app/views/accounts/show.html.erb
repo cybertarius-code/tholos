@@ -1,0 +1,105 @@
+<section class="rounded-xl border border-line bg-surface p-6 dark:bg-slate-900">
+  <p><%= link_to t(".back"), accounts_path, class: "text-sm text-accent underline hover:no-underline" %></p>
+
+  <div class="mt-2 flex flex-wrap items-start justify-between gap-4">
+    <div class="min-w-0">
+      <h1 class="break-words text-2xl font-semibold text-ink dark:text-slate-100"><%= @account.name %></h1>
+      <p class="mt-1 flex flex-wrap items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+        <%= account_kind_label(@account) %> · <%= account_classification_label(@account) %>
+        <% if @account.closed? %>
+          <%= render BadgeComponent.new do %><%= t("accounts.statuses.closed") %><% end %>
+        <% end %>
+      </p>
+    </div>
+    <div class="sm:text-right">
+      <p class="text-2xl font-semibold"><%= render MoneyComponent.new(cents: @balance_cents, currency: @account.currency) %></p>
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+        <%= t(".projected") %> <%= render MoneyComponent.new(cents: @projected_balance_cents, currency: @account.currency) %>
+      </p>
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <%= render CardComponent.new do |card| %>
+      <% card.with_body do %>
+        <dl class="grid gap-4 text-sm sm:grid-cols-2">
+          <div>
+            <dt class="text-slate-600 dark:text-slate-400"><%= t("activerecord.attributes.account.opening_balance") %></dt>
+            <dd class="mt-1"><%= render MoneyComponent.new(cents: @account.opening_balance_cents, currency: @account.currency) %></dd>
+          </div>
+          <div>
+            <dt class="text-slate-600 dark:text-slate-400"><%= t("activerecord.attributes.account.opening_date") %></dt>
+            <dd class="mt-1 text-ink"><%= l(@account.opening_date, format: :short) %></dd>
+          </div>
+          <div>
+            <dt class="text-slate-600 dark:text-slate-400"><%= t("activerecord.attributes.account.currency") %></dt>
+            <dd class="mt-1 text-ink"><%= @account.currency %></dd>
+          </div>
+          <div>
+            <dt class="text-slate-600 dark:text-slate-400"><%= t("activerecord.attributes.account.include_in_net_worth") %></dt>
+            <dd class="mt-1 text-ink"><%= @account.include_in_net_worth? ? t(".yes") : t(".no") %></dd>
+          </div>
+          <% if @account.notes.present? %>
+            <div class="sm:col-span-2">
+              <dt class="text-slate-600 dark:text-slate-400"><%= t("activerecord.attributes.account.notes") %></dt>
+              <dd class="mt-1 whitespace-pre-line text-ink"><%= @account.notes %></dd>
+            </div>
+          <% end %>
+        </dl>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="mt-6 flex flex-wrap gap-3">
+    <% if @account.open? %>
+      <%= render ButtonComponent.new(href: new_transaction_path(account_id: @account.id)) do %><%= t(".new_transaction") %><% end %>
+    <% end %>
+    <%= render ButtonComponent.new(variant: :secondary, href: edit_account_path(@account)) do %><%= t(".edit") %><% end %>
+
+    <% if @account.open? %>
+      <%= form_with url: account_closure_path(@account), method: :post,
+            data: (@balance_cents.zero? ? {} : { turbo_confirm: t(".close_with_balance_confirm") }) do %>
+        <%= render ButtonComponent.new(variant: :secondary, type: "submit") do %><%= t(".close") %><% end %>
+      <% end %>
+    <% else %>
+      <%= form_with url: account_closure_path(@account), method: :delete do %>
+        <%= render ButtonComponent.new(variant: :secondary, type: "submit") do %><%= t(".reopen") %><% end %>
+      <% end %>
+    <% end %>
+
+    <% unless @account.movements? %>
+      <%= form_with url: account_path(@account), method: :delete, data: { turbo_confirm: t(".destroy_confirm") } do %>
+        <%= render ButtonComponent.new(variant: :danger, type: "submit") do %><%= t(".destroy") %><% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <section class="mt-8" aria-labelledby="account-transactions">
+    <h2 id="account-transactions" class="text-lg font-medium text-ink dark:text-slate-100"><%= t(".transactions") %></h2>
+    <% if @transactions.any? %>
+      <ul class="mt-3 divide-y divide-line">
+        <% @transactions.each do |transaction| %>
+          <li id="<%= dom_id(transaction) %>">
+            <%= link_to edit_transaction_path(transaction), class: "flex items-center justify-between gap-4 rounded-md px-2 py-3 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:hover:bg-slate-800" do %>
+              <span class="flex min-w-0 items-center gap-3">
+                <% if transaction.category %>
+                  <%= render CategoryIconComponent.new(color: transaction.category.color, icon: transaction.category.icon, size: :small) %>
+                <% end %>
+                <span class="min-w-0">
+                  <span class="block break-words text-sm font-medium text-ink"><%= transaction.payee.presence || transaction.category&.name || t(".no_payee") %></span>
+                  <span class="block text-xs text-slate-600 dark:text-slate-400">
+                    <%= l(transaction.date, format: :short) %>
+                    <% unless transaction.cleared? %> · <%= t("transactions.statuses.#{transaction.status}") %><% end %>
+                  </span>
+                </span>
+              </span>
+              <%= render MoneyComponent.new(cents: transaction.amount_cents, currency: transaction.currency) %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="mt-3 text-sm text-slate-600 dark:text-slate-400"><%= t(".no_transactions") %></p>
+    <% end %>
+  </section>
+</section>

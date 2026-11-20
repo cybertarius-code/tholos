@@ -1,0 +1,60 @@
+---
+en:
+  activerecord:
+    attributes:
+      transaction:
+        account_id: Account
+        amount: Amount
+        category_id: Category
+        currency: Currency
+        date: Date
+        notes: Notes
+        payee: Payee
+        status: Status
+    errors:
+      models:
+        transaction:
+          attributes:
+            account_id:
+              closed: is closed
+            amount:
+              cannot_be_zero: cannot be zero
+            base:
+              un_solo_tipo: A movement is a transfer, an adjustment or an income/expense, never two at once.
+            category_id:
+              archived: is archived
+            currency:
+              mismatch: must be the account's currency
+    models:
+      transaction:
+        one: Movement
+        other: Movements
+  transactions:
+    create:
+      success: Movement recorded.
+    destroy:
+      success: Movement deleted.
+    directions:
+      expense: Expense
+      income: Income
+    edit:
+      destroy: Delete movement
+      destroy_confirm: Delete this movement? This cannot be undone.
+      title: Edit movement
+    form:
+      amount_help: Positive; Expense or Income sets the sign.
+      cancel: Cancel
+      category_general: "%{name} (general)"
+      choose_account: Choose an account
+      direction: Movement type
+      no_category: No category
+      status_help: Only cleared movements count in the current balance; scheduled and pending ones count in the projected balance.
+      submit: Save movement
+    new:
+      title: New movement
+    statuses:
+      cleared: Cleared
+      pending: Pending
+      scheduled: Scheduled
+    update:
+      success: Movement updated.

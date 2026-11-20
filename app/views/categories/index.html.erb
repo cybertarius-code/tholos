@@ -1,0 +1,76 @@
+<% content_for :head do %>
+  <%# Subir/Bajar redirige aquí: se refresca con morphing y conserva el scroll %>
+  <%= turbo_refreshes_with method: :morph, scroll: :preserve %>
+<% end %>
+
+<section class="rounded-xl border border-line bg-surface p-6 dark:bg-slate-900">
+  <p><%= link_to t(".back"), settings_path, class: "text-sm text-accent underline hover:no-underline" %></p>
+  <h1 class="mt-2 text-2xl font-semibold text-ink dark:text-slate-100"><%= t(".title") %></h1>
+  <p class="mt-1 text-sm text-slate-600 dark:text-slate-400"><%= t(".intro") %></p>
+
+  <div class="mt-6 grid gap-8 lg:grid-cols-2">
+    <% Category::KINDS.each do |kind| %>
+      <section aria-labelledby="categories-<%= kind %>" class="min-w-0">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <h2 id="categories-<%= kind %>" class="text-lg font-medium text-ink dark:text-slate-100"><%= t(".sections.#{kind}") %></h2>
+          <%= render ButtonComponent.new(variant: :secondary, size: :small, href: new_category_path(kind: kind)) do %>
+            <%= t(".new.#{kind}") %>
+          <% end %>
+        </div>
+
+        <% roots = @roots.fetch(kind, []) %>
+        <% if roots.any? %>
+          <ul class="mt-3 divide-y divide-line">
+            <% roots.each_with_index do |root, index| %>
+              <li id="<%= dom_id(root) %>" class="py-2">
+                <%= render "row", category: root, first: index.zero?, last: index == roots.size - 1 %>
+
+                <% children = @children.fetch(root.id, []) %>
+                <% if children.any? %>
+                  <ul class="ml-6 mt-1 border-l border-line pl-3" aria-label="<%= t(".children_of", name: root.name) %>">
+                    <% children.each_with_index do |child, child_index| %>
+                      <li id="<%= dom_id(child) %>">
+                        <%= render "row", category: child, first: child_index.zero?, last: child_index == children.size - 1 %>
+                      </li>
+                    <% end %>
+                  </ul>
+                <% end %>
+
+                <div class="ml-12">
+                  <%= link_to t(".add_child"), new_category_path(parent_id: root.id),
+                        aria: { label: t(".add_child_to", name: root.name) },
+                        class: "inline-flex min-h-11 items-center text-sm text-accent underline hover:no-underline" %>
+                </div>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="mt-3 text-sm text-slate-600 dark:text-slate-400"><%= t(".empty") %></p>
+        <% end %>
+      </section>
+    <% end %>
+  </div>
+
+  <% if @archived.any? %>
+    <details class="mt-8 rounded-lg border border-line px-4 py-2">
+      <summary class="flex min-h-11 cursor-pointer items-center text-sm font-medium text-ink">
+        <%= t(".archived", count: @archived.size) %>
+      </summary>
+      <ul class="divide-y divide-line">
+        <% @archived.each do |category| %>
+          <li id="<%= dom_id(category, :archived) %>" class="flex flex-wrap items-center justify-between gap-3 py-2">
+            <span class="flex min-w-0 items-center gap-3">
+              <%= render CategoryIconComponent.new(color: category.color, icon: category.icon, size: :small) %>
+              <span class="truncate text-sm text-ink"><%= category_full_name(category, @names) %></span>
+              <span class="text-xs text-slate-600 dark:text-slate-400"><%= category_kind_label(category.kind) %></span>
+            </span>
+            <%= form_with url: category_archive_path(category), method: :delete do %>
+              <%= render ButtonComponent.new(variant: :secondary, size: :small, type: "submit",
+                    aria: { label: t(".unarchive_named", name: category.name) }) do %><%= t(".unarchive") %><% end %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    </details>
+  <% end %>
+</section>

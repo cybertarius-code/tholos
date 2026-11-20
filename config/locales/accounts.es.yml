@@ -1,0 +1,83 @@
+---
+es:
+  accounts:
+    classifications:
+      asset: Activo
+      liability: Pasivo
+    closures:
+      create:
+        success: Cuenta cerrada. Ya no se ofrecerá al registrar movimientos.
+        success_with_balance: Cuenta cerrada con un saldo distinto de cero. Ya no se ofrecerá al registrar movimientos.
+      destroy:
+        success: Cuenta reabierta.
+    create:
+      success: Cuenta creada.
+    destroy:
+      has_movements: Esta cuenta tiene movimientos y no se puede borrar. Ciérrala en su lugar.
+      success: Cuenta borrada.
+    edit:
+      title: Editar %{name}
+    form:
+      cancel: Cancelar
+      currency_locked: La moneda no se puede cambiar porque la cuenta tiene movimientos.
+      opening_balance: Saldo inicial
+      opening_debt: Deuda inicial
+      submit: Guardar cuenta
+    index:
+      empty_text: Crea tu primera cuenta para empezar a registrar movimientos.
+      empty_title: Aún no tienes cuentas
+      new: Nueva cuenta
+    kinds:
+      cash: Efectivo
+      checking: Corriente
+      credit_card: Tarjeta de crédito
+      ewallet: Monedero electrónico
+      investment: Inversión
+      loan: Préstamo
+      other: Otra
+      savings: Ahorro
+    new:
+      title: Nueva cuenta
+    show:
+      back: "← Cuentas"
+      close: Cerrar cuenta
+      close_with_balance_confirm: La cuenta tiene un saldo distinto de cero. ¿Cerrarla de todos modos?
+      destroy: Borrar
+      destroy_confirm: "¿Borrar esta cuenta? No se puede deshacer."
+      edit: Editar
+      new_transaction: Nuevo movimiento
+      'no': 'No'
+      no_payee: Sin beneficiario
+      no_transactions: Aún no hay movimientos.
+      projected: 'Proyectado:'
+      reopen: Reabrir cuenta
+      transactions: Últimos movimientos
+      'yes': Sí
+    statuses:
+      closed: Cerrada
+    update:
+      success: Cuenta actualizada.
+  activerecord:
+    attributes:
+      account:
+        currency: Moneda
+        include_in_net_worth: Incluir en el patrimonio
+        kind: Tipo
+        name: Nombre
+        notes: Notas
+        opening_amount: Importe inicial
+        opening_balance: Saldo inicial
+        opening_date: Fecha del saldo inicial
+        status: Estado
+    errors:
+      models:
+        account:
+          attributes:
+            base:
+              has_movements: La cuenta tiene movimientos. Ciérrala en su lugar.
+            currency:
+              locked: no se puede cambiar porque la cuenta tiene movimientos
+    models:
+      account:
+        one: Cuenta
+        other: Cuentas

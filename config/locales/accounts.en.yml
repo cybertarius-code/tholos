@@ -1,0 +1,83 @@
+---
+en:
+  accounts:
+    classifications:
+      asset: Asset
+      liability: Liability
+    closures:
+      create:
+        success: Account closed. It will no longer be offered when recording movements.
+        success_with_balance: Account closed with a non-zero balance. It will no longer be offered when recording movements.
+      destroy:
+        success: Account reopened.
+    create:
+      success: Account created.
+    destroy:
+      has_movements: This account has movements and cannot be deleted. Close it instead.
+      success: Account deleted.
+    edit:
+      title: Edit %{name}
+    form:
+      cancel: Cancel
+      currency_locked: The currency cannot be changed because the account has movements.
+      opening_balance: Opening balance
+      opening_debt: Opening debt
+      submit: Save account
+    index:
+      empty_text: Create your first account to start recording movements.
+      empty_title: You have no accounts yet
+      new: New account
+    kinds:
+      cash: Cash
+      checking: Checking
+      credit_card: Credit card
+      ewallet: E-wallet
+      investment: Investment
+      loan: Loan
+      other: Other
+      savings: Savings
+    new:
+      title: New account
+    show:
+      back: "← Accounts"
+      close: Close account
+      close_with_balance_confirm: The account has a non-zero balance. Close it anyway?
+      destroy: Delete
+      destroy_confirm: Delete this account? This cannot be undone.
+      edit: Edit
+      new_transaction: New movement
+      'no': 'No'
+      no_payee: No payee
+      no_transactions: No movements yet.
+      projected: 'Projected:'
+      reopen: Reopen account
+      transactions: Latest movements
+      'yes': 'Yes'
+    statuses:
+      closed: Closed
+    update:
+      success: Account updated.
+  activerecord:
+    attributes:
+      account:
+        currency: Currency
+        include_in_net_worth: Include in net worth
+        kind: Type
+        name: Name
+        notes: Notes
+        opening_amount: Opening amount
+        opening_balance: Opening balance
+        opening_date: Opening balance date
+        status: Status
+    errors:
+      models:
+        account:
+          attributes:
+            base:
+              has_movements: The account has movements. Close it instead.
+            currency:
+              locked: cannot be changed because the account has movements
+    models:
+      account:
+        one: Account
+        other: Accounts
