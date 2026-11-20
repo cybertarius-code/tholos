@@ -1,6 +1,13 @@
 <div class="my-5">
-  <%= @form.label @attribute, @label, for: @input_id, class: "block text-sm font-medium text-ink" %>
-  <%= input_html %>
+  <% if checkbox? %>
+    <div class="flex items-center gap-3">
+      <%= input_html %>
+      <%= label_html %>
+    </div>
+  <% else %>
+    <%= label_html %>
+    <%= input_html %>
+  <% end %>
   <% if @help_text.present? %>
     <p id="<%= help_id %>" class="mt-1 text-sm text-slate-600 dark:text-slate-400"><%= @help_text %></p>
   <% end %>
