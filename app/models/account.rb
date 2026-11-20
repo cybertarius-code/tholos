@@ -1,8 +1,14 @@
 class Account < ApplicationRecord
+  include ConstraintViolationErrors
+
   KINDS = %w[ checking savings cash ewallet credit_card loan investment other ].freeze
   LIABILITY_KINDS = %w[ credit_card loan ].freeze
 
   belongs_to :household
+  has_many :transactions, dependent: :restrict_with_error
+
+  # La BD rechaza cambiar la moneda si hay movimientos (FK compuesta de transactions)
+  constraint_error "transactions_account_currency_fk", :currency, :locked
 
   enum :kind, KINDS.index_with(&:itself), validate: true
   enum :status, { open: "open", closed: "closed" }, default: :open, validate: true
@@ -35,14 +41,32 @@ class Account < ApplicationRecord
     LIABILITY_KINDS.include?(kind)
   end
 
-  # TODO(US-0104): con movimientos, saldo inicial + suma de movimientos
-  def balance_cents
-    opening_balance_cents
+  # Saldo actual: saldo inicial + movimientos conciliados hasta la fecha (ADR-0005)
+  def balance_cents(on: Date.current)
+    opening_balance_cents + transactions.cleared.on_or_before(on).sum(:amount_cents)
   end
 
-  # TODO(US-0104): true si la cuenta tiene movimientos
+  # Saldo proyectado: incluye también lo programado y lo pendiente, con cualquier fecha
+  def projected_balance_cents
+    opening_balance_cents + transactions.sum(:amount_cents)
+  end
+
+  # Saldos de varias cuentas en una sola consulta: { account_id => [actual, proyectado] }
+  def self.balances_for(accounts, on: Date.current)
+    sums = Transaction.where(account_id: accounts.map(&:id)).group(:account_id).pluck(
+      :account_id,
+      Arel.sql(sanitize_sql_array([ "COALESCE(SUM(amount_cents) FILTER (WHERE status = 'cleared' AND date <= ?), 0)", on ])),
+      Arel.sql("SUM(amount_cents)")
+    ).to_h { |id, current, projected| [ id, [ current, projected ] ] }
+
+    accounts.to_h do |account|
+      current, projected = sums.fetch(account.id, [ 0, 0 ])
+      [ account.id, [ account.opening_balance_cents + current, account.opening_balance_cents + projected ] ]
+    end
+  end
+
   def movements?
-    false
+    transactions.exists?
   end
 
   def close!

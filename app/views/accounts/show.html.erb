@@ -11,7 +11,12 @@
         <% end %>
       </p>
     </div>
-    <p class="text-2xl font-semibold"><%= render MoneyComponent.new(cents: @account.balance_cents, currency: @account.currency) %></p>
+    <div class="sm:text-right">
+      <p class="text-2xl font-semibold"><%= render MoneyComponent.new(cents: @balance_cents, currency: @account.currency) %></p>
+      <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+        <%= t(".projected") %> <%= render MoneyComponent.new(cents: @projected_balance_cents, currency: @account.currency) %>
+      </p>
+    </div>
   </div>
 
   <div class="mt-6">
@@ -46,11 +51,14 @@
   </div>
 
   <div class="mt-6 flex flex-wrap gap-3">
+    <% if @account.open? %>
+      <%= render ButtonComponent.new(href: new_transaction_path(account_id: @account.id)) do %><%= t(".new_transaction") %><% end %>
+    <% end %>
     <%= render ButtonComponent.new(variant: :secondary, href: edit_account_path(@account)) do %><%= t(".edit") %><% end %>
 
     <% if @account.open? %>
       <%= form_with url: account_closure_path(@account), method: :post,
-            data: (@account.balance_cents.zero? ? {} : { turbo_confirm: t(".close_with_balance_confirm") }) do %>
+            data: (@balance_cents.zero? ? {} : { turbo_confirm: t(".close_with_balance_confirm") }) do %>
         <%= render ButtonComponent.new(variant: :secondary, type: "submit") do %><%= t(".close") %><% end %>
       <% end %>
     <% else %>
@@ -65,4 +73,33 @@
       <% end %>
     <% end %>
   </div>
+
+  <section class="mt-8" aria-labelledby="account-transactions">
+    <h2 id="account-transactions" class="text-lg font-medium text-ink dark:text-slate-100"><%= t(".transactions") %></h2>
+    <% if @transactions.any? %>
+      <ul class="mt-3 divide-y divide-line">
+        <% @transactions.each do |transaction| %>
+          <li id="<%= dom_id(transaction) %>">
+            <%= link_to edit_transaction_path(transaction), class: "flex items-center justify-between gap-4 rounded-md px-2 py-3 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:hover:bg-slate-800" do %>
+              <span class="flex min-w-0 items-center gap-3">
+                <% if transaction.category %>
+                  <%= render CategoryIconComponent.new(color: transaction.category.color, icon: transaction.category.icon, size: :small) %>
+                <% end %>
+                <span class="min-w-0">
+                  <span class="block break-words text-sm font-medium text-ink"><%= transaction.payee.presence || transaction.category&.name || t(".no_payee") %></span>
+                  <span class="block text-xs text-slate-600 dark:text-slate-400">
+                    <%= l(transaction.date, format: :short) %>
+                    <% unless transaction.cleared? %> · <%= t("transactions.statuses.#{transaction.status}") %><% end %>
+                  </span>
+                </span>
+              </span>
+              <%= render MoneyComponent.new(cents: transaction.amount_cents, currency: transaction.currency) %>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="mt-3 text-sm text-slate-600 dark:text-slate-400"><%= t(".no_transactions") %></p>
+    <% end %>
+  </section>
 </section>

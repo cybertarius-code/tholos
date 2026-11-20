@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   resources :accounts, path: "cuentas", path_names: { new: "nueva", edit: "editar" } do
     resource :closure, only: [ :create, :destroy ], path: "cierre", module: :accounts
   end
+  # La lista (GET /movimientos) sigue en el placeholder hasta US-0106
+  resources :transactions, path: "movimientos", only: %i[ new create edit update destroy ],
+    path_names: { new: "nuevo", edit: "editar" }
   resources :categories, path: "ajustes/categorias", except: :show, path_names: { new: "nueva", edit: "editar" } do
     scope module: :categories do
       resource :archive, only: [ :create, :destroy ], path: "archivo"

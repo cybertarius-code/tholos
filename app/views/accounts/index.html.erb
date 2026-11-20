@@ -18,7 +18,7 @@
                 <% end %>
               </p>
             </div>
-            <%= render MoneyComponent.new(cents: account.balance_cents, currency: account.currency) %>
+            <%= render MoneyComponent.new(cents: @balances.fetch(account.id).first, currency: account.currency) %>
           <% end %>
         </li>
       <% end %>

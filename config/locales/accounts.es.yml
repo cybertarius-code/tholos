@@ -45,8 +45,13 @@ es:
       destroy: Borrar
       destroy_confirm: "¿Borrar esta cuenta? No se puede deshacer."
       edit: Editar
+      new_transaction: Nuevo movimiento
       'no': 'No'
+      no_payee: Sin beneficiario
+      no_transactions: Aún no hay movimientos.
+      projected: 'Proyectado:'
       reopen: Reabrir cuenta
+      transactions: Últimos movimientos
       'yes': Sí
     statuses:
       closed: Cerrada

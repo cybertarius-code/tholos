@@ -10,6 +10,7 @@ data:
   write:
     - ["{accounts,activerecord.attributes.account,activerecord.errors.models.account,activerecord.models.account}.*", "config/locales/accounts.%{locale}.yml"]
     - ["{categories,activerecord.attributes.category,activerecord.errors.models.category,activerecord.models.category}.*", "config/locales/categories.%{locale}.yml"]
+    - ["{transactions,activerecord.attributes.transaction,activerecord.errors.models.transaction,activerecord.models.transaction}.*", "config/locales/transactions.%{locale}.yml"]
     - ["{date,number}.*", "config/locales/formats.%{locale}.yml"]
     - ["dashboard.*", "config/locales/dashboards.%{locale}.yml"]
     - ["households.*", "config/locales/household.%{locale}.yml"]
@@ -42,3 +43,4 @@ ignore_unused:
   - "categories.index.{sections,new}.*"
   - "categories.index.move_{up,down}"
   - "categories.new.title.*"
+  - "transactions.{directions,statuses}.*"

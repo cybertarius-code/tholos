@@ -21,6 +21,7 @@ class Category < ApplicationRecord
   belongs_to :parent, class_name: "Category", optional: true, inverse_of: :children
   has_many :children, class_name: "Category", foreign_key: :parent_id, inverse_of: :parent,
     dependent: :restrict_with_error
+  has_many :transactions, dependent: :restrict_with_error
 
   enum :kind, KINDS.index_with(&:itself), validate: true
   enum :report_group, REPORT_GROUPS.index_with(&:itself), prefix: true, validate: { allow_nil: true }
@@ -61,9 +62,8 @@ class Category < ApplicationRecord
     ICONS.fetch(icon, ICONS["tag"])
   end
 
-  # TODO(US-0104): true si algún movimiento usa la categoría
   def movements?
-    false
+    transactions.exists?
   end
 
   # Archivar un padre archiva también sus hijas

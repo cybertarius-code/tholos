@@ -1,0 +1,60 @@
+---
+es:
+  activerecord:
+    attributes:
+      transaction:
+        account_id: Cuenta
+        amount: Importe
+        category_id: Categoría
+        currency: Moneda
+        date: Fecha
+        notes: Notas
+        payee: Beneficiario
+        status: Estado
+    errors:
+      models:
+        transaction:
+          attributes:
+            account_id:
+              closed: está cerrada
+            amount:
+              cannot_be_zero: no puede ser cero
+            base:
+              un_solo_tipo: Un movimiento es transferencia, ajuste o ingreso/gasto, nunca dos a la vez.
+            category_id:
+              archived: está archivada
+            currency:
+              mismatch: debe ser la de la cuenta
+    models:
+      transaction:
+        one: Movimiento
+        other: Movimientos
+  transactions:
+    create:
+      success: Movimiento registrado.
+    destroy:
+      success: Movimiento borrado.
+    directions:
+      expense: Gasto
+      income: Ingreso
+    edit:
+      destroy: Borrar movimiento
+      destroy_confirm: "¿Borrar este movimiento? No se puede deshacer."
+      title: Editar movimiento
+    form:
+      amount_help: En positivo; el signo lo pone Gasto o Ingreso.
+      cancel: Cancelar
+      category_general: "%{name} (general)"
+      choose_account: Elige una cuenta
+      direction: Tipo de movimiento
+      no_category: Sin categoría
+      status_help: Solo lo conciliado cuenta en el saldo actual; lo programado y lo pendiente, en el proyectado.
+      submit: Guardar movimiento
+    new:
+      title: Nuevo movimiento
+    statuses:
+      cleared: Conciliado
+      pending: Pendiente
+      scheduled: Programado
+    update:
+      success: Movimiento actualizado.

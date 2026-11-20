@@ -45,8 +45,13 @@ en:
       destroy: Delete
       destroy_confirm: Delete this account? This cannot be undone.
       edit: Edit
+      new_transaction: New movement
       'no': 'No'
+      no_payee: No payee
+      no_transactions: No movements yet.
+      projected: 'Projected:'
       reopen: Reopen account
+      transactions: Latest movements
       'yes': 'Yes'
     statuses:
       closed: Closed

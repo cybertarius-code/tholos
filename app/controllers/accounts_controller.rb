@@ -3,10 +3,15 @@ class AccountsController < ApplicationController
 
   # Lista provisional: la definitiva llega con US-0102
   def index
-    @accounts = Current.household.accounts.ordered
+    @accounts = Current.household.accounts.ordered.to_a
+    @balances = Account.balances_for(@accounts)
   end
 
   def show
+    @balance_cents = @account.balance_cents
+    @projected_balance_cents = @account.projected_balance_cents
+    # Provisional hasta US-0102 (detalle) y US-0106 (lista filtrada)
+    @transactions = @account.transactions.includes(:category).recent_first.limit(20)
   end
 
   def new
