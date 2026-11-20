@@ -22,9 +22,10 @@ RSpec.describe Category, "database integrity" do
         .to raise_error(ActiveRecord::InvalidForeignKey, /categories_parent_kind_fk/)
     end
 
+    # PostgreSQL 17 lo da como ForeignKeyViolation y 18 como RestrictViolation
     it "impide borrar un padre con hijas (ON DELETE RESTRICT)" do
       expect { described_class.where(id: transport.id).delete_all }
-        .to raise_error(ActiveRecord::StatementInvalid, /PG::RestrictViolation/)
+        .to raise_error(ActiveRecord::StatementInvalid, /categories_parent_kind_fk/)
     end
   end
 

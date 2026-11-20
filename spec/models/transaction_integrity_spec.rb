@@ -52,17 +52,21 @@ RSpec.describe Transaction, "database integrity" do
       .to raise_error(ActiveRecord::RecordNotUnique, /transactions_un_lado_por_signo/)
   end
 
+  # PostgreSQL 17 lo da como ForeignKeyViolation y 18 como RestrictViolation:
+  # se comprueba el nombre de la restricción, no la clase
   describe "ON DELETE RESTRICT" do
     let(:category) { create(:category, household: household) }
 
     before { create(:transaction, account: account, category: category) }
 
     it "no se borra una cuenta con movimientos" do
-      expect { Account.where(id: account.id).delete_all }.to raise_error(ActiveRecord::StatementInvalid, /RestrictViolation/)
+      expect { Account.where(id: account.id).delete_all }
+        .to raise_error(ActiveRecord::StatementInvalid, /transactions_account_(household|currency)_fk/)
     end
 
     it "no se borra una categoría con movimientos" do
-      expect { Category.where(id: category.id).delete_all }.to raise_error(ActiveRecord::StatementInvalid, /RestrictViolation/)
+      expect { Category.where(id: category.id).delete_all }
+        .to raise_error(ActiveRecord::StatementInvalid, /transactions_category_household_fk/)
     end
   end
 
