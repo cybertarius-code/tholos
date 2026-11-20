@@ -8,6 +8,12 @@ Rails.application.routes.draw do
   get "metas", to: "coming_soon#show", defaults: { section: "goals" }, as: :goals
   get "patrimonio", to: "coming_soon#show", defaults: { section: "net_worth" }, as: :net_worth
   get "ajustes", to: "coming_soon#show", defaults: { section: "settings" }, as: :settings
+  resources :categories, path: "ajustes/categorias", except: :show, path_names: { new: "nueva", edit: "editar" } do
+    scope module: :categories do
+      resource :archive, only: [ :create, :destroy ], path: "archivo"
+      resource :position, only: :update, path: "posicion"
+    end
+  end
   resources :homes, only: [ :index, :show ]
   resource :session
   resources :passwords, param: :token

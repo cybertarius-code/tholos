@@ -1,0 +1,139 @@
+---
+en:
+  activerecord:
+    attributes:
+      category:
+        color: Color
+        icon: Icon
+        kind: Type
+        name: Name
+        parent_id: Parent category
+        report_group: Group
+    errors:
+      models:
+        category:
+          attributes:
+            base:
+              has_movements: The category has movements. Archive it instead.
+            kind:
+              locked: cannot be changed because the category has movements or subcategories
+            name:
+              taken: already exists at this level
+            parent_id:
+              archived: is archived
+              has_children: cannot be set because this category has subcategories
+              kind_mismatch: must be of the same type (expense or income)
+              too_deep: is already a subcategory; there are only two levels
+            report_group:
+              present: is only set on top-level expense categories
+    models:
+      category:
+        one: Category
+        other: Categories
+  categories:
+    archives:
+      create:
+        success: "“%{name}” archived. It is no longer offered in forms."
+      destroy:
+        success: "“%{name}” unarchived."
+    colors:
+      copper: Copper
+      gold: Gold
+      green: Green
+      navy: Navy
+      plum: Plum
+      red: Red
+      slate: Slate
+      teal: Teal
+    create:
+      success: Category “%{name}” created.
+    destroy:
+      in_use: It cannot be deleted because it has subcategories or movements. Archive it instead.
+      success: Category “%{name}” deleted.
+    edit:
+      archive: Archive
+      archive_confirm: Its subcategories will be archived too. Continue?
+      danger_help: Archiving hides it from forms and keeps its movements. It can only be deleted if it has no subcategories or movements.
+      danger_zone: Archive or delete
+      destroy: Delete
+      destroy_confirm: Delete this category? This cannot be undone.
+      title: Edit “%{name}”
+      unarchive: Unarchive
+    form:
+      cancel: Cancel
+      kind_locked: The type cannot be changed because the category has movements or subcategories.
+      no_parent: "— None (top-level category) —"
+      parent_help: Only top-level %{kind} categories.
+      parent_locked: It has subcategories, so it must stay a top-level category.
+      report_group_help: Groups reports (Essentials, Lifestyle…). Subcategories use their parent's group.
+      submit: Save category
+    icons:
+      bank: Bank
+      box: Box
+      car: Car
+      care: Personal care
+      cart: Cart
+      chart: Chart
+      clothes: Clothes
+      coffee: Coffee
+      document: Document
+      education: Books
+      family: Family
+      gift: Gift
+      health: Health
+      home: House
+      invoice: Invoice
+      leisure: Leisure
+      percent: Banknotes
+      pet: Pet
+      phone: Phone
+      plus: Plus
+      restaurant: Restaurant
+      salary: Salary
+      sport: Sport
+      subscription: Subscription
+      tag: Tag
+      travel: Plane
+      work: Briefcase
+    index:
+      add_child: "+ Subcategory"
+      add_child_to: Add a subcategory to “%{name}”
+      archived:
+        one: Archived (1)
+        other: Archived (%{count})
+      back: "← Settings"
+      children_of: Subcategories of %{name}
+      edit: Edit
+      edit_named: Edit “%{name}”
+      empty: No categories yet.
+      intro: Top-level categories can have subcategories. The order is the same in forms.
+      move_down: Move “%{name}” down
+      move_up: Move “%{name}” up
+      new:
+        expense: New expense
+        income: New income
+      sections:
+        expense: Expenses
+        income: Income
+      title: Categories
+      unarchive: Unarchive
+      unarchive_named: Unarchive “%{name}”
+    kinds:
+      expense: Expense
+      income: Income
+    new:
+      archived_namesake: "“%{name}” already exists, archived, at this level. You can unarchive it instead of creating another one."
+      title:
+        expense: New expense category
+        income: New income category
+      title_child: New subcategory
+      unarchive: Unarchive “%{name}”
+    report_groups:
+      essentials: Essentials
+      finance: Finance
+      growth: Growth
+      lifestyle: Lifestyle
+      other: Other
+      work: Work and business
+    update:
+      success: Category “%{name}” updated.

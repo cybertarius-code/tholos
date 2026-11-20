@@ -20,4 +20,10 @@ RSpec.describe "Navigation", type: :request do
       expect(response.body).to include(I18n.t("coming_soon.title"))
     end
   end
+
+  it "links to categories from settings" do
+    get settings_path
+
+    expect(response.body).to include(%(href="#{categories_path}"))
+  end
 end

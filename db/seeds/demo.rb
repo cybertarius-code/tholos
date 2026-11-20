@@ -24,3 +24,7 @@ end
 
 puts "Seed demo: usuario #{user.email_address} (id #{user.id})"
 puts "Seed demo: hogar #{household.name} (id #{household.id})"
+
+# Idempotente: completa las categorías por defecto si faltan (US-0103)
+created = household.seed_default_categories!
+puts "Seed demo: #{created} categorías por defecto creadas"

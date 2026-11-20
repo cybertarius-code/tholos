@@ -1,0 +1,139 @@
+---
+es:
+  activerecord:
+    attributes:
+      category:
+        color: Color
+        icon: Icono
+        kind: Tipo
+        name: Nombre
+        parent_id: Categoría principal
+        report_group: Grupo
+    errors:
+      models:
+        category:
+          attributes:
+            base:
+              has_movements: La categoría tiene movimientos. Archívala en su lugar.
+            kind:
+              locked: no se puede cambiar porque la categoría tiene movimientos o subcategorías
+            name:
+              taken: ya existe en este nivel
+            parent_id:
+              archived: está archivada
+              has_children: no se puede asignar porque esta categoría tiene subcategorías
+              kind_mismatch: debe ser del mismo tipo (gasto o ingreso)
+              too_deep: ya es una subcategoría; solo hay dos niveles
+            report_group:
+              present: solo se asigna a las categorías principales de gasto
+    models:
+      category:
+        one: Categoría
+        other: Categorías
+  categories:
+    archives:
+      create:
+        success: "«%{name}» archivada. Ya no se ofrece en los formularios."
+      destroy:
+        success: "«%{name}» desarchivada."
+    colors:
+      copper: Cobre
+      gold: Oro
+      green: Verde
+      navy: Azul marino
+      plum: Ciruela
+      red: Rojo
+      slate: Pizarra
+      teal: Verde azulado
+    create:
+      success: Categoría «%{name}» creada.
+    destroy:
+      in_use: No se puede borrar porque tiene subcategorías o movimientos. Archívala en su lugar.
+      success: Categoría «%{name}» borrada.
+    edit:
+      archive: Archivar
+      archive_confirm: Se archivarán también sus subcategorías. ¿Continuar?
+      danger_help: Archivar la oculta de los formularios y conserva sus movimientos. Solo se puede borrar si no tiene subcategorías ni movimientos.
+      danger_zone: Archivar o borrar
+      destroy: Borrar
+      destroy_confirm: "¿Borrar esta categoría? No se puede deshacer."
+      title: Editar «%{name}»
+      unarchive: Desarchivar
+    form:
+      cancel: Cancelar
+      kind_locked: El tipo no se puede cambiar porque la categoría tiene movimientos o subcategorías.
+      no_parent: "— Ninguna (es una categoría principal) —"
+      parent_help: Solo categorías principales de %{kind}.
+      parent_locked: Tiene subcategorías, así que debe seguir siendo una categoría principal.
+      report_group_help: Agrupa los informes (Esenciales, Estilo de vida…). Las subcategorías usan el de su categoría principal.
+      submit: Guardar categoría
+    icons:
+      bank: Banco
+      box: Caja
+      car: Coche
+      care: Cuidado personal
+      cart: Carrito
+      chart: Gráfico
+      clothes: Ropa
+      coffee: Café
+      document: Documento
+      education: Libros
+      family: Familia
+      gift: Regalo
+      health: Salud
+      home: Casa
+      invoice: Factura
+      leisure: Ocio
+      percent: Billetes
+      pet: Mascota
+      phone: Teléfono
+      plus: Más
+      restaurant: Restaurante
+      salary: Nómina
+      sport: Deporte
+      subscription: Suscripción
+      tag: Etiqueta
+      travel: Avión
+      work: Maletín
+    index:
+      add_child: "+ Subcategoría"
+      add_child_to: Añadir subcategoría a «%{name}»
+      archived:
+        one: Archivada (1)
+        other: Archivadas (%{count})
+      back: "← Ajustes"
+      children_of: Subcategorías de %{name}
+      edit: Editar
+      edit_named: Editar «%{name}»
+      empty: Aún no hay categorías.
+      intro: Las categorías principales pueden tener subcategorías. El orden se ve igual en los formularios.
+      move_down: Bajar «%{name}»
+      move_up: Subir «%{name}»
+      new:
+        expense: Nueva de gasto
+        income: Nueva de ingreso
+      sections:
+        expense: Gastos
+        income: Ingresos
+      title: Categorías
+      unarchive: Desarchivar
+      unarchive_named: Desarchivar «%{name}»
+    kinds:
+      expense: Gasto
+      income: Ingreso
+    new:
+      archived_namesake: Ya existe «%{name}» archivada en este nivel. Puedes desarchivarla en lugar de crear otra.
+      title:
+        expense: Nueva categoría de gasto
+        income: Nueva categoría de ingreso
+      title_child: Nueva subcategoría
+      unarchive: Desarchivar «%{name}»
+    report_groups:
+      essentials: Esenciales
+      finance: Finanzas
+      growth: Desarrollo
+      lifestyle: Estilo de vida
+      other: Otros
+      work: Trabajo y negocio
+    update:
+      success: Categoría «%{name}» actualizada.

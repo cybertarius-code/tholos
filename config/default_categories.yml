@@ -1,0 +1,28 @@
+# Categorías por defecto de cada hogar nuevo (ADR-0015, "Categorías por defecto").
+# Son datos del hogar, no textos de la UI: van en español y cada usuario los edita.
+# Iconos y colores: claves de Category::ICONS y Category::COLORS.
+expense:
+  - { name: "Alimentación", report_group: essentials, color: green, icon: cart }
+  - { name: "Vivienda y suministros", report_group: essentials, color: navy, icon: home }
+  - { name: "Hogar y familia", report_group: essentials, color: teal, icon: family }
+  - { name: "Transporte", report_group: essentials, color: slate, icon: car }
+  - { name: "Salud", report_group: essentials, color: red, icon: health }
+  - { name: "Mascotas", report_group: essentials, color: copper, icon: pet }
+  - { name: "Restaurantes", report_group: lifestyle, color: copper, icon: restaurant }
+  - { name: "Ocio", report_group: lifestyle, color: plum, icon: leisure }
+  - { name: "Viajes", report_group: lifestyle, color: teal, icon: travel }
+  - { name: "Suscripciones", report_group: lifestyle, color: navy, icon: subscription }
+  - { name: "Cuidado personal", report_group: lifestyle, color: plum, icon: care }
+  - { name: "Regalos y donaciones", report_group: lifestyle, color: red, icon: gift }
+  - { name: "Formación", report_group: growth, color: gold, icon: education }
+  - { name: "Gastos de trabajo", report_group: work, color: slate, icon: work }
+  - { name: "Comisiones bancarias", report_group: finance, color: navy, icon: bank }
+  - { name: "Intereses", report_group: finance, color: red, icon: percent }
+  - { name: "Trámites y legal", report_group: finance, color: slate, icon: document }
+  - { name: "Varios", report_group: other, color: slate, icon: box }
+income:
+  - { name: "Nómina", color: green, icon: salary }
+  - { name: "Trabajo por cuenta propia", color: teal, icon: invoice }
+  - { name: "Rendimientos (intereses y dividendos)", color: gold, icon: chart }
+  - { name: "Regalos recibidos", color: plum, icon: gift }
+  - { name: "Otros ingresos", color: slate, icon: plus }

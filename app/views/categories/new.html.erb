@@ -1,0 +1,18 @@
+<section class="rounded-xl border border-line bg-surface p-6 dark:bg-slate-900">
+  <h1 class="text-2xl font-semibold text-ink dark:text-slate-100">
+    <%= @category.parent_id? ? t(".title_child") : t(".title.#{@category.kind}") %>
+  </h1>
+
+  <% if @archived_namesake %>
+    <div class="mt-4 rounded-lg border border-line border-l-4 border-l-warning p-4" role="status">
+      <p class="text-sm text-ink"><%= t(".archived_namesake", name: @archived_namesake.name) %></p>
+      <%= form_with url: category_archive_path(@archived_namesake), method: :delete, class: "mt-3" do %>
+        <%= render ButtonComponent.new(variant: :secondary, size: :small, type: "submit") do %>
+          <%= t(".unarchive", name: @archived_namesake.name) %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= render "form", category: @category %>
+</section>

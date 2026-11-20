@@ -13,6 +13,15 @@
   --color-info: #1F4E79;
   --color-expense: #A8372C;
   --color-income: #2F684F;
+  /* Paleta cerrada de categorías (US-0103): ≥ 3:1 sobre la superficie */
+  --color-cat-navy: #1F4E79;
+  --color-cat-teal: #1D6B63;
+  --color-cat-green: #2F684F;
+  --color-cat-gold: #76540F;
+  --color-cat-copper: #A85630;
+  --color-cat-red: #A8372C;
+  --color-cat-plum: #6B3FA0;
+  --color-cat-slate: #475569;
 }
 
 :root {
@@ -32,6 +41,14 @@
   --color-info: #93c5fd;
   --color-expense: #fca5a5;
   --color-income: #6ee7b7;
+  --color-cat-navy: #93c5fd;
+  --color-cat-teal: #5eead4;
+  --color-cat-green: #6ee7b7;
+  --color-cat-gold: #fcd34d;
+  --color-cat-copper: #fdba74;
+  --color-cat-red: #fca5a5;
+  --color-cat-plum: #c4b5fd;
+  --color-cat-slate: #cbd5e1;
 }
 
 @source "../../components/**/*.{rb,erb}";
