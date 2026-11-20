@@ -13,7 +13,6 @@
 ActiveRecord::Schema[8.1].define(version: 2026_11_20_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
-  enable_extension "pg_catalog.plpgsql"
 
   create_table "accounts", force: :cascade do |t|
     t.bigint "household_id", null: false
@@ -31,6 +30,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_100000) do
     t.index ["household_id", "status"], name: "index_accounts_on_household_id_and_status"
     t.check_constraint "kind::text = ANY (ARRAY['checking'::character varying, 'savings'::character varying, 'cash'::character varying, 'ewallet'::character varying, 'credit_card'::character varying, 'loan'::character varying, 'investment'::character varying, 'other'::character varying]::text[])", name: "accounts_kind_check"
     t.check_constraint "status::text = ANY (ARRAY['open'::character varying, 'closed'::character varying]::text[])", name: "accounts_status_check"
+  end
 
   create_table "categories", force: :cascade do |t|
     t.bigint "household_id", null: false
