@@ -27,4 +27,10 @@ RSpec.describe "Navigation", type: :request do
     expect(response).to have_http_status(:ok)
     expect(response.body).not_to include(I18n.t("coming_soon.title"))
   end
+
+  it "links to categories from settings" do
+    get settings_path
+
+    expect(response.body).to include(%(href="#{categories_path}"))
+  end
 end

@@ -1,0 +1,75 @@
+<%= form_with model: category, class: "max-w-xl" do |form| %>
+  <% if category.errors[:base].any? %>
+    <p class="mb-4 text-sm text-error" role="alert"><%= category.errors[:base].to_sentence %></p>
+  <% end %>
+
+  <%= render FormFieldComponent.new(
+    form: form, attribute: :name, label: t("activerecord.attributes.category.name"),
+    error: category.errors[:name].first,
+    input_options: { required: true, maxlength: 60, autofocus: category.new_record?, autocomplete: "off" }
+  ) %>
+
+  <% if category.new_record? %>
+    <%= form.hidden_field :kind %>
+  <% elsif category.root? %>
+    <% locked = category.movements? || category.children.exists? %>
+    <%= render FormFieldComponent.new(
+      form: form, attribute: :kind, label: t("activerecord.attributes.category.kind"),
+      input_type: :select, choices: Category::KINDS.map { |kind| [ category_kind_label(kind), kind ] },
+      help_text: (t("categories.form.kind_locked") if locked),
+      error: category.errors[:kind].first,
+      input_options: { disabled: locked }
+    ) %>
+  <% end %>
+
+  <% parent_locked = category.persisted? && category.children.exists? %>
+  <%= render FormFieldComponent.new(
+    form: form, attribute: :parent_id, label: t("activerecord.attributes.category.parent_id"),
+    input_type: :select, choices: [ [ t("categories.form.no_parent"), "" ] ] + category_parent_options(category),
+    help_text: (parent_locked ? t("categories.form.parent_locked") : t("categories.form.parent_help", kind: category_kind_label(category.kind).downcase)),
+    error: category.errors[:parent_id].first,
+    input_options: { disabled: parent_locked }
+  ) %>
+
+  <% if category.expense? && category.root? %>
+    <%= render FormFieldComponent.new(
+      form: form, attribute: :report_group, label: t("activerecord.attributes.category.report_group"),
+      input_type: :select, choices: category_report_group_options,
+      help_text: t("categories.form.report_group_help"),
+      error: category.errors[:report_group].first
+    ) %>
+  <% end %>
+
+  <fieldset class="my-5">
+    <legend class="text-sm font-medium text-ink"><%= t("activerecord.attributes.category.color") %></legend>
+    <div class="mt-2 flex flex-wrap gap-2">
+      <% Category::COLORS.each do |color| %>
+        <label class="relative inline-flex size-11 cursor-pointer items-center justify-center rounded-full has-[:checked]:ring-2 has-[:checked]:ring-ink has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent">
+          <%= form.radio_button :color, color, class: "sr-only" %>
+          <span class="size-7 rounded-full <%= CategoryIconComponent::SWATCHES.fetch(color) %>" aria-hidden="true"></span>
+          <span class="sr-only"><%= category_color_label(color) %></span>
+        </label>
+      <% end %>
+    </div>
+    <% if category.errors[:color].any? %><p class="mt-1 text-sm text-error" role="alert"><%= category.errors[:color].first %></p><% end %>
+  </fieldset>
+
+  <fieldset class="my-5">
+    <legend class="text-sm font-medium text-ink"><%= t("activerecord.attributes.category.icon") %></legend>
+    <div class="mt-2 flex flex-wrap gap-1">
+      <% Category::ICONS.each do |key, emoji| %>
+        <label class="inline-flex size-11 cursor-pointer items-center justify-center rounded-md text-xl has-[:checked]:bg-stone-100 has-[:checked]:ring-2 has-[:checked]:ring-ink has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-accent dark:has-[:checked]:bg-slate-800">
+          <%= form.radio_button :icon, key, class: "sr-only" %>
+          <span aria-hidden="true"><%= emoji %></span>
+          <span class="sr-only"><%= t("categories.icons.#{key}") %></span>
+        </label>
+      <% end %>
+    </div>
+    <% if category.errors[:icon].any? %><p class="mt-1 text-sm text-error" role="alert"><%= category.errors[:icon].first %></p><% end %>
+  </fieldset>
+
+  <div class="flex flex-wrap gap-3">
+    <%= render ButtonComponent.new(type: "submit") do %><%= t("categories.form.submit") %><% end %>
+    <%= render ButtonComponent.new(variant: :secondary, href: categories_path) do %><%= t("categories.form.cancel") %><% end %>
+  </div>
+<% end %>

@@ -10,6 +10,12 @@ Rails.application.routes.draw do
   resources :accounts, path: "cuentas", path_names: { new: "nueva", edit: "editar" } do
     resource :closure, only: [ :create, :destroy ], path: "cierre", module: :accounts
   end
+  resources :categories, path: "ajustes/categorias", except: :show, path_names: { new: "nueva", edit: "editar" } do
+    scope module: :categories do
+      resource :archive, only: [ :create, :destroy ], path: "archivo"
+      resource :position, only: :update, path: "posicion"
+    end
+  end
   resources :homes, only: [ :index, :show ]
   resource :session
   resources :passwords, param: :token

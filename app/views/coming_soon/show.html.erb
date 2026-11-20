@@ -4,6 +4,9 @@
     <p class="mt-4">
       <%= link_to t("settings.security.title"), settings_sessions_path, class: "text-accent underline hover:no-underline" %>
     </p>
+    <p class="mt-2">
+      <%= link_to t("categories.index.title"), categories_path, class: "text-accent underline hover:no-underline" %>
+    </p>
     <div class="mt-6 max-w-sm">
       <label for="theme-preference" class="block text-sm font-medium text-ink"><%= t("settings.theme.label") %></label>
       <select id="theme-preference"
