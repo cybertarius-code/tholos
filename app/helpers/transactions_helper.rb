@@ -30,16 +30,17 @@ module TransactionsHelper
 
   # --- Lista de movimientos (US-0106) ---
 
-  def transaction_search_account_options
-    Current.household.accounts.ordered.map do |account|
+  def transaction_search_account_options(search)
+    search.accounts.map do |account|
       label = account.closed? ? t("transactions.index.closed_account", name: account.name) : account.name
       [ label, account.id ]
     end
   end
 
   # Un padre filtra también por sus hijas; las archivadas siguen para buscar en el histórico
-  def transaction_search_category_options(selected)
-    categories = Current.household.categories.ordered.to_a
+  def transaction_search_category_options(search)
+    categories = search.categories
+    selected = search.category&.id
     children = categories.reject(&:root?).group_by(&:parent_id)
 
     groups = categories.select(&:root?).map do |root|
@@ -64,17 +65,26 @@ module TransactionsHelper
   end
 
   # "Mercadona", "Alimentación", "Sin beneficiario" o "Transferencia a/desde"
-  def movement_title(transaction)
+  def movement_title(transaction, search)
     if transaction.transfer?
       transaction.amount_cents.negative? ? t("accounts.show.transfer_to") : t("accounts.show.transfer_from")
     else
-      transaction.payee.presence || transaction.category&.name || t("accounts.show.no_payee")
+      transaction.payee.presence || movement_category(transaction, search)&.name || t("accounts.show.no_payee")
     end
   end
 
   # La cuenta del otro lado de una transferencia
-  def transfer_counterpart_account(transaction)
-    transaction.transfer&.counterpart_of(transaction)&.account
+  def transfer_counterpart_account(transaction, search)
+    other = transaction.transfer&.counterpart_of(transaction)
+    search.accounts_by_id[other.account_id] if other
+  end
+
+  def movement_account(transaction, search)
+    search.accounts_by_id.fetch(transaction.account_id)
+  end
+
+  def movement_category(transaction, search)
+    search.categories_by_id[transaction.category_id] if transaction.category_id
   end
 
   def movement_badges(transaction)

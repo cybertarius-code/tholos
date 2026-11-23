@@ -10,12 +10,12 @@
     </div>
     <div class="min-w-0">
       <%= form.label :account_id, t(".account"), class: label_class %>
-      <%= form.select :account_id, [ [ t("transactions.index.any_account"), "" ] ] + transaction_search_account_options,
+      <%= form.select :account_id, [ [ t("transactions.index.any_account"), "" ] ] + transaction_search_account_options(search),
             { selected: search.account&.id }, class: field_class %>
     </div>
     <div class="min-w-0">
       <%= form.label :category_id, t(".category"), class: label_class %>
-      <%= form.select :category_id, transaction_search_category_options(search.category&.id), {}, class: field_class %>
+      <%= form.select :category_id, transaction_search_category_options(search), {}, class: field_class %>
     </div>
     <div class="min-w-0">
       <%= form.label :status, t(".status"), class: label_class %>

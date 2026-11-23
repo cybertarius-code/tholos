@@ -37,18 +37,31 @@ class TransactionSearch
     Date.strptime(month, "%Y-%m")
   end
 
-  def account
-    return if account_id.nil?
-    return @account if defined?(@account)
+  # Cuentas y categorías del hogar, cargadas una vez: sirven para los
+  # desplegables de filtros, las filas y el otro lado de las transferencias,
+  # sin una consulta por relación (presupuesto de US-0112: < 15 consultas)
+  def accounts
+    @accounts ||= household.accounts.ordered.to_a
+  end
 
-    @account = household.accounts.find_by(id: account_id)
+  def categories
+    @categories ||= household.categories.ordered.to_a
+  end
+
+  def accounts_by_id
+    @accounts_by_id ||= accounts.index_by(&:id)
+  end
+
+  def categories_by_id
+    @categories_by_id ||= categories.index_by(&:id)
+  end
+
+  def account
+    accounts_by_id[account_id] if account_id
   end
 
   def category
-    return if category_id.nil?
-    return @category if defined?(@category)
-
-    @category = household.categories.find_by(id: category_id)
+    categories_by_id[category_id] if category_id
   end
 
   def status
@@ -81,7 +94,7 @@ class TransactionSearch
   def results
     scope = base
       .where(date: month_start..month_start.end_of_month)
-      .includes(:account, :category, transfer: { legs: :account })
+      .includes(transfer: :legs)
       .order(date: :desc, id: :desc)
     scope = scope.where(category_id: category_ids) if category_id
     scope = scope.where(status: status) if status
@@ -112,6 +125,6 @@ class TransactionSearch
     def category_ids
       return [] unless category
 
-      [ category.id, *household.categories.where(parent_id: category.id).ids ]
+      [ category.id, *categories.select { |child| child.parent_id == category.id }.map(&:id) ]
     end
 end
