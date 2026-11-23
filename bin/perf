@@ -1,0 +1,170 @@
+#!/usr/bin/env ruby
+# Medición de rendimiento de las listas (US-0112).
+#
+# Arranca la app en RAILS_ENV=production en local, contra la BD de desarrollo
+# con el hogar "Rendimiento" (bin/rails perf:seed), entra con su usuario y hace
+# 50 peticiones por página. Saca el p95 de X-Runtime y falla si alguna página
+# llega a 200 ms. El número de consultas lo vigila un request spec de la suite
+# (spec/requests/performance_queries_spec.rb).
+#
+#   bin/perf                      # todas las páginas
+#   PERF_REQUESTS=100 bin/perf    # más peticiones
+#
+# No usa secretos: SECRET_KEY_BASE_DUMMY. Las BD de caché, cola y cable de
+# producción se sustituyen por tholos_perf_*, desechables.
+
+require "json"
+require "net/http"
+require "uri"
+require "open3"
+
+APP_ROOT = File.expand_path("..", __dir__)
+PORT = Integer(ENV.fetch("PERF_PORT", "3999"))
+REQUESTS = Integer(ENV.fetch("PERF_REQUESTS", "50"))
+WARMUP = 5
+BUDGET_MS = 200.0
+HOST = "tholos.cc" # config.hosts de producción
+PASSWORD = ENV.fetch("THOLOS_PERF_PASSWORD", "tholos-perf-local")
+DB_USER = ENV.fetch("PERF_DB_USER", ENV.fetch("USER"))
+DB_HOST = ENV.fetch("PERF_DB_HOST", "localhost")
+
+def database_url(name)
+  "postgres://#{DB_USER}@#{DB_HOST}/#{name}"
+end
+
+SERVER_ENV = {
+  "RAILS_ENV" => "production",
+  "SECRET_KEY_BASE_DUMMY" => "1",
+  "DATABASE_URL" => database_url(ENV.fetch("PERF_DATABASE", "tholos_development")),
+  "CACHE_DATABASE_URL" => database_url("tholos_perf_cache"),
+  "QUEUE_DATABASE_URL" => database_url("tholos_perf_queue"),
+  "CABLE_DATABASE_URL" => database_url("tholos_perf_cable"),
+  "RAILS_LOG_LEVEL" => "error",
+  "RAILS_MAX_THREADS" => "3",
+  "WEB_CONCURRENCY" => "0"
+}.freeze
+
+def run!(env, *command)
+  output, status = Open3.capture2e(env, *command, chdir: APP_ROOT)
+  abort "bin/perf: falló #{command.join(" ")}\n#{output}" unless status.success?
+  output
+end
+
+# IDs del hogar "Rendimiento", en desarrollo
+def fixture_ids
+  script = <<~RUBY
+    household = Household.find_by(name: PerformanceSeed::HOUSEHOLD_NAME)
+    abort "NO_SEED" unless household && Transaction.exists?(household_id: household.id)
+    account = Account.find_by!(household_id: household.id, name: "Corriente BBVA")
+    food = Category.find_by!(household_id: household.id, name: "Alimentación", parent_id: nil)
+    month = Transaction.where(household_id: household.id).where(date: ..Date.current).maximum(:date).strftime("%Y-%m")
+    puts({ account_id: account.id, category_id: food.id, month: month }.to_json)
+  RUBY
+  output, status = Open3.capture2e({ "RAILS_ENV" => "development" }, "bin/rails", "runner", script, chdir: APP_ROOT)
+  abort "bin/perf: no hay datos. Ejecuta antes bin/rails perf:seed" if output.include?("NO_SEED")
+  abort "bin/perf: no se pudieron leer los IDs\n#{output}" unless status.success?
+  JSON.parse(output.lines.last, symbolize_names: true)
+end
+
+# BD desechables de caché, cola y cable con su esquema (sin tocar la principal)
+def prepare_support_databases
+  env = SERVER_ENV.merge("DISABLE_DATABASE_ENVIRONMENT_CHECK" => "1")
+  %w[ cache queue cable ].each do |name|
+    run!(env, "bin/rails", "db:create:#{name}", "db:schema:load:#{name}")
+  end
+end
+
+def http
+  @http ||= Net::HTTP.new("127.0.0.1", PORT).tap { |connection| connection.read_timeout = 30 }
+end
+
+def request(method, path, cookie: nil, form: nil)
+  klass = method == :post ? Net::HTTP::Post : Net::HTTP::Get
+  request = klass.new(path, "Host" => HOST, "Accept" => "text/html")
+  request["Cookie"] = cookie if cookie
+  request.set_form_data(form) if form
+  http.request(request)
+end
+
+def start_server
+  log = File.join(APP_ROOT, "log/perf.log")
+  pid = Process.spawn(SERVER_ENV, "bin/rails", "server", "-p", PORT.to_s, "-b", "127.0.0.1",
+                      "-P", File.join(APP_ROOT, "tmp/pids/perf.pid"), chdir: APP_ROOT, out: log, err: log)
+  60.times do
+    sleep 0.5
+    return pid if (Net::HTTP.get_response(URI("http://127.0.0.1:#{PORT}/up")).code == "200" rescue false)
+    abort "bin/perf: el servidor no arrancó; mira log/perf.log" if Process.wait(pid, Process::WNOHANG)
+  end
+  abort "bin/perf: el servidor no respondió en 30 s; mira log/perf.log"
+end
+
+def cookie_from(response, previous = nil)
+  cookies = previous.to_s.split("; ").to_h { |pair| pair.split("=", 2) }
+  Array(response.get_fields("Set-Cookie")).each do |line|
+    name, value = line.split(";").first.split("=", 2)
+    cookies[name] = value
+  end
+  cookies.map { |name, value| "#{name}=#{value}" }.join("; ")
+end
+
+def sign_in
+  form_page = request(:get, "/session/new")
+  token = form_page.body[/name="authenticity_token" value="([^"]+)"/, 1] or abort "bin/perf: sin token CSRF en /session/new"
+  cookie = cookie_from(form_page)
+  response = request(:post, "/session", cookie: cookie,
+                     form: { "authenticity_token" => token, "email_address" => "perf@tholos.local", "password" => PASSWORD })
+  abort "bin/perf: no se pudo entrar (#{response.code}); ¿cambió THOLOS_PERF_PASSWORD?" unless response.code == "302" && response["Location"].to_s.include?("dashboard")
+  cookie_from(response, cookie)
+end
+
+def measure(path, cookie)
+  WARMUP.times { request(:get, path, cookie: cookie) }
+  runtimes = Array.new(REQUESTS) do
+    response = request(:get, path, cookie: cookie)
+    abort "bin/perf: #{path} respondió #{response.code}" unless response.code == "200"
+    Float(response["X-Runtime"]) * 1000
+  end.sort
+  { p50: percentile(runtimes, 50), p95: percentile(runtimes, 95), max: runtimes.last }
+end
+
+def percentile(sorted, rank)
+  sorted[((rank / 100.0) * sorted.size).ceil - 1]
+end
+
+ids = fixture_ids
+pages = {
+  "Movimientos" => "/movimientos?month=#{ids[:month]}",
+  "Movimientos, una cuenta (saldo acumulado)" => "/movimientos?month=#{ids[:month]}&account_id=#{ids[:account_id]}",
+  "Movimientos, cuenta + categoría + texto" =>
+    "/movimientos?month=#{ids[:month]}&account_id=#{ids[:account_id]}&category_id=#{ids[:category_id]}&q=mercadona",
+  "Movimientos, todo el texto (sin cuenta)" => "/movimientos?month=#{ids[:month]}&q=a",
+  "Cuentas" => "/cuentas",
+  "Detalle de una cuenta" => "/cuentas/#{ids[:account_id]}"
+}
+
+puts "bin/perf: preparando BD de apoyo y arrancando RAILS_ENV=production en :#{PORT}…"
+prepare_support_databases
+pid = start_server
+
+begin
+  cookie = sign_in
+  results = pages.transform_values { |path| measure(path, cookie) }
+
+  width = pages.keys.map(&:length).max
+  puts
+  puts format("%-#{width}s  %8s  %8s  %8s", "Página (#{REQUESTS} peticiones)", "p50", "p95", "máx")
+  results.each do |name, result|
+    mark = result[:p95] < BUDGET_MS ? "ok" : "SUPERA #{BUDGET_MS.to_i} ms"
+    puts format("%-#{width}s  %6.1f ms  %6.1f ms  %6.1f ms  %s", name, result[:p50], result[:p95], result[:max], mark)
+  end
+
+  slow = results.select { |_name, result| result[:p95] >= BUDGET_MS }
+  if slow.any?
+    puts "\nbin/perf: #{slow.size} página(s) con p95 >= #{BUDGET_MS.to_i} ms"
+    exit 1
+  end
+  puts "\nbin/perf: todas las páginas con p95 < #{BUDGET_MS.to_i} ms"
+ensure
+  Process.kill("TERM", pid) rescue nil
+  Process.wait(pid) rescue nil
+end
