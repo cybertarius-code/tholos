@@ -11,7 +11,7 @@ class AccountsController < ApplicationController
     @balance_cents = @account.balance_cents
     @projected_balance_cents = @account.projected_balance_cents
     # Provisional hasta US-0102 (detalle) y US-0106 (lista filtrada)
-    @transactions = @account.transactions.includes(:category).recent_first.limit(20)
+    @transactions = @account.transactions.includes(:category, transfer: { legs: :account }).recent_first.limit(20)
   end
 
   def new

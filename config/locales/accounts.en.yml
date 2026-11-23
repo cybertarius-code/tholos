@@ -46,12 +46,16 @@ en:
       destroy_confirm: Delete this account? This cannot be undone.
       edit: Edit
       new_transaction: New movement
+      new_transfer: New transfer
       'no': 'No'
       no_payee: No payee
       no_transactions: No movements yet.
+      pay_account: Pay
       projected: 'Projected:'
       reopen: Reopen account
       transactions: Latest movements
+      transfer_from: Transfer from
+      transfer_to: Transfer to
       'yes': 'Yes'
     statuses:
       closed: Closed

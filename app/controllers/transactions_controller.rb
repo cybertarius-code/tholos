@@ -1,5 +1,6 @@
 class TransactionsController < ApplicationController
   before_action :set_transaction, only: %i[ edit update destroy ]
+  before_action :redirect_transfer_leg, only: %i[ edit update ]
 
   def new
     @transaction = Current.household.transactions.new(
@@ -39,6 +40,11 @@ class TransactionsController < ApplicationController
   private
     def set_transaction
       @transaction = Current.household.transactions.find(params[:id])
+    end
+
+    # Un lado de una transferencia se edita desde la transferencia, con los dos a la vez
+    def redirect_transfer_leg
+      redirect_to edit_transfer_path(@transaction.transfer_id) if @transaction.transfer?
     end
 
     def transaction_params

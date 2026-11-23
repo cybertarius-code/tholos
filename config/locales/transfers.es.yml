@@ -1,0 +1,51 @@
+---
+es:
+  activerecord:
+    attributes:
+      transfer:
+        amount: Importe
+        date: Fecha
+        from_account_id: Desde
+        notes: Notas
+        to_account_id: Hacia
+    errors:
+      models:
+        transfer:
+          attributes:
+            amount:
+              must_be_positive: debe ser mayor que cero
+            base:
+              invalid_legs: No se pudo guardar la transferencia.
+              two_legs: Una transferencia tiene exactamente una salida y una entrada.
+              unbalanced: Los dos lados deben tener importes opuestos, la misma fecha y la misma moneda.
+            from_account_id:
+              closed: está cerrada
+            to_account_id:
+              closed: está cerrada
+              currency_mismatch: tiene otra moneda; las transferencias entre monedas llegarán más adelante
+              same_as_from: debe ser distinta de la de origen
+    models:
+      transfer:
+        one: Transferencia
+        other: Transferencias
+  transfers:
+    create:
+      success: Transferencia registrada.
+    destroy:
+      success: Transferencia borrada.
+    edit:
+      destroy: Borrar transferencia
+      destroy_confirm: "¿Borrar esta transferencia? Se borran sus dos movimientos. No se puede deshacer."
+      intro: Los cambios se aplican a los dos movimientos.
+      title: Editar transferencia
+    form:
+      amount_help: En positivo; sale de una cuenta y entra en la otra.
+      cancel: Cancelar
+      choose_account: Elige una cuenta
+      submit: Guardar transferencia
+      to_help: Para pagar la tarjeta, elige la tarjeta como destino.
+    new:
+      intro: Mueve dinero entre dos cuentas tuyas. No cuenta como gasto ni como ingreso.
+      title: Nueva transferencia
+    update:
+      success: Transferencia actualizada.
