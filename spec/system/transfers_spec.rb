@@ -73,6 +73,44 @@ RSpec.describe "Transfers", type: :system do
     expect(Transfer.count).to eq(0)
   end
 
+  it "edita una transferencia y cambia los dos lados" do
+    Transfer.record!(household: household, from: checking, to: savings, amount_cents: 30_000, date: Date.current)
+    sign_in
+    visit account_path(checking)
+
+    click_link I18n.t("accounts.show.transfer_to")
+    expect(page).to have_css("h1", text: I18n.t("transfers.edit.title"))
+    expect(page).to have_field("Importe", with: "300,00")
+    fill_in "Importe", with: "125,50"
+    fill_in "Notas", with: "Corregido"
+    click_button I18n.t("transfers.form.submit")
+
+    expect(page).to have_content(I18n.t("transfers.update.success"))
+    expect(page).to have_content("874,50 €")
+    click_link "Ahorro"
+    expect(page).to have_content("125,50 €")
+  end
+
+  it "muestra el error con monedas distintas o una cuenta cerrada y no guarda nada" do
+    create(:account, household: household, name: "Sabadell USD", currency: "USD")
+    closed = create(:account, household: household, name: "Vieja")
+    sign_in
+    visit new_transfer_path(account_id: checking.id)
+    select "Sabadell USD (USD)", from: "Hacia"
+    fill_in "Importe", with: "10"
+    click_button I18n.t("transfers.form.submit")
+    expect(page).to have_content(I18n.t("activerecord.errors.models.transfer.attributes.to_account_id.currency_mismatch"))
+
+    # Se cierra con el formulario ya abierto: el select aún la ofrece
+    select "Vieja (EUR)", from: "Hacia"
+    closed.update!(status: "closed")
+    fill_in "Importe", with: "10"
+    click_button I18n.t("transfers.form.submit")
+    expect(page).to have_content(I18n.t("activerecord.errors.models.transfer.attributes.to_account_id.closed"))
+
+    expect(Transaction.count).to eq(0)
+  end
+
   context "en móvil (390 px)" do
     before do
       page.driver.browser.execute_cdp(
