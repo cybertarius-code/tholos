@@ -39,6 +39,7 @@ es:
     new:
       title: Nueva cuenta
     show:
+      all_transactions: Ver todos con su saldo
       back: "← Cuentas"
       close: Cerrar cuenta
       close_with_balance_confirm: La cuenta tiene un saldo distinto de cero. ¿Cerrarla de todos modos?

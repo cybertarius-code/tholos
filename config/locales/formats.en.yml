@@ -2,6 +2,7 @@
 en:
   date:
     formats:
+      day: "%A, %B %-d, %Y"
       short: "%-d %b %Y"
   number:
     precision:

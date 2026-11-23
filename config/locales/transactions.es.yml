@@ -41,6 +41,15 @@ es:
       destroy: Borrar movimiento
       destroy_confirm: "¿Borrar este movimiento? No se puede deshacer."
       title: Editar movimiento
+    filters:
+      account: Cuenta
+      category: Categoría
+      clear: Quitar filtros
+      month: Mes
+      q: Texto
+      q_placeholder: Beneficiario o notas
+      status: Estado
+      submit: Filtrar
     form:
       amount_help: En positivo; el signo lo pone Gasto o Ingreso.
       cancel: Cancelar
@@ -50,6 +59,38 @@ es:
       no_category: Sin categoría
       status_help: Solo lo conciliado cuenta en el saldo actual; lo programado y lo pendiente, en el proyectado.
       submit: Guardar movimiento
+    index:
+      adjustment: Ajuste
+      any_account: Todas las cuentas
+      any_category: Todas las categorías
+      any_status: Todos los estados
+      archived: "%{name} (archivada)"
+      balance_after: 'Saldo:'
+      category_all: "%{name} (con subcategorías)"
+      closed_account: "%{name} (cerrada)"
+      columns:
+        account: Cuenta
+        amount: Importe
+        balance: Saldo
+        category: Categoría
+        description: Descripción
+      count:
+        one: 1 movimiento
+        other: "%{count} movimientos"
+      current_balance: 'Saldo actual de %{account}:'
+      empty_filtered_text: Prueba con otro mes o quita algún filtro.
+      empty_filtered_title: Ningún movimiento coincide con los filtros
+      empty_text: Los movimientos que registres este mes aparecerán aquí.
+      empty_title: No hay movimientos este mes
+      new_transaction: Nuevo movimiento
+      new_transfer: Nueva transferencia
+      next: Siguiente →
+      no_running_balance: 'Sin saldo acumulado: no está conciliado'
+      page: Página %{page} de %{last}
+      pagination: Páginas
+      previous: "← Anterior"
+      title: Movimientos
+      transfer: Transferencia
     new:
       title: Nuevo movimiento
     statuses:

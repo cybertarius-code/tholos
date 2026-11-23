@@ -1,0 +1,36 @@
+<%# Formulario GET: los filtros viajan en la URL y solo se recarga el Turbo Frame de la lista %>
+<% field_class = "mt-1 block w-full min-w-0 rounded-md border border-line bg-surface px-3 py-2 text-base text-ink shadow-sm focus:outline-blue-600 sm:text-sm" %>
+<% label_class = "block text-sm font-medium text-ink" %>
+<%= form_with url: transactions_path, method: :get, role: "search", class: "mt-6",
+      data: { turbo_frame: "transactions_list", turbo_action: "advance" } do |form| %>
+  <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+    <div class="min-w-0">
+      <%= form.label :month, t(".month"), class: label_class %>
+      <%= form.month_field :month, value: search.month, class: field_class %>
+    </div>
+    <div class="min-w-0">
+      <%= form.label :account_id, t(".account"), class: label_class %>
+      <%= form.select :account_id, [ [ t("transactions.index.any_account"), "" ] ] + transaction_search_account_options,
+            { selected: search.account&.id }, class: field_class %>
+    </div>
+    <div class="min-w-0">
+      <%= form.label :category_id, t(".category"), class: label_class %>
+      <%= form.select :category_id, transaction_search_category_options(search.category&.id), {}, class: field_class %>
+    </div>
+    <div class="min-w-0">
+      <%= form.label :status, t(".status"), class: label_class %>
+      <%= form.select :status, transaction_search_status_options, { selected: search.status }, class: field_class %>
+    </div>
+    <div class="min-w-0">
+      <%= form.label :q, t(".q"), class: label_class %>
+      <%= form.search_field :q, value: search.q, placeholder: t(".q_placeholder"), class: field_class %>
+    </div>
+  </div>
+  <div class="mt-3 flex flex-wrap items-center gap-3">
+    <%= render ButtonComponent.new(type: "submit", variant: :secondary) do %><%= t(".submit") %><% end %>
+    <% if search.filtered? %>
+      <%= link_to t(".clear"), transactions_path(month: search.month), class: "text-sm text-accent underline hover:no-underline",
+            data: { turbo_frame: "_top" } %>
+    <% end %>
+  </div>
+<% end %>

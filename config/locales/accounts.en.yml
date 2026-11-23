@@ -39,6 +39,7 @@ en:
     new:
       title: New account
     show:
+      all_transactions: See all with running balance
       back: "← Accounts"
       close: Close account
       close_with_balance_confirm: The account has a non-zero balance. Close it anyway?

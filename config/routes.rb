@@ -2,7 +2,6 @@ Rails.application.routes.draw do
   mount Lookbook::Engine, at: "/lookbook" if Rails.env.development?
   root "homes#index"
   get "dashboard", to: "dashboard#show", as: :dashboard
-  get "movimientos", to: "coming_soon#show", defaults: { section: "movements" }, as: :movements
   get "presupuesto", to: "coming_soon#show", defaults: { section: "budget" }, as: :budget
   get "metas", to: "coming_soon#show", defaults: { section: "goals" }, as: :goals
   get "patrimonio", to: "coming_soon#show", defaults: { section: "net_worth" }, as: :net_worth
@@ -10,8 +9,7 @@ Rails.application.routes.draw do
   resources :accounts, path: "cuentas", path_names: { new: "nueva", edit: "editar" } do
     resource :closure, only: [ :create, :destroy ], path: "cierre", module: :accounts
   end
-  # La lista (GET /movimientos) sigue en el placeholder hasta US-0106
-  resources :transactions, path: "movimientos", only: %i[ new create edit update destroy ],
+  resources :transactions, path: "movimientos", except: :show,
     path_names: { new: "nuevo", edit: "editar" }
   resources :transfers, path: "transferencias", only: %i[ new create edit update destroy ],
     path_names: { new: "nueva", edit: "editar" }

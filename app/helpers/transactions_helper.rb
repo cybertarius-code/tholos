@@ -27,4 +27,71 @@ module TransactionsHelper
   def transaction_status_options
     Transaction::STATUSES.reverse.map { |status| [ t("transactions.statuses.#{status}"), status ] }
   end
+
+  # --- Lista de movimientos (US-0106) ---
+
+  def transaction_search_account_options
+    Current.household.accounts.ordered.map do |account|
+      label = account.closed? ? t("transactions.index.closed_account", name: account.name) : account.name
+      [ label, account.id ]
+    end
+  end
+
+  # Un padre filtra también por sus hijas; las archivadas siguen para buscar en el histórico
+  def transaction_search_category_options(selected)
+    categories = Current.household.categories.ordered.to_a
+    children = categories.reject(&:root?).group_by(&:parent_id)
+
+    groups = categories.select(&:root?).map do |root|
+      options = [ root, *children.fetch(root.id, []) ].map do |category|
+        label = category.root? ? t("transactions.index.category_all", name: category.name) : category.name
+        label = t("transactions.index.archived", name: label) if category.archived?
+        tag.option(label, value: category.id, selected: category.id == selected)
+      end
+      tag.optgroup(safe_join(options), label: "#{root.name} · #{t("categories.kinds.#{root.kind}")}")
+    end
+
+    safe_join([ tag.option(t("transactions.index.any_category"), value: ""), *groups ])
+  end
+
+  def transaction_search_status_options
+    [ [ t("transactions.index.any_status"), "" ] ] + transaction_status_options
+  end
+
+  # Enlace a la edición: un lado de una transferencia se edita en la transferencia
+  def edit_movement_path(transaction)
+    transaction.transfer? ? edit_transfer_path(transaction.transfer_id) : edit_transaction_path(transaction)
+  end
+
+  # "Mercadona", "Alimentación", "Sin beneficiario" o "Transferencia a/desde"
+  def movement_title(transaction)
+    if transaction.transfer?
+      transaction.amount_cents.negative? ? t("accounts.show.transfer_to") : t("accounts.show.transfer_from")
+    else
+      transaction.payee.presence || transaction.category&.name || t("accounts.show.no_payee")
+    end
+  end
+
+  # La cuenta del otro lado de una transferencia
+  def transfer_counterpart_account(transaction)
+    transaction.transfer&.counterpart_of(transaction)&.account
+  end
+
+  def movement_badges(transaction)
+    badges = []
+    badges << render(BadgeComponent.new) { t("transactions.index.transfer") } if transaction.transfer?
+    badges << render(BadgeComponent.new) { t("transactions.index.adjustment") } if transaction.adjustment?
+    unless transaction.cleared?
+      variant = transaction.pending? ? :warning : :neutral
+      badges << render(BadgeComponent.new(variant: variant)) { t("transactions.statuses.#{transaction.status}") }
+    end
+    safe_join(badges, " ")
+  end
+
+  # Saldo después del movimiento: solo con una cuenta filtrada y en lo conciliado
+  def running_balance_for(transaction)
+    return unless transaction.has_attribute?(:running_balance_cents) && transaction.cleared?
+
+    transaction.running_balance_cents
+  end
 end
