@@ -1,0 +1,46 @@
+<section class="min-w-0 rounded-xl border border-line bg-surface p-4 sm:p-6 dark:bg-slate-900">
+  <h1 class="text-2xl font-semibold text-ink dark:text-slate-100">SPK-0007 · <%= @library %></h1>
+  <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+    <%= @account&.name %> · saldo de los últimos 90 días ·
+    <%= link_to "ECharts", spike_charts_path(lib: "echarts"), class: "text-accent underline" %> ·
+    <%= link_to "Chart.js", spike_charts_path(lib: "chartjs"), class: "text-accent underline" %> ·
+    <%= link_to "Sin gráfico", spike_charts_path(lib: "none"), class: "text-accent underline" %>
+  </p>
+
+  <% if @series.any? %>
+    <% label = "Saldo de #{@account.name} en los últimos 90 días: de #{number_to_currency(@series.first.last / 100.0)} a #{number_to_currency(@series.last.last / 100.0)}." %>
+    <figure class="mt-6">
+      <% case @library %>
+      <% when "echarts" %>
+        <div class="h-64 w-full" role="img" aria-label="<%= label %>"
+             data-controller="echarts-chart"
+             data-echarts-chart-series-value="<%= @series.to_json %>"
+             data-echarts-chart-currency-value="<%= @account.currency %>"
+             data-echarts-chart-label-value="<%= label %>"></div>
+      <% when "chartjs" %>
+        <div class="relative h-64 w-full" data-controller="chartjs-chart"
+             data-chartjs-chart-series-value="<%= @series.to_json %>"
+             data-chartjs-chart-currency-value="<%= @account.currency %>"
+             data-chartjs-chart-label-value="<%= label %>">
+          <canvas role="img" data-chartjs-chart-target="canvas"></canvas>
+        </div>
+      <% end %>
+      <figcaption class="mt-2 text-sm text-slate-600 dark:text-slate-400"><%= label %></figcaption>
+    </figure>
+
+    <%# Alternativa accesible: los mismos datos en una tabla, plegada %>
+    <details class="mt-4 text-sm">
+      <summary class="cursor-pointer text-accent underline">Ver los datos en una tabla</summary>
+      <table class="mt-2 w-full">
+        <caption class="sr-only">Saldo diario de <%= @account.name %></caption>
+        <thead><tr><th scope="col" class="text-left">Día</th><th scope="col" class="text-right">Saldo</th></tr></thead>
+        <tbody>
+          <% @series.each do |date, cents| %>
+            <tr><td><%= l(Date.iso8601(date), format: :short) %></td>
+                <td class="text-right"><%= render MoneyComponent.new(cents: cents, currency: @account.currency) %></td></tr>
+          <% end %>
+        </tbody>
+      </table>
+    </details>
+  <% end %>
+</section>
