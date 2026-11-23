@@ -43,6 +43,17 @@ RSpec.describe "Transfers", type: :request do
         .to eq([ [ checking.id, -30_000 ], [ savings.id, 30_000 ] ])
     end
 
+    it "POST de un pago de tarjeta deja la Visa a 0 € y no cuenta como gasto" do
+      visa = create(:account, :credit_card, household: household, name: "Visa", opening_balance_cents: -45_000)
+
+      post transfers_path, params: transfer_params(to: visa, amount: "450")
+
+      expect(response).to redirect_to(account_path(checking))
+      expect(visa.balance_cents).to eq(0)
+      expect(checking.balance_cents).to eq(55_000)
+      expect(Transaction.income_and_expense).to be_empty
+    end
+
     it "POST con la misma cuenta, otra moneda o una cuenta cerrada muestra el error y no guarda nada" do
       dollars = create(:account, household: household, currency: "USD")
       closed = create(:account, :closed, household: household)
