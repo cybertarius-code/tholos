@@ -6,8 +6,10 @@ en:
         amount: Amount
         category_id: Category
         concept: Description
+        counter_account_id: Transfer account
         date: Date
         decision: Decision
+        matched_transaction_id: Already recorded movement
     errors:
       models:
         import_row:
@@ -16,14 +18,24 @@ en:
               cannot_be_zero: can't be zero
             category_id:
               archived: is archived
+            counter_account_id:
+              closed: is closed
+              currency_mismatch: has a different currency
+            matched_transaction_id:
+              mismatch: does not have the same amount or is more than 7 days away
   imports:
     commits:
       create:
         failed: No movement was created. Row %{line} is not valid; fix it and confirm again.
+        linked:
+          one: 1 already recorded movement was linked.
+          other: "%{count} already recorded movements were linked."
         success:
           one: Statement confirmed. 1 movement was created.
           other: Statement confirmed. %{count} movements were created.
         undecided: 'These rows still need a decision: %{lines}. No movement was created.'
+      errors:
+        already_linked: The movement chosen as "already recorded" is already linked to another row.
     create:
       closed_account: The account is closed. Reopen it to import movements.
       success:
@@ -46,6 +58,8 @@ en:
       submit: Load statement
       title: Import a statement into %{name}
     row:
+      already_recorded: Already recorded
+      already_recorded_group: Already recorded (same amount, ± 7 days)
       amount: Amount
       balance: 'Balance:'
       before_cutoff: Before cutoff
@@ -57,8 +71,14 @@ en:
         expense: Expense
         income: Income
       line: Line %{line}
+      movement: Movement
       save: Save
       skip: Skip
+      transfer_from: Transfer from %{name}
+      transfer_from_group: Transfer from
+      transfer_movement: Transfer
+      transfer_to: Transfer to %{name}
+      transfer_to_group: Transfer to
       undecided: Undecided
     show:
       commit: Confirm

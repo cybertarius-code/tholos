@@ -6,8 +6,10 @@ es:
         amount: Importe
         category_id: Categoría
         concept: Concepto
+        counter_account_id: Cuenta de la transferencia
         date: Fecha
         decision: Decisión
+        matched_transaction_id: Movimiento ya registrado
     errors:
       models:
         import_row:
@@ -16,14 +18,24 @@ es:
               cannot_be_zero: no puede ser cero
             category_id:
               archived: está archivada
+            counter_account_id:
+              closed: está cerrada
+              currency_mismatch: tiene otra moneda
+            matched_transaction_id:
+              mismatch: no tiene el mismo importe o está a más de 7 días
   imports:
     commits:
       create:
         failed: No se ha creado ningún movimiento. La fila %{line} no es válida; corrígela y vuelve a confirmar.
+        linked:
+          one: Se ha enlazado 1 movimiento ya registrado.
+          other: Se han enlazado %{count} movimientos ya registrados.
         success:
           one: Extracto confirmado. Se ha creado 1 movimiento.
           other: Extracto confirmado. Se han creado %{count} movimientos.
         undecided: 'Faltan por decidir las filas: %{lines}. No se ha creado ningún movimiento.'
+      errors:
+        already_linked: El movimiento elegido como «ya registrado» ya está enlazado con otra fila.
     create:
       closed_account: La cuenta está cerrada. Reábrela para importar movimientos.
       success:
@@ -46,6 +58,8 @@ es:
       submit: Cargar extracto
       title: Importar un extracto en %{name}
     row:
+      already_recorded: Ya registrado
+      already_recorded_group: Ya registrado (mismo importe, ± 7 días)
       amount: Importe
       balance: 'Saldo:'
       before_cutoff: Anterior al corte
@@ -57,8 +71,14 @@ es:
         expense: Gasto
         income: Ingreso
       line: Línea %{line}
+      movement: Movimiento
       save: Guardar
       skip: Omitir
+      transfer_from: Transferencia desde %{name}
+      transfer_from_group: Transferencia desde
+      transfer_movement: Transferencia
+      transfer_to: Transferencia a %{name}
+      transfer_to_group: Transferencia a
       undecided: Sin decidir
     show:
       commit: Confirmar

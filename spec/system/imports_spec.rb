@@ -21,7 +21,7 @@ RSpec.describe "Imports", type: :system do
   end
 
   def within_line(line, &)
-    row = ImportRow.find_by!(line: line)
+    row = ImportRow.where(line: line).order(:id).last!
     within("turbo-frame#import_row_#{row.id}", &)
   end
 
@@ -59,6 +59,33 @@ RSpec.describe "Imports", type: :system do
     expect(page).to have_current_path(account_path(account))
     expect(page).to have_content("Farmacia")
     expect(page).to have_content("1.047,60 €")
+  end
+
+  it "importa la corriente con un traspaso al ahorro y después el extracto del ahorro con «ya registrado» (US-0114)" do
+    savings = create(:account, household: household, name: "Ahorro", opening_date: Date.new(2026, 1, 1))
+    sign_in
+
+    travel_to(Date.new(2026, 1, 20)) do
+      visit new_account_import_path(account)
+      attach_file "Extracto", file_fixture("sabadell_traspaso.txt")
+      click_button I18n.t("imports.new.submit")
+      expect(page).to have_content("Extracto cargado con 2 filas")
+      decide(1, "Ahorro")
+      decide(2, "Restaurantes")
+      click_button I18n.t("imports.show.commit")
+      expect(page).to have_content("Se han creado 3 movimientos")
+
+      visit new_account_import_path(savings)
+      attach_file "Extracto", file_fixture("sabadell_ahorro.txt")
+      click_button I18n.t("imports.new.submit")
+      expect(page).to have_content("Extracto cargado con 1 fila")
+      decide(1, "10 ene 2026 · PARA AHORRO SABADELL · 300,00 €")
+      click_button I18n.t("imports.show.commit")
+      expect(page).to have_content("Se han creado 0 movimientos. Se ha enlazado 1 movimiento ya registrado.")
+    end
+
+    expect(Transfer.count).to eq(1)
+    expect(Transaction.where(account: savings).pluck(:import_ref)).to all(be_present)
   end
 
   context "en móvil (390 px)" do

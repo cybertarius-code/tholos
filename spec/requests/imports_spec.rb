@@ -118,4 +118,61 @@ RSpec.describe "Imports", type: :request do
       expect(response.body).to include(new_account_import_path(account), I18n.t("accounts.show.import_statement"))
     end
   end
+
+  describe "transferencias y ya registrado (US-0114)" do
+    before { sign_in_as(user) }
+
+    around { |example| travel_to(Date.new(2026, 1, 20)) { example.run } }
+
+    def options_for(row)
+      Nokogiri::HTML(response.body).css("turbo-frame#import_row_#{row.id} select option").to_h { |option| [ option["value"], option.text ] }
+    end
+
+    it "la transferencia solo ofrece cuentas activas del hogar, de la misma moneda y distintas de la importada" do
+      savings = create(:account, household: household, name: "Ahorro")
+      create(:account, household: household, name: "Cuenta en dólares", currency: "USD")
+      create(:account, :closed, household: household, name: "Cerrada")
+      create(:account, name: "De otro hogar")
+      upload("sabadell_traspaso.txt")
+      import = Import.last
+
+      get account_import_path(account, import)
+
+      options = options_for(rows_of(import).first)
+      transfer_options = options.select { |value, _| value.start_with?("transfer:") }
+      expect(transfer_options).to eq("transfer:#{savings.id}" => "Ahorro")
+      expect(response.body).to include("Transferencia a")
+    end
+
+    it "ya registrado solo ofrece movimientos de esta cuenta con el mismo importe, sin huella y a ± 7 días" do
+      match = create(:transaction, account: account, amount_cents: -30_000, date: Date.new(2026, 1, 15), payee: "Traspaso a mano")
+      create(:transaction, account: account, amount_cents: -30_000, date: Date.new(2026, 1, 18))
+      create(:transaction, account: account, amount_cents: -29_999, date: Date.new(2026, 1, 10))
+      create(:transaction, account: account, amount_cents: -30_000, date: Date.new(2026, 1, 10), import_ref: "ya-importado")
+      create(:transaction, account: create(:account, household: household), amount_cents: -30_000, date: Date.new(2026, 1, 10))
+      upload("sabadell_traspaso.txt")
+      import = Import.last
+      row = rows_of(import).first
+
+      get account_import_path(account, import)
+
+      recorded = options_for(row).select { |value, _| value.start_with?("recorded:") }
+      expect(recorded.keys).to eq([ "recorded:#{match.id}" ])
+      expect(recorded.values.first).to include("Traspaso a mano")
+
+      patch import_row_path(row), params: { import_row: { decision: "recorded:#{match.id}" } }
+      expect(response).to have_http_status(:ok)
+      expect(row.reload.matched_transaction_id).to eq(match.id)
+    end
+
+    it "rechaza una cuenta de otro hogar al guardar la fila" do
+      upload("sabadell_traspaso.txt")
+      row = rows_of(Import.last).first
+
+      patch import_row_path(row), params: { import_row: { decision: "transfer:#{create(:account).id}" } }
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(row.reload.counter_account_id).to be_nil
+    end
+  end
 end

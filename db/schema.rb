@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_24_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_24_110000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -77,9 +77,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_24_100000) do
     t.text "commit_error"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "counter_account_id"
+    t.bigint "matched_transaction_id"
     t.index ["category_id"], name: "index_import_rows_on_category_id"
+    t.index ["counter_account_id"], name: "index_import_rows_on_counter_account_id"
     t.index ["import_id", "line"], name: "index_import_rows_on_import_id_and_line", unique: true
-    t.check_constraint "NOT (skipped AND category_id IS NOT NULL)", name: "import_rows_skipped_sin_categoria"
+    t.index ["matched_transaction_id"], name: "index_import_rows_on_matched_transaction_id"
+    t.check_constraint "(skipped::integer + num_nonnulls(category_id, counter_account_id, matched_transaction_id)) <= 1", name: "import_rows_una_decision"
     t.check_constraint "proposal::text = ANY (ARRAY['none'::character varying, 'duplicate'::character varying, 'before_cutoff'::character varying]::text[])", name: "import_rows_proposal_check"
   end
 
@@ -159,8 +163,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_24_100000) do
   add_foreign_key "accounts", "households"
   add_foreign_key "categories", "categories", column: ["parent_id", "kind"], primary_key: ["id", "kind"], name: "categories_parent_kind_fk", on_delete: :restrict
   add_foreign_key "categories", "households"
+  add_foreign_key "import_rows", "accounts", column: "counter_account_id", on_delete: :nullify
   add_foreign_key "import_rows", "categories", on_delete: :nullify
   add_foreign_key "import_rows", "imports", on_delete: :cascade
+  add_foreign_key "import_rows", "transactions", column: "matched_transaction_id", on_delete: :nullify
   add_foreign_key "imports", "accounts", column: ["account_id", "household_id"], primary_key: ["id", "household_id"], name: "imports_account_household_fk", on_delete: :restrict
   add_foreign_key "imports", "households"
   add_foreign_key "memberships", "households"
