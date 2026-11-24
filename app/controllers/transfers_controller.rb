@@ -1,4 +1,6 @@
 class TransfersController < ApplicationController
+  layout :modal_layout
+
   before_action :set_transfer, only: %i[ edit update destroy ]
 
   def new
@@ -9,6 +11,9 @@ class TransfersController < ApplicationController
     @transfer = Current.household.transfers.new(transfer_params)
 
     if @transfer.save
+      remember_last_account(@transfer.from_account_id)
+      return close_modal_and_refresh(t(".success")) if modal_request?
+
       redirect_to account_path(@transfer.from_account_id), success: t(".success")
     else
       render :new, status: :unprocessable_content
@@ -41,10 +46,10 @@ class TransfersController < ApplicationController
       params.expect(transfer: %i[ from_account_id to_account_id amount_input date notes ])
     end
 
-    # Desde la ficha de una cuenta: es el origen, salvo en tarjetas y préstamos,
-    # donde lo normal es pagarlas (el destino)
+    # Desde la ficha de una cuenta (o, si no, la última usada): es el origen, salvo en
+    # tarjetas y préstamos, donde lo normal es pagarlas (el destino)
     def preselected_accounts
-      account = Current.household.accounts.open.find_by(id: params[:account_id])
+      account = Current.household.accounts.open.find_by(id: params[:account_id] || cookies.signed[:last_account_id])
       return {} unless account
 
       account.liability? ? { to_account_id: account.id } : { from_account_id: account.id }

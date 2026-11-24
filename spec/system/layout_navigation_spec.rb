@@ -20,7 +20,7 @@ RSpec.describe "Layout navigation", type: :system do
       expect(page).to have_css('aside nav a', text: label, visible: true)
     end
     expect(page).to have_css('aside nav a[aria-current="page"]', text: "Dashboard")
-    expect(page).to have_button(I18n.t("navigation.quick_movement"), disabled: true)
+    expect(page).to have_link(I18n.t("navigation.quick_movement"), href: new_transaction_path)
   end
 
   it "shows the mobile navigation and more menu without horizontal scrolling" do
@@ -29,7 +29,7 @@ RSpec.describe "Layout navigation", type: :system do
 
     expect(page).to have_css('nav[aria-label="Principal"]', visible: true)
     expect(page).to have_css("nav summary", text: I18n.t("navigation.more"), visible: true)
-    expect(page).to have_button(I18n.t("navigation.quick_movement"), disabled: true)
+    expect(page).to have_link(I18n.t("navigation.quick_movement"), href: new_transaction_path)
     expect(page.evaluate_script("document.documentElement.scrollWidth <= window.innerWidth")).to be(true)
 
     find("nav summary", text: I18n.t("navigation.more")).click

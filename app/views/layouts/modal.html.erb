@@ -1,0 +1,23 @@
+<%# Formularios de "+ Movimiento" (US-0109) dentro del Turbo Frame "modal" del layout.
+    <dialog> nativo: atrapa el foco y se cierra con Escape; el controlador modal hace el resto. %>
+<%= turbo_frame_tag "modal" do %>
+  <dialog data-controller="modal" data-modal-opener-value="quick_movement"
+          data-action="close->modal#closed" aria-labelledby="modal_title"
+          class="m-0 h-dvh max-h-none w-full max-w-none overflow-y-auto bg-surface p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] text-ink backdrop:bg-slate-950/50
+                 dark:bg-slate-900 sm:m-auto sm:h-auto sm:max-h-[90dvh] sm:max-w-xl sm:rounded-xl sm:border sm:border-line sm:p-6">
+    <div class="mb-4 flex items-center justify-between gap-4">
+      <h2 id="modal_title" class="text-xl font-semibold text-ink dark:text-slate-100"><%= t("quick_movement.title") %></h2>
+      <button type="button" data-action="modal#close" aria-label="<%= t("quick_movement.close") %>"
+              class="-m-2 inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-ink/70 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink">
+        <svg class="size-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+             stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <%= render "shared/movement_tabs", active: controller_name == "transfers" ? "transfer" : @transaction.direction %>
+
+    <%= yield %>
+  </dialog>
+<% end %>

@@ -3,6 +3,8 @@ class TransactionsController < ApplicationController
 
   PER_PAGE = 50
 
+  layout :modal_layout
+
   before_action :set_transaction, only: %i[ edit update destroy ]
   before_action :redirect_transfer_leg, only: %i[ edit update ]
 
@@ -18,7 +20,8 @@ class TransactionsController < ApplicationController
       date: Date.current,
       status: :cleared,
       direction: params[:direction].presence_in(Transaction::DIRECTIONS) || "expense",
-      account_id: Current.household.accounts.open.find_by(id: params[:account_id])&.id
+      # Si no viene de la ficha de una cuenta, la última usada (se ignora si ya está cerrada)
+      account_id: Current.household.accounts.open.find_by(id: params[:account_id] || cookies.signed[:last_account_id])&.id
     )
   end
 
@@ -26,6 +29,9 @@ class TransactionsController < ApplicationController
     @transaction = Current.household.transactions.new(transaction_params)
 
     if @transaction.save
+      remember_last_account(@transaction.account_id)
+      return close_modal_and_refresh(t(".success")) if modal_request?
+
       redirect_to account_path(@transaction.account_id), success: t(".success")
     else
       render :new, status: :unprocessable_content

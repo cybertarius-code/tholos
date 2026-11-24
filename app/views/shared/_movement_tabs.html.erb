@@ -1,0 +1,13 @@
+<%# Pestañas del modal "+ Movimiento": enlaces que navegan dentro del frame %>
+<nav aria-label="<%= t("quick_movement.tabs.label") %>" class="mb-5 grid grid-cols-3 gap-1 rounded-lg border border-line p-1">
+  <% [ [ "expense", t("quick_movement.tabs.expense"), new_transaction_path(direction: "expense") ],
+       [ "income", t("quick_movement.tabs.income"), new_transaction_path(direction: "income") ],
+       [ "transfer", t("quick_movement.tabs.transfer"), new_transfer_path ] ].each do |tab, label, path| %>
+    <%= link_to label, path,
+          aria: { current: ("page" if tab == active) },
+          class: "flex min-h-11 items-center justify-center rounded-md text-sm font-medium text-ink hover:bg-stone-100
+                  focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent dark:hover:bg-slate-800
+                  aria-[current=page]:bg-ink aria-[current=page]:text-white
+                  dark:aria-[current=page]:bg-slate-100 dark:aria-[current=page]:text-slate-900" %>
+  <% end %>
+</nav>

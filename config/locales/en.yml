@@ -22,7 +22,16 @@ en:
     net_worth: Net worth
     primary: Main
     quick_movement: "+ Movement"
+    quick_movement_shortcut: 'Shortcut: n'
     settings: Settings
+  quick_movement:
+    close: Close
+    tabs:
+      expense: Expense
+      income: Income
+      label: Movement type
+      transfer: Transfer
+    title: New movement
   settings:
     passwords:
       confirm_label: Confirm new password

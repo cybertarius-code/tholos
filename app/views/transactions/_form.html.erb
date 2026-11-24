@@ -3,6 +3,10 @@
     <p class="mb-4 text-sm text-error" role="alert"><%= transaction.errors[:base].to_sentence %></p>
   <% end %>
 
+  <% if modal_request? %>
+    <%# En el modal, Gasto/Ingreso son las pestañas de arriba %>
+    <%= form.hidden_field :direction, data: { transaction_form_target: "direction" } %>
+  <% else %>
   <fieldset class="my-5">
     <legend class="sr-only"><%= t("transactions.form.direction") %></legend>
     <div class="grid grid-cols-2 gap-1 rounded-lg border border-line p-1">
@@ -16,6 +20,7 @@
       <% end %>
     </div>
   </fieldset>
+  <% end %>
 
   <div class="grid gap-x-4 sm:grid-cols-2">
     <%= render FormFieldComponent.new(
@@ -67,9 +72,13 @@
 
   <div class="flex flex-wrap gap-3">
     <%= render ButtonComponent.new(type: "submit") do %><%= t("transactions.form.submit") %><% end %>
-    <%= render ButtonComponent.new(variant: :secondary,
-          href: transaction.account_id? ? account_path(transaction.account_id) : accounts_path) do %>
-      <%= t("transactions.form.cancel") %>
+    <% if modal_request? %>
+      <%= render ButtonComponent.new(variant: :secondary, data: { action: "modal#close" }) do %><%= t("transactions.form.cancel") %><% end %>
+    <% else %>
+      <%= render ButtonComponent.new(variant: :secondary,
+            href: transaction.account_id? ? account_path(transaction.account_id) : accounts_path) do %>
+        <%= t("transactions.form.cancel") %>
+      <% end %>
     <% end %>
   </div>
 <% end %>
