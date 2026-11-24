@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_20_110200) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_24_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -63,6 +63,39 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_110200) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "import_rows", force: :cascade do |t|
+    t.bigint "import_id", null: false
+    t.integer "line", null: false
+    t.date "date", null: false
+    t.string "concept", null: false
+    t.bigint "amount_cents", null: false
+    t.bigint "balance_cents", null: false
+    t.string "import_ref", null: false
+    t.string "proposal", default: "none", null: false
+    t.boolean "skipped", default: false, null: false
+    t.bigint "category_id"
+    t.text "commit_error"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_import_rows_on_category_id"
+    t.index ["import_id", "line"], name: "index_import_rows_on_import_id_and_line", unique: true
+    t.check_constraint "NOT (skipped AND category_id IS NOT NULL)", name: "import_rows_skipped_sin_categoria"
+    t.check_constraint "proposal::text = ANY (ARRAY['none'::character varying, 'duplicate'::character varying, 'before_cutoff'::character varying]::text[])", name: "import_rows_proposal_check"
+  end
+
+  create_table "imports", force: :cascade do |t|
+    t.bigint "household_id", null: false
+    t.bigint "account_id", null: false
+    t.string "status", default: "staged", null: false
+    t.string "filename"
+    t.datetime "confirmed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_imports_on_account_id"
+    t.index ["household_id"], name: "index_imports_on_household_id"
+    t.check_constraint "status::text = ANY (ARRAY['staged'::character varying, 'confirmed'::character varying]::text[])", name: "imports_status_check"
+  end
+
   create_table "memberships", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "household_id", null: false
@@ -97,10 +130,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_110200) do
     t.boolean "adjustment", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "import_ref"
     t.index "transfer_id, ((amount_cents > 0))", name: "transactions_un_lado_por_signo", unique: true, where: "(transfer_id IS NOT NULL)"
     t.index ["account_id", "date"], name: "index_transactions_on_account_id_and_date"
     t.index ["category_id", "date"], name: "index_transactions_on_category_id_and_date"
     t.index ["household_id", "date"], name: "index_transactions_on_household_id_and_date"
+    t.index ["import_ref"], name: "index_transactions_on_import_ref", unique: true
     t.check_constraint "amount_cents <> 0", name: "transactions_importe_no_cero"
     t.check_constraint "num_nonnulls(transfer_id, NULLIF(adjustment, false), category_id) <= 1", name: "transactions_un_solo_tipo"
     t.check_constraint "status::text = ANY (ARRAY['scheduled'::character varying, 'pending'::character varying, 'cleared'::character varying]::text[])", name: "transactions_status_check"
@@ -124,6 +159,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_110200) do
   add_foreign_key "accounts", "households"
   add_foreign_key "categories", "categories", column: ["parent_id", "kind"], primary_key: ["id", "kind"], name: "categories_parent_kind_fk", on_delete: :restrict
   add_foreign_key "categories", "households"
+  add_foreign_key "import_rows", "categories", on_delete: :nullify
+  add_foreign_key "import_rows", "imports", on_delete: :cascade
+  add_foreign_key "imports", "accounts", column: ["account_id", "household_id"], primary_key: ["id", "household_id"], name: "imports_account_household_fk", on_delete: :restrict
+  add_foreign_key "imports", "households"
   add_foreign_key "memberships", "households"
   add_foreign_key "memberships", "users"
   add_foreign_key "sessions", "users"

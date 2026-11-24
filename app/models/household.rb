@@ -5,6 +5,7 @@ class Household < ApplicationRecord
   has_many :categories
   has_many :transactions
   has_many :transfers
+  has_many :imports
 
   validates :name, presence: true
   validates :base_currency, presence: true, format: { with: /\A[A-Z]{3}\z/, message: "must be a valid ISO 4217 currency code" }

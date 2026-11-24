@@ -59,6 +59,7 @@
         <%= @account.liability? ? t(".pay_account") : t(".new_transfer") %>
       <% end %>
       <%= render ButtonComponent.new(variant: :secondary, href: new_account_adjustment_path(@account)) do %><%= t(".adjust_balance") %><% end %>
+      <%= render ButtonComponent.new(variant: :secondary, href: new_account_import_path(@account)) do %><%= t(".import_statement") %><% end %>
     <% end %>
     <%= render ButtonComponent.new(variant: :secondary, href: edit_account_path(@account)) do %><%= t(".edit") %><% end %>
 

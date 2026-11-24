@@ -74,6 +74,7 @@ en:
       destroy: Delete
       destroy_confirm: Delete this account? This cannot be undone.
       edit: Edit
+      import_statement: Import statement
       new_transaction: New movement
       new_transfer: New transfer
       'no': 'No'

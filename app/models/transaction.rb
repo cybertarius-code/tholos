@@ -24,6 +24,8 @@ class Transaction < ApplicationRecord
   constraint_error "transactions_account_household_fk", :account_id, :invalid
   constraint_error "transactions_account_currency_fk", :currency, :mismatch
   constraint_error "transactions_category_household_fk", :category_id, :invalid
+  # Huella de una fila importada (US-0113): una fila del banco, un movimiento
+  constraint_error "index_transactions_on_import_ref", :import_ref, :taken
 
   normalizes :payee, with: ->(payee) { payee.squish.presence }
   normalizes :notes, with: ->(notes) { notes.strip.presence }

@@ -9,11 +9,16 @@ Rails.application.routes.draw do
   resources :accounts, path: "cuentas", path_names: { new: "nueva", edit: "editar" } do
     resource :closure, only: [ :create, :destroy ], path: "cierre", module: :accounts
     resource :adjustment, only: [ :new, :create ], path: "ajuste", path_names: { new: "nuevo" }, module: :accounts
+    resources :imports, only: [ :new, :create, :show ], path: "importaciones", path_names: { new: "nueva" }
   end
   resources :transactions, path: "movimientos", except: :show,
     path_names: { new: "nuevo", edit: "editar" }
   resources :transfers, path: "transferencias", only: %i[ new create edit update destroy ],
     path_names: { new: "nueva", edit: "editar" }
+  resources :import_rows, only: :update, path: "filas-importadas"
+  resources :imports, only: [] do
+    resource :commit, only: :create, path: "confirmar", module: :imports
+  end
   resources :categories, path: "ajustes/categorias", except: :show, path_names: { new: "nueva", edit: "editar" } do
     scope module: :categories do
       resource :archive, only: [ :create, :destroy ], path: "archivo"

@@ -1,0 +1,71 @@
+---
+es:
+  activerecord:
+    attributes:
+      import_row:
+        amount: Importe
+        category_id: Categoría
+        concept: Concepto
+        date: Fecha
+        decision: Decisión
+    errors:
+      models:
+        import_row:
+          attributes:
+            amount:
+              cannot_be_zero: no puede ser cero
+            category_id:
+              archived: está archivada
+  imports:
+    commits:
+      create:
+        failed: No se ha creado ningún movimiento. La fila %{line} no es válida; corrígela y vuelve a confirmar.
+        success:
+          one: Extracto confirmado. Se ha creado 1 movimiento.
+          other: Extracto confirmado. Se han creado %{count} movimientos.
+        undecided: 'Faltan por decidir las filas: %{lines}. No se ha creado ningún movimiento.'
+    create:
+      closed_account: La cuenta está cerrada. Reábrela para importar movimientos.
+      success:
+        one: Extracto cargado con 1 fila. Revísala y confirma; hasta entonces no cuenta.
+        other: Extracto cargado con %{count} filas. Revísalas y confirma; hasta entonces no cuentan.
+    new:
+      back: "← %{name}"
+      cancel: Cancelar
+      error_line: 'Línea %{line}: %{message}'
+      errors_title:
+        one: No se ha cargado nada. El fichero tiene 1 error
+        other: No se ha cargado nada. El fichero tiene %{count} errores
+      file: Extracto
+      file_help: El .txt que descarga Sabadell desde la banca online («Movimientos de cuenta»). No se guarda.
+      intro: Sube el extracto, revisa cada fila y confirma. Nada cuenta en el saldo ni en los informes hasta confirmar.
+      problems:
+        missing_file: Elige el fichero del extracto.
+        too_big: El fichero es demasiado grande para ser un extracto.
+        wrong_format: Este fichero no parece un extracto de Sabadell (un .txt con los campos separados por «|», en Windows-1252). No se ha cargado nada.
+      submit: Cargar extracto
+      title: Importar un extracto en %{name}
+    row:
+      amount: Importe
+      balance: 'Saldo:'
+      before_cutoff: Anterior al corte
+      concept: Concepto
+      date: Fecha
+      decision: Es…
+      duplicate: Duplicada
+      kinds:
+        expense: Gasto
+        income: Ingreso
+      line: Línea %{line}
+      save: Guardar
+      skip: Omitir
+      undecided: Sin decidir
+    show:
+      commit: Confirmar
+      committed: Confirmado
+      help: Corrige el concepto, la fecha o el importe si hace falta y decide cada fila. Guarda cada fila y, cuando estén todas, confirma.
+      rows:
+        one: 1 fila
+        other: "%{count} filas"
+      rows_label: Filas del extracto
+      title: Extracto de %{name}

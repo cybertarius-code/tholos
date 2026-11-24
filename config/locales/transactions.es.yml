@@ -8,6 +8,7 @@ es:
         category_id: Categoría
         currency: Moneda
         date: Fecha
+        import_ref: Fila del extracto
         notes: Notas
         payee: Beneficiario
         status: Estado

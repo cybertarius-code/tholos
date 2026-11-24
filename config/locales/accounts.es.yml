@@ -74,6 +74,7 @@ es:
       destroy: Borrar
       destroy_confirm: "¿Borrar esta cuenta? No se puede deshacer."
       edit: Editar
+      import_statement: Importar extracto
       new_transaction: Nuevo movimiento
       new_transfer: Nueva transferencia
       'no': 'No'

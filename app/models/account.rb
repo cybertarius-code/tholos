@@ -6,6 +6,7 @@ class Account < ApplicationRecord
 
   belongs_to :household
   has_many :transactions, dependent: :restrict_with_error
+  has_many :imports, dependent: :delete_all
 
   # La BD rechaza cambiar la moneda si hay movimientos (FK compuesta de transactions)
   constraint_error "transactions_account_currency_fk", :currency, :locked

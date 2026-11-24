@@ -8,6 +8,7 @@ en:
         category_id: Category
         currency: Currency
         date: Date
+        import_ref: Statement row
         notes: Notes
         payee: Payee
         status: Status
