@@ -1,0 +1,10 @@
+<%# Totales del grupo por moneda (sin conversión hasta F6) %>
+<p class="text-sm text-slate-600 dark:text-slate-400">
+  <% Account.totals_by_currency(accounts, balances).each_with_index do |(currency, (current, projected)), index| %>
+    <%= " · " unless index.zero? %>
+    <span class="whitespace-nowrap" data-total="<%= currency %>">
+      <span class="font-semibold"><%= render MoneyComponent.new(cents: current, currency: currency) %></span>
+      (<%= t("accounts.index.projected") %> <%= render MoneyComponent.new(cents: projected, currency: currency) %>)
+    </span>
+  <% end %>
+</p>

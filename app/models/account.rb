@@ -51,6 +51,17 @@ class Account < ApplicationRecord
     opening_balance_cents + transactions.sum(:amount_cents)
   end
 
+  # Grupos de la lista (US-0102): por clasificación. investment y other son
+  # activos y van con "Efectivo y bancos" hasta F5.
+  GROUPS = { asset: :cash_and_banks, liability: :cards_and_loans }.freeze
+
+  # Totales por moneda, sin conversión hasta F6: { "EUR" => [actual, proyectado] }
+  def self.totals_by_currency(accounts, balances)
+    accounts.group_by(&:currency).sort.to_h do |currency, in_currency|
+      [ currency, in_currency.map { |account| balances.fetch(account.id) }.transpose.map(&:sum) ]
+    end
+  end
+
   # Saldos de varias cuentas en una sola consulta: { account_id => [actual, proyectado] }
   def self.balances_for(accounts, on: Date.current)
     sums = Transaction.where(account_id: accounts.map(&:id)).group(:account_id).pluck(
@@ -63,6 +74,31 @@ class Account < ApplicationRecord
       current, projected = sums.fetch(account.id, [ 0, 0 ])
       [ account.id, [ account.opening_balance_cents + current, account.opening_balance_cents + projected ] ]
     end
+  end
+
+  # Saldo actual al cierre de cada día de los últimos `days` días, hasta `on`
+  # incluido: [[fecha, céntimos], ...]. Una sola consulta: generate_series da
+  # los días (también los que no tienen movimientos) y una suma acumulada
+  # (window function) parte del saldo conciliado anterior al periodo.
+  def daily_balances(days: 90, on: Date.current)
+    from = on - (days - 1)
+    sql = <<~SQL.squish
+      WITH daily AS (
+        SELECT date, SUM(amount_cents) AS total
+        FROM transactions
+        WHERE account_id = :account_id AND status = 'cleared' AND date <= :to
+        GROUP BY date
+      )
+      SELECT days.day,
+             :opening
+               + (SELECT COALESCE(SUM(total), 0) FROM daily WHERE date < :from)
+               + COALESCE(SUM(daily.total) OVER (ORDER BY days.day), 0) AS balance
+      FROM generate_series(CAST(:from AS date), CAST(:to AS date), interval '1 day') AS days(day)
+      LEFT JOIN daily ON daily.date = days.day
+      ORDER BY days.day
+    SQL
+    query = self.class.sanitize_sql_array([ sql, { account_id: id, opening: opening_balance_cents, from: from, to: on } ])
+    self.class.connection.select_rows(query).map { |day, balance| [ day.to_date, balance.to_i ] }
   end
 
   def movements?

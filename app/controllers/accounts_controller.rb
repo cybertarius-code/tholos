@@ -1,16 +1,22 @@
 class AccountsController < ApplicationController
   before_action :set_account, only: %i[ show edit update destroy ]
 
-  # Lista provisional: la definitiva llega con US-0102
+  # Abiertas agrupadas por clasificación y cerradas aparte; todos los saldos
+  # en una sola consulta (Account.balances_for)
   def index
     @accounts = Current.household.accounts.ordered.to_a
     @balances = Account.balances_for(@accounts)
+    open_accounts, @closed_accounts = @accounts.partition(&:open?)
+    grouped = open_accounts.group_by(&:classification)
+    @groups = Account::GROUPS.filter_map do |classification, group|
+      [ group, grouped[classification] ] if grouped[classification]
+    end
   end
 
   def show
     @balance_cents = @account.balance_cents
     @projected_balance_cents = @account.projected_balance_cents
-    # Provisional hasta US-0102 (detalle) y US-0106 (lista filtrada)
+    @daily_balances = @account.daily_balances
     @transactions = @account.transactions.includes(:category, transfer: { legs: :account }).recent_first.limit(20)
   end
 

@@ -10,6 +10,28 @@ RSpec.describe Account, "saldos" do
     create(:transaction, account: account, amount_cents: cents, date: date, status: status)
   end
 
+  it "escenario de US-0102: 100 € con -30 € conciliado ayer y -20 € programado mañana dan 70 € y 50 €" do
+    account = create(:account, opening_balance_cents: 10_000)
+    create(:transaction, account: account, amount_cents: -3_000, date: Date.current - 1)
+    create(:transaction, :scheduled, account: account, amount_cents: -2_000, date: Date.current + 1)
+
+    expect(account.balance_cents).to eq(7_000)
+    expect(account.projected_balance_cents).to eq(5_000)
+    expect(described_class.balances_for([ account ])).to eq(account.id => [ 7_000, 5_000 ])
+  end
+
+  describe ".totals_by_currency" do
+    it "suma actual y proyectado por moneda, sin convertir" do
+      euros = create(:account, opening_balance_cents: 10_000)
+      more_euros = create(:account, household: euros.household, opening_balance_cents: -2_500)
+      dollars = create(:account, household: euros.household, currency: "USD", opening_balance_cents: 5_000)
+      balances = { euros.id => [ 10_000, 9_000 ], more_euros.id => [ -2_500, -2_500 ], dollars.id => [ 5_000, 4_000 ] }
+
+      expect(described_class.totals_by_currency([ euros, more_euros, dollars ], balances))
+        .to eq("EUR" => [ 7_500, 6_500 ], "USD" => [ 5_000, 4_000 ])
+    end
+  end
+
   it "sin movimientos, ambos son el saldo inicial" do
     expect(account.balance_cents).to eq(10_000)
     expect(account.projected_balance_cents).to eq(10_000)

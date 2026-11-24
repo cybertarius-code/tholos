@@ -1,0 +1,45 @@
+<%# Saldo de los últimos 90 días (US-0102). El canvas no es accesible: el
+    resumen va en aria-label y como pie, y los datos en una tabla plegada. %>
+<% first_cents = series.first.last %>
+<% last_cents = series.last.last %>
+<% values = series.map(&:last) %>
+<% summary = t("accounts.show.chart_summary",
+     name: account.name,
+     from: MoneyComponent.new(cents: first_cents, currency: account.currency).formatted_amount,
+     to: MoneyComponent.new(cents: last_cents, currency: account.currency).formatted_amount,
+     min: MoneyComponent.new(cents: values.min, currency: account.currency).formatted_amount,
+     max: MoneyComponent.new(cents: values.max, currency: account.currency).formatted_amount) %>
+<section class="mt-6" aria-labelledby="account-chart">
+  <h2 id="account-chart" class="text-lg font-medium text-ink dark:text-slate-100"><%= t("accounts.show.chart_title") %></h2>
+  <figure class="mt-3">
+    <div class="relative h-56 w-full sm:h-64"
+         data-controller="balance-chart"
+         data-balance-chart-series-value="<%= series.map { |date, cents| [ date.iso8601, cents ] }.to_json %>"
+         data-balance-chart-currency-value="<%= account.currency %>">
+      <canvas role="img" aria-label="<%= summary %>" data-balance-chart-target="canvas"></canvas>
+    </div>
+    <figcaption class="mt-2 text-sm text-slate-600 dark:text-slate-400"><%= summary %></figcaption>
+  </figure>
+  <details class="mt-2 text-sm">
+    <summary class="cursor-pointer text-accent underline hover:no-underline"><%= t("accounts.show.chart_table") %></summary>
+    <div class="mt-2 max-h-80 overflow-y-auto">
+      <table class="w-full">
+        <caption class="sr-only"><%= t("accounts.show.chart_title") %></caption>
+        <thead>
+          <tr class="text-left text-xs text-slate-600 dark:text-slate-400">
+            <th scope="col" class="py-1 font-medium"><%= t("accounts.show.chart_day") %></th>
+            <th scope="col" class="py-1 text-right font-medium"><%= t("accounts.show.chart_balance") %></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-line">
+          <% series.reverse_each do |date, cents| %>
+            <tr>
+              <td class="py-1 text-ink"><%= l(date, format: :short) %></td>
+              <td class="py-1 text-right"><%= render MoneyComponent.new(cents: cents, currency: account.currency) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>

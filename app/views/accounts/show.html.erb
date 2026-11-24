@@ -19,6 +19,8 @@
     </div>
   </div>
 
+  <%= render "balance_chart", account: @account, series: @daily_balances %>
+
   <div class="mt-6">
     <%= render CardComponent.new do |card| %>
       <% card.with_body do %>
