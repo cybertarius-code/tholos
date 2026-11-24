@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get "ajustes", to: "coming_soon#show", defaults: { section: "settings" }, as: :settings
   resources :accounts, path: "cuentas", path_names: { new: "nueva", edit: "editar" } do
     resource :closure, only: [ :create, :destroy ], path: "cierre", module: :accounts
+    resource :adjustment, only: [ :new, :create ], path: "ajuste", path_names: { new: "nuevo" }, module: :accounts
   end
   resources :transactions, path: "movimientos", except: :show,
     path_names: { new: "nuevo", edit: "editar" }

@@ -1,6 +1,20 @@
 ---
 en:
   accounts:
+    adjustments:
+      create:
+        success: Balance adjusted.
+        unchanged: The balance already matches. No movement was created.
+      new:
+        amount_help: What the bank says on that day. A movement is created for the difference, with no category.
+        cancel: Cancel
+        current_balance: 'Current balance:'
+        date: Date
+        intro: Match the account with the bank without making up an expense or an income.
+        real_balance: Actual balance
+        real_debt: Actual debt
+        submit: Adjust balance
+        title: Adjust the balance of %{name}
     classifications:
       asset: Asset
       liability: Liability
@@ -46,8 +60,10 @@ en:
     new:
       title: New account
     show:
+      adjust_balance: Adjust balance
       all_transactions: See all with running balance
       back: "← Accounts"
+      balance_adjustment: Balance adjustment
       chart_balance: Balance
       chart_day: Day
       chart_summary: "%{name} balance over the last 90 days: from %{from} to %{to}. Lowest %{min}; highest %{max}."

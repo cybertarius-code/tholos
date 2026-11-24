@@ -26,6 +26,8 @@ RSpec.describe "Quick movement", type: :system do
   end
 
   it "registra un gasto sin salir de la página y recuerda la última cuenta" do
+    # En escritorio: en móvil el aviso sale arriba y tapa el botón. Otros specs dejan la ventana a 390 px
+    page.driver.browser.manage.window.resize_to(1280, 900)
     sign_in
     visit account_path(account)
     expect(page).to have_content("1.000,00 €")

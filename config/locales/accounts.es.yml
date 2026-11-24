@@ -1,6 +1,20 @@
 ---
 es:
   accounts:
+    adjustments:
+      create:
+        success: Saldo ajustado.
+        unchanged: El saldo ya coincide. No se ha creado ningún movimiento.
+      new:
+        amount_help: El que dice el banco ese día. Se crea un movimiento por la diferencia, sin categoría.
+        cancel: Cancelar
+        current_balance: 'Saldo actual:'
+        date: Fecha
+        intro: Cuadra la cuenta con el banco sin inventar un gasto o un ingreso.
+        real_balance: Saldo real
+        real_debt: Deuda real
+        submit: Ajustar saldo
+        title: Ajustar el saldo de %{name}
     classifications:
       asset: Activo
       liability: Pasivo
@@ -46,8 +60,10 @@ es:
     new:
       title: Nueva cuenta
     show:
+      adjust_balance: Ajustar saldo
       all_transactions: Ver todos con su saldo
       back: "← Cuentas"
+      balance_adjustment: Ajuste de saldo
       chart_balance: Saldo
       chart_day: Día
       chart_summary: 'Saldo de %{name} en los últimos 90 días: de %{from} a %{to}. Mínimo %{min}; máximo %{max}.'

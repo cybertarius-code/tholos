@@ -70,7 +70,8 @@ RSpec.describe "Accounts", type: :system do
       account = create(:account, household: household, name: "Cuenta con un nombre bastante largo para móvil")
       sign_in
 
-      [ accounts_path, account_path(account), edit_account_path(account), new_account_path ].each do |path|
+      [ accounts_path, account_path(account), edit_account_path(account), new_account_path,
+        new_account_adjustment_path(account) ].each do |path|
         visit path
         expect(page.evaluate_script("document.documentElement.scrollWidth <= window.innerWidth")).to be(true), path
       end

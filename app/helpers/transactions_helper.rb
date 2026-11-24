@@ -64,10 +64,12 @@ module TransactionsHelper
     transaction.transfer? ? edit_transfer_path(transaction.transfer_id) : edit_transaction_path(transaction)
   end
 
-  # "Mercadona", "Alimentación", "Sin beneficiario" o "Transferencia a/desde"
+  # "Mercadona", "Alimentación", "Sin beneficiario", "Transferencia a/desde" o "Ajuste de saldo"
   def movement_title(transaction, search)
     if transaction.transfer?
       transaction.amount_cents.negative? ? t("accounts.show.transfer_to") : t("accounts.show.transfer_from")
+    elsif transaction.adjustment?
+      t("accounts.show.balance_adjustment")
     else
       transaction.payee.presence || movement_category(transaction, search)&.name || t("accounts.show.no_payee")
     end
