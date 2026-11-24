@@ -1,0 +1,51 @@
+---
+en:
+  activerecord:
+    attributes:
+      transfer:
+        amount: Amount
+        date: Date
+        from_account_id: From
+        notes: Notes
+        to_account_id: To
+    errors:
+      models:
+        transfer:
+          attributes:
+            amount:
+              must_be_positive: must be greater than zero
+            base:
+              invalid_legs: The transfer could not be saved.
+              two_legs: A transfer has exactly one outflow and one inflow.
+              unbalanced: Both sides must have opposite amounts, the same date and the same currency.
+            from_account_id:
+              closed: is closed
+            to_account_id:
+              closed: is closed
+              currency_mismatch: has a different currency; transfers between currencies will come later
+              same_as_from: must be different from the source account
+    models:
+      transfer:
+        one: Transfer
+        other: Transfers
+  transfers:
+    create:
+      success: Transfer recorded.
+    destroy:
+      success: Transfer deleted.
+    edit:
+      destroy: Delete transfer
+      destroy_confirm: Delete this transfer? Both of its movements are deleted. This cannot be undone.
+      intro: Changes apply to both movements.
+      title: Edit transfer
+    form:
+      amount_help: Positive; it leaves one account and enters the other.
+      cancel: Cancel
+      choose_account: Choose an account
+      submit: Save transfer
+      to_help: To pay the credit card, choose the card as the destination.
+    new:
+      intro: Move money between two of your accounts. It does not count as an expense or income.
+      title: New transfer
+    update:
+      success: Transfer updated.

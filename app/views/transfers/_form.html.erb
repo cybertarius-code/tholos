@@ -1,0 +1,47 @@
+<%= form_with model: transfer, class: "max-w-xl" do |form| %>
+  <% if transfer.errors[:base].any? %>
+    <p class="mb-4 text-sm text-error" role="alert"><%= transfer.errors[:base].to_sentence %></p>
+  <% end %>
+
+  <% accounts = [ [ t("transfers.form.choose_account"), "" ] ] + transfer_account_options(transfer) %>
+  <div class="grid gap-x-4 sm:grid-cols-2">
+    <%= render FormFieldComponent.new(
+      form: form, attribute: :from_account_id, label: t("activerecord.attributes.transfer.from_account_id"),
+      input_type: :select, choices: accounts, error: transfer.errors[:from_account_id].first,
+      input_options: { required: true }
+    ) %>
+
+    <%= render FormFieldComponent.new(
+      form: form, attribute: :to_account_id, label: t("activerecord.attributes.transfer.to_account_id"),
+      input_type: :select, choices: accounts, error: transfer.errors[:to_account_id].first,
+      help_text: t("transfers.form.to_help"), input_options: { required: true }
+    ) %>
+  </div>
+
+  <div class="grid gap-x-4 sm:grid-cols-2">
+    <%= render FormFieldComponent.new(
+      form: form, attribute: :amount_input, label: t("activerecord.attributes.transfer.amount"),
+      help_text: t("transfers.form.amount_help"), error: transfer.errors[:amount].first,
+      input_options: { required: true, inputmode: "decimal", autocomplete: "off", placeholder: "0,00",
+                       autofocus: transfer.new_record? }
+    ) %>
+
+    <%= render FormFieldComponent.new(
+      form: form, attribute: :date, label: t("activerecord.attributes.transfer.date"),
+      input_type: :date, error: transfer.errors[:date].first, input_options: { required: true }
+    ) %>
+  </div>
+
+  <%= render FormFieldComponent.new(
+    form: form, attribute: :notes, label: t("activerecord.attributes.transfer.notes"),
+    input_type: :text_area, input_options: { rows: 3 }
+  ) %>
+
+  <div class="flex flex-wrap gap-3">
+    <%= render ButtonComponent.new(type: "submit") do %><%= t("transfers.form.submit") %><% end %>
+    <%= render ButtonComponent.new(variant: :secondary,
+          href: transfer.from_account_id ? account_path(transfer.from_account_id) : accounts_path) do %>
+      <%= t("transfers.form.cancel") %>
+    <% end %>
+  </div>
+<% end %>

@@ -24,9 +24,16 @@ es:
       opening_debt: Deuda inicial
       submit: Guardar cuenta
     index:
+      closed:
+        one: Cerradas (1)
+        other: Cerradas (%{count})
       empty_text: Crea tu primera cuenta para empezar a registrar movimientos.
       empty_title: Aún no tienes cuentas
+      groups:
+        cards_and_loans: Tarjetas y préstamos
+        cash_and_banks: Efectivo y bancos
       new: Nueva cuenta
+      projected: 'Proyectado:'
     kinds:
       cash: Efectivo
       checking: Corriente
@@ -39,19 +46,29 @@ es:
     new:
       title: Nueva cuenta
     show:
+      all_transactions: Ver todos con su saldo
       back: "← Cuentas"
+      chart_balance: Saldo
+      chart_day: Día
+      chart_summary: 'Saldo de %{name} en los últimos 90 días: de %{from} a %{to}. Mínimo %{min}; máximo %{max}.'
+      chart_table: Ver los datos en una tabla
+      chart_title: Saldo de los últimos 90 días
       close: Cerrar cuenta
       close_with_balance_confirm: La cuenta tiene un saldo distinto de cero. ¿Cerrarla de todos modos?
       destroy: Borrar
       destroy_confirm: "¿Borrar esta cuenta? No se puede deshacer."
       edit: Editar
       new_transaction: Nuevo movimiento
+      new_transfer: Nueva transferencia
       'no': 'No'
       no_payee: Sin beneficiario
       no_transactions: Aún no hay movimientos.
+      pay_account: Pagar
       projected: 'Proyectado:'
       reopen: Reabrir cuenta
       transactions: Últimos movimientos
+      transfer_from: Transferencia desde
+      transfer_to: Transferencia a
       'yes': Sí
     statuses:
       closed: Cerrada

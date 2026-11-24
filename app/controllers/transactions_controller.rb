@@ -1,5 +1,17 @@
 class TransactionsController < ApplicationController
+  include Pagy::Method
+
+  PER_PAGE = 50
+
   before_action :set_transaction, only: %i[ edit update destroy ]
+  before_action :redirect_transfer_leg, only: %i[ edit update ]
+
+  def index
+    @search = TransactionSearch.new(household: Current.household, **search_params)
+    # Una cuenta o categoría de otro hogar (o inexistente) da 404, como sus fichas
+    raise ActiveRecord::RecordNotFound unless @search.valid_references?
+    @pagy, @transactions = pagy(@search.results, limit: PER_PAGE)
+  end
 
   def new
     @transaction = Current.household.transactions.new(
@@ -39,6 +51,15 @@ class TransactionsController < ApplicationController
   private
     def set_transaction
       @transaction = Current.household.transactions.find(params[:id])
+    end
+
+    # Un lado de una transferencia se edita desde la transferencia, con los dos a la vez
+    def redirect_transfer_leg
+      redirect_to edit_transfer_path(@transaction.transfer_id) if @transaction.transfer?
+    end
+
+    def search_params
+      params.permit(:month, :account_id, :category_id, :status, :q).to_h.symbolize_keys
     end
 
     def transaction_params

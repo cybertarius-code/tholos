@@ -1,0 +1,31 @@
+<%# Fila de movimiento. La fila entera abre la edición (enlace "estirado" con
+    after:inset-0); en una transferencia, la otra cuenta es un enlace aparte. %>
+<% other = transaction.transfer&.counterpart_of(transaction) %>
+<li id="<%= dom_id(transaction) %>" class="relative flex items-center justify-between gap-4 rounded-md px-2 py-3 hover:bg-stone-50 dark:hover:bg-slate-800">
+  <span class="flex min-w-0 items-center gap-3">
+    <% if transaction.category %>
+      <%= render CategoryIconComponent.new(color: transaction.category.color, icon: transaction.category.icon, size: :small) %>
+    <% end %>
+    <span class="min-w-0">
+      <% if transaction.transfer? %>
+        <span class="block break-words text-sm font-medium text-ink">
+          <%= link_to transaction.amount_cents.negative? ? t("accounts.show.transfer_to") : t("accounts.show.transfer_from"),
+                edit_transfer_path(transaction.transfer_id),
+                class: "rounded-sm after:absolute after:inset-0 after:rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink" %>
+          <% if other %>
+            <%= link_to other.account.name, account_path(other.account_id), class: "relative z-10 text-accent underline hover:no-underline" %>
+          <% end %>
+        </span>
+      <% else %>
+        <%= link_to transaction.payee.presence || transaction.category&.name || t("accounts.show.no_payee"),
+              edit_transaction_path(transaction),
+              class: "block break-words rounded-sm text-sm font-medium text-ink after:absolute after:inset-0 after:rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink" %>
+      <% end %>
+      <span class="block text-xs text-slate-600 dark:text-slate-400">
+        <%= l(transaction.date, format: :short) %>
+        <% unless transaction.cleared? %> · <%= t("transactions.statuses.#{transaction.status}") %><% end %>
+      </span>
+    </span>
+  </span>
+  <%= render MoneyComponent.new(cents: transaction.amount_cents, currency: transaction.currency) %>
+</li>

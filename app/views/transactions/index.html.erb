@@ -1,0 +1,15 @@
+<section class="min-w-0 rounded-xl border border-line bg-surface p-4 sm:p-6 dark:bg-slate-900">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <h1 class="text-2xl font-semibold text-ink dark:text-slate-100"><%= t(".title") %></h1>
+    <div class="flex flex-wrap gap-2">
+      <%= render ButtonComponent.new(href: new_transaction_path(account_id: @search.account&.id)) do %><%= t(".new_transaction") %><% end %>
+      <%= render ButtonComponent.new(variant: :secondary, href: new_transfer_path(account_id: @search.account&.id)) do %><%= t(".new_transfer") %><% end %>
+    </div>
+  </div>
+
+  <%= render "filters", search: @search %>
+
+  <%= turbo_frame_tag "transactions_list", target: "_top", data: { turbo_action: "advance" } do %>
+    <%= render "list", search: @search, pagy: @pagy, transactions: @transactions %>
+  <% end %>
+</section>

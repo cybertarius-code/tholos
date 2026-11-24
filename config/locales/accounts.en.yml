@@ -24,9 +24,16 @@ en:
       opening_debt: Opening debt
       submit: Save account
     index:
+      closed:
+        one: Closed (1)
+        other: Closed (%{count})
       empty_text: Create your first account to start recording movements.
       empty_title: You have no accounts yet
+      groups:
+        cards_and_loans: Cards and loans
+        cash_and_banks: Cash and banks
       new: New account
+      projected: 'Projected:'
     kinds:
       cash: Cash
       checking: Checking
@@ -39,19 +46,29 @@ en:
     new:
       title: New account
     show:
+      all_transactions: See all with running balance
       back: "← Accounts"
+      chart_balance: Balance
+      chart_day: Day
+      chart_summary: "%{name} balance over the last 90 days: from %{from} to %{to}. Lowest %{min}; highest %{max}."
+      chart_table: Show the data as a table
+      chart_title: Balance over the last 90 days
       close: Close account
       close_with_balance_confirm: The account has a non-zero balance. Close it anyway?
       destroy: Delete
       destroy_confirm: Delete this account? This cannot be undone.
       edit: Edit
       new_transaction: New movement
+      new_transfer: New transfer
       'no': 'No'
       no_payee: No payee
       no_transactions: No movements yet.
+      pay_account: Pay
       projected: 'Projected:'
       reopen: Reopen account
       transactions: Latest movements
+      transfer_from: Transfer from
+      transfer_to: Transfer to
       'yes': 'Yes'
     statuses:
       closed: Closed

@@ -13,6 +13,7 @@ class Transaction < ApplicationRecord
   belongs_to :household
   belongs_to :account
   belongs_to :category, optional: true
+  belongs_to :transfer, optional: true, inverse_of: :legs
 
   enum :status, STATUSES.index_with(&:itself), default: :cleared, validate: true
 
@@ -42,6 +43,36 @@ class Transaction < ApplicationRecord
   scope :on_or_before, ->(date) { where(date: ..date) }
   scope :income_and_expense, -> { where(transfer_id: nil, adjustment: false) }
   scope :recent_first, -> { order(date: :desc, id: :desc) }
+
+  # Importe escrito en positivo: "12,50" y "1.234,56" (es), "12.50"; un punto
+  # seguido de 3 cifras es de miles. Devuelve un BigDecimal o nil.
+  def self.parse_amount_input(value)
+    text = value.to_s.delete(" ")
+    return if text.blank?
+
+    if text.include?(",")
+      text = text.delete(".").tr(",", ".")
+    elsif text.match?(/\.\d{3}\z/) || text.count(".") > 1
+      text = text.delete(".")
+    end
+    BigDecimal(text, exception: false)
+  end
+
+  def transfer?
+    transfer_id.present?
+  end
+
+  # Un lado de una transferencia no se borra solo: borra la transferencia
+  # entera, con sus dos lados, en una transacción (ADR-0004)
+  def destroy
+    return super if !transfer? || destroyed_by_association
+
+    transfer = Transfer.includes(:legs).find(transfer_id)
+    return false unless transfer.destroy
+
+    @destroyed = true
+    freeze
+  end
 
   # Pestaña del formulario: el signo del importe
   def direction
@@ -99,17 +130,8 @@ class Transaction < ApplicationRecord
       @direction = nil
     end
 
-    # "12,50" y "1.234,56" (es), "12.50"; un punto seguido de 3 cifras es de miles
     def parsed_amount_input
-      text = @amount_input.to_s.delete(" ")
-      return if text.blank?
-
-      if text.include?(",")
-        text = text.delete(".").tr(",", ".")
-      elsif text.match?(/\.\d{3}\z/) || text.count(".") > 1
-        text = text.delete(".")
-      end
-      BigDecimal(text, exception: false)
+      self.class.parse_amount_input(@amount_input)
     end
 
     def amount_is_valid

@@ -84,14 +84,14 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
-    addressable (2.9.2)
+    addressable (2.10.0)
       public_suffix (>= 2.0.2, < 8.0)
     ast (2.4.3)
     base64 (0.3.0)
     bcrypt (3.1.22)
     bigdecimal (4.1.3)
     bindex (0.8.1)
-    bootsnap (1.26.1)
+    bootsnap (1.26.2)
       msgpack (~> 1.5)
     brakeman (8.1.1)
       racc
@@ -148,7 +148,6 @@ GEM
     highline (3.1.2)
       reline
     htmlbeautifier (1.4.3)
-    htmlentities (4.4.2)
     i18n (1.15.2)
       concurrent-ruby (~> 1.0)
     i18n-tasks (1.2.1)
@@ -181,11 +180,10 @@ GEM
     loofah (2.25.3)
       crass (~> 1.0.2)
       nokogiri (>= 1.19.5)
-    lookbook (2.3.15)
+    lookbook (2.3.17)
       activemodel
       css_parser
       htmlbeautifier (~> 1.3)
-      htmlentities (~> 4.3)
       marcel (>= 1.0)
       railties (>= 5.0)
       redcarpet (~> 3.5)
@@ -246,6 +244,10 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.7-x86_64-linux-musl)
       racc (~> 1.4)
+    pagy (43.8.5)
+      json
+      uri
+      yaml
     parallel (2.3.0)
     parser (3.3.13.0)
       ast (~> 2.4.1)
@@ -274,11 +276,11 @@ GEM
       activesupport (>= 7.0.0)
       rack
     public_suffix (7.0.5)
-    puma (8.1.1)
+    puma (8.1.2)
       nio4r (~> 2.0)
     raabro (1.5.0)
     racc (1.8.1)
-    rack (3.2.8)
+    rack (3.2.9)
     rack-session (2.1.2)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
@@ -391,7 +393,7 @@ GEM
       logger
     rubyzip (3.7.0)
     securerandom (0.4.1)
-    selenium-webdriver (4.51.0)
+    selenium-webdriver (4.54.0)
       base64 (~> 0.2)
       logger (~> 1.4)
       rubyzip (>= 1.2.2, < 4.0)
@@ -441,7 +443,7 @@ GEM
     unicode-emoji (4.3.0)
     uri (1.1.2)
     useragent (0.16.11)
-    view_component (4.24.0)
+    view_component (4.25.0)
       actionview (>= 7.1.0)
       activesupport (>= 7.1.0)
       prism (>= 1.0)
@@ -456,6 +458,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
+    yaml (0.4.0)
     yard (0.9.45)
     zeitwerk (2.8.3)
 
@@ -485,10 +488,11 @@ DEPENDENCIES
   importmap-rails
   lookbook (>= 2.3.15)
   money-rails
+  pagy (~> 43.8)
   pg (~> 1.1)
   propshaft
   puma (>= 5.0)
-  rack (~> 3.2.8)
+  rack (= 3.2.9)
   rails (~> 8.1.3, >= 8.1.3.1)
   rails-html-sanitizer (~> 1.7.2)
   rails-i18n (>= 8.1)

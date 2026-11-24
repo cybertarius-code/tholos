@@ -1,0 +1,11 @@
+<section class="rounded-xl border border-line bg-surface p-6 dark:bg-slate-900">
+  <h1 class="text-2xl font-semibold text-ink dark:text-slate-100"><%= t(".title") %></h1>
+  <p class="mt-1 text-sm text-slate-600 dark:text-slate-400"><%= t(".intro") %></p>
+  <%= render "form", transfer: @transfer %>
+
+  <div class="mt-8 border-t border-line pt-6">
+    <%= form_with url: transfer_path(@transfer), method: :delete, data: { turbo_confirm: t(".destroy_confirm") } do %>
+      <%= render ButtonComponent.new(variant: :danger, type: "submit") do %><%= t(".destroy") %><% end %>
+    <% end %>
+  </div>
+</section>

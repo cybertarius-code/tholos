@@ -1,0 +1,17 @@
+<%# Tarjeta de cuenta (galería de PRD-F1 §6): toda la tarjeta enlaza al detalle %>
+<% current, projected = balances.fetch(account.id) %>
+<li id="<%= dom_id(account) %>" class="min-w-0">
+  <%= link_to account_path(account),
+        class: "block h-full rounded-lg border border-line bg-surface p-4 shadow-sm hover:border-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink dark:bg-slate-900 dark:hover:border-slate-300" do %>
+    <span class="block break-words font-medium text-ink dark:text-slate-100"><%= account.name %></span>
+    <span class="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+      <%= account_kind_label(account) %><% if account.currency != Current.household.base_currency %> · <%= account.currency %><% end %>
+    </span>
+    <span class="mt-3 block text-2xl font-semibold" data-balance="current">
+      <%= render MoneyComponent.new(cents: current, currency: account.currency) %>
+    </span>
+    <span class="mt-1 block text-xs text-slate-600 dark:text-slate-400" data-balance="projected">
+      <%= t("accounts.index.projected") %> <%= render MoneyComponent.new(cents: projected, currency: account.currency) %>
+    </span>
+  <% end %>
+</li>
