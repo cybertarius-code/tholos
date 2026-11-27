@@ -95,6 +95,7 @@ class TransactionSearch
     scope = base
       .where(date: month_start..month_start.end_of_month)
       .includes(transfer: :legs)
+      .with_attached_receipt
       .order(date: :desc, id: :desc)
     scope = scope.where(category_id: category_ids) if category_id
     scope = scope.where(status: status) if status

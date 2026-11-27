@@ -22,7 +22,16 @@ es:
     net_worth: Patrimonio
     primary: Principal
     quick_movement: "+ Movimiento"
+    quick_movement_shortcut: 'Atajo: n'
     settings: Ajustes
+  quick_movement:
+    close: Cerrar
+    tabs:
+      expense: Gasto
+      income: Ingreso
+      label: Tipo de movimiento
+      transfer: Transferencia
+    title: Nuevo movimiento
   settings:
     passwords:
       confirm_label: Confirmar nueva contraseña

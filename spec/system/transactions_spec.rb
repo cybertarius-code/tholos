@@ -54,6 +54,24 @@ RSpec.describe "Transactions", type: :system do
     expect(page).to have_content("1.000,00 €")
   end
 
+  it "duplica un gasto desde la lista en el modal y solo lo guarda al pulsar Guardar (US-0111)" do
+    create(:transaction, account: account, amount_cents: -6_000, date: Date.current, payee: "Gasolinera Repsol")
+    sign_in
+    visit transactions_path
+
+    first("a[aria-label='#{I18n.t('transactions.index.duplicate_named', name: 'Gasolinera Repsol')}']", minimum: 1).click
+    within("dialog[open]") do
+      expect(page).to have_field("Importe", with: "60,00")
+      expect(page).to have_field("Beneficiario", with: "Gasolinera Repsol")
+      expect(Transaction.count).to eq(1)
+      click_button I18n.t("transactions.form.submit")
+    end
+
+    expect(page).to have_content(I18n.t("transactions.create.success"))
+    expect(page).to have_no_css("dialog[open]")
+    expect(Transaction.where(payee: "Gasolinera Repsol", amount_cents: -6_000).count).to eq(2)
+  end
+
   context "en móvil (390 px)" do
     before do
       page.driver.browser.execute_cdp(
@@ -81,6 +99,21 @@ RSpec.describe "Transactions", type: :system do
         JS
         expect(overflowing).to be_empty, "#{path}: #{overflowing.first(3).inspect}"
       end
+    end
+
+    it "adjunta la foto de un recibo y el movimiento muestra su miniatura (US-0107)" do
+      transaction = create(:transaction, account: account, payee: "Farmacia")
+      sign_in
+      visit edit_transaction_path(transaction)
+
+      expect(find_field(I18n.t("activerecord.attributes.transaction.receipt"))["accept"]).to eq("image/*,application/pdf")
+      attach_file I18n.t("activerecord.attributes.transaction.receipt"), file_fixture("recibo.jpg")
+      click_button I18n.t("transactions.form.submit")
+      expect(page).to have_content(I18n.t("transactions.update.success"))
+
+      visit edit_transaction_path(transaction)
+      thumbnail = find("img[alt='#{I18n.t('transactions.receipt.thumbnail_alt')}']")
+      expect(page.evaluate_script("arguments[0].naturalWidth", thumbnail)).to eq(200)
     end
   end
 end

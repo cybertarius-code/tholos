@@ -90,6 +90,10 @@ jobs:
         with:
           bundler-cache: true
 
+      # Miniaturas de los recibos (US-0107, ADR-0016): ruby-vips necesita la librería
+      - name: Install libvips
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libvips42
+
       - name: Prepare database
         run: bin/rails db:test:prepare
 

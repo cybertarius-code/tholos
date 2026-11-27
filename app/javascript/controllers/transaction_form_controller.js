@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Muestra solo las categorías del tipo elegido (Gasto/Ingreso).
 // Sin JavaScript se ven todas, y el modelo acepta cualquiera (devoluciones).
+// En el modal (US-0109) el tipo llega en un campo oculto, fijado por la pestaña.
 export default class extends Controller {
   static targets = ["direction", "category"]
 
@@ -10,7 +11,7 @@ export default class extends Controller {
   }
 
   filter() {
-    const checked = this.directionTargets.find((input) => input.checked)
+    const checked = this.directionTargets.find((input) => input.checked || input.type === "hidden")
     if (!checked) return
 
     let selectedHidden = false

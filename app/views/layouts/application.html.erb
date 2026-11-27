@@ -15,6 +15,9 @@
       <script>document.documentElement.classList.toggle("dark", window.matchMedia("(prefers-color-scheme: dark)").matches);</script>
     <% end %>
 
+    <%# Al guardar desde el modal "+ Movimiento" la página se refresca sin perder el scroll (US-0109) %>
+    <%= turbo_refresh_method_tag :morph %>
+    <%= turbo_refresh_scroll_tag :preserve %>
     <%= yield :head %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
@@ -30,7 +33,7 @@
   </head>
 
   <body class="min-h-dvh overflow-x-hidden bg-background text-ink">
-    <div id="flash" aria-live="polite" class="pointer-events-none fixed inset-x-4 top-4 z-50 flex flex-col gap-2 sm:left-auto sm:w-96">
+    <div id="flash" aria-live="polite" class="pointer-events-none fixed inset-x-4 top-4 z-50 flex flex-col gap-2 sm:left-auto sm:top-auto sm:bottom-4 sm:w-96">
       <%= render "shared/flash_messages" %>
     </div>
     <div class="min-h-dvh lg:flex">
@@ -38,7 +41,9 @@
       <main class="min-w-0 flex-1 px-4 pb-[calc(5rem+env(safe-area-inset-bottom))] pt-6 sm:px-6 lg:px-10 lg:pb-10">
         <div class="mx-auto max-w-7xl">
           <div class="mb-6 flex justify-end">
-            <%= render ButtonComponent.new(disabled: true, aria: { disabled: true }, class: "focus-visible:outline-ink") do %>
+            <%= render ButtonComponent.new(href: new_transaction_path, id: "quick_movement", class: "focus-visible:outline-ink",
+                  aria: { keyshortcuts: "n" }, title: t("navigation.quick_movement_shortcut"),
+                  data: { turbo_frame: "modal", controller: "hotkey", action: "keydown@document->hotkey#press" }) do %>
               <%= t("navigation.quick_movement") %>
             <% end %>
           </div>
@@ -47,5 +52,6 @@
       </main>
     </div>
     <%= render "layouts/bottom_nav" %>
+    <%= turbo_frame_tag "modal" %>
   </body>
 </html>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_20_110200) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_27_171256) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -32,6 +32,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_110200) do
     t.index ["id", "household_id"], name: "index_accounts_on_id_and_household_id", unique: true
     t.check_constraint "kind::text = ANY (ARRAY['checking'::character varying, 'savings'::character varying, 'cash'::character varying, 'ewallet'::character varying, 'credit_card'::character varying, 'loan'::character varying, 'investment'::character varying, 'other'::character varying]::text[])", name: "accounts_kind_check"
     t.check_constraint "status::text = ANY (ARRAY['open'::character varying, 'closed'::character varying]::text[])", name: "accounts_status_check"
+  end
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "categories", force: :cascade do |t|
@@ -61,6 +89,43 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_110200) do
     t.string "base_currency", limit: 3, default: "EUR", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "import_rows", force: :cascade do |t|
+    t.bigint "import_id", null: false
+    t.integer "line", null: false
+    t.date "date", null: false
+    t.string "concept", null: false
+    t.bigint "amount_cents", null: false
+    t.bigint "balance_cents", null: false
+    t.string "import_ref", null: false
+    t.string "proposal", default: "none", null: false
+    t.boolean "skipped", default: false, null: false
+    t.bigint "category_id"
+    t.text "commit_error"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "counter_account_id"
+    t.bigint "matched_transaction_id"
+    t.index ["category_id"], name: "index_import_rows_on_category_id"
+    t.index ["counter_account_id"], name: "index_import_rows_on_counter_account_id"
+    t.index ["import_id", "line"], name: "index_import_rows_on_import_id_and_line", unique: true
+    t.index ["matched_transaction_id"], name: "index_import_rows_on_matched_transaction_id"
+    t.check_constraint "(skipped::integer + num_nonnulls(category_id, counter_account_id, matched_transaction_id)) <= 1", name: "import_rows_una_decision"
+    t.check_constraint "proposal::text = ANY (ARRAY['none'::character varying, 'duplicate'::character varying, 'before_cutoff'::character varying]::text[])", name: "import_rows_proposal_check"
+  end
+
+  create_table "imports", force: :cascade do |t|
+    t.bigint "household_id", null: false
+    t.bigint "account_id", null: false
+    t.string "status", default: "staged", null: false
+    t.string "filename"
+    t.datetime "confirmed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_imports_on_account_id"
+    t.index ["household_id"], name: "index_imports_on_household_id"
+    t.check_constraint "status::text = ANY (ARRAY['staged'::character varying, 'confirmed'::character varying]::text[])", name: "imports_status_check"
   end
 
   create_table "memberships", force: :cascade do |t|
@@ -97,10 +162,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_110200) do
     t.boolean "adjustment", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "import_ref"
     t.index "transfer_id, ((amount_cents > 0))", name: "transactions_un_lado_por_signo", unique: true, where: "(transfer_id IS NOT NULL)"
     t.index ["account_id", "date"], name: "index_transactions_on_account_id_and_date"
     t.index ["category_id", "date"], name: "index_transactions_on_category_id_and_date"
     t.index ["household_id", "date"], name: "index_transactions_on_household_id_and_date"
+    t.index ["import_ref"], name: "index_transactions_on_import_ref", unique: true
     t.check_constraint "amount_cents <> 0", name: "transactions_importe_no_cero"
     t.check_constraint "num_nonnulls(transfer_id, NULLIF(adjustment, false), category_id) <= 1", name: "transactions_un_solo_tipo"
     t.check_constraint "status::text = ANY (ARRAY['scheduled'::character varying, 'pending'::character varying, 'cleared'::character varying]::text[])", name: "transactions_status_check"
@@ -122,8 +189,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_20_110200) do
   end
 
   add_foreign_key "accounts", "households"
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "categories", "categories", column: ["parent_id", "kind"], primary_key: ["id", "kind"], name: "categories_parent_kind_fk", on_delete: :restrict
   add_foreign_key "categories", "households"
+  add_foreign_key "import_rows", "accounts", column: "counter_account_id", on_delete: :nullify
+  add_foreign_key "import_rows", "categories", on_delete: :nullify
+  add_foreign_key "import_rows", "imports", on_delete: :cascade
+  add_foreign_key "import_rows", "transactions", column: "matched_transaction_id", on_delete: :nullify
+  add_foreign_key "imports", "accounts", column: ["account_id", "household_id"], primary_key: ["id", "household_id"], name: "imports_account_household_fk", on_delete: :restrict
+  add_foreign_key "imports", "households"
   add_foreign_key "memberships", "households"
   add_foreign_key "memberships", "users"
   add_foreign_key "sessions", "users"

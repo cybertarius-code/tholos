@@ -8,8 +8,10 @@ es:
         category_id: Categoría
         currency: Moneda
         date: Fecha
+        import_ref: Fila del extracto
         notes: Notas
         payee: Beneficiario
+        receipt: Recibo o factura
         status: Estado
     errors:
       models:
@@ -25,6 +27,9 @@ es:
               archived: está archivada
             currency:
               mismatch: debe ser la de la cuenta
+            receipt:
+              content_type: debe ser una foto (JPEG, PNG o HEIC) o un PDF
+              too_large: no puede pasar de %{size} MB
     models:
       transaction:
         one: Movimiento
@@ -37,9 +42,12 @@ es:
     directions:
       expense: Gasto
       income: Ingreso
+    duplicate: Duplicar
     edit:
       destroy: Borrar movimiento
       destroy_confirm: "¿Borrar este movimiento? No se puede deshacer."
+      remove_receipt: Quitar el recibo
+      remove_receipt_confirm: "¿Quitar el recibo de este movimiento?"
       title: Editar movimiento
     filters:
       account: Cuenta
@@ -55,8 +63,11 @@ es:
       cancel: Cancelar
       category_general: "%{name} (general)"
       choose_account: Elige una cuenta
+      current_receipt: Recibo
       direction: Tipo de movimiento
       no_category: Sin categoría
+      receipt_help: Foto o PDF, hasta %{size} MB.
+      replace_receipt: Cambiar el recibo
       status_help: Solo lo conciliado cuenta en el saldo actual; lo programado y lo pendiente, en el proyectado.
       submit: Guardar movimiento
     index:
@@ -78,6 +89,7 @@ es:
         one: 1 movimiento
         other: "%{count} movimientos"
       current_balance: 'Saldo actual de %{account}:'
+      duplicate_named: Duplicar %{name}
       empty_filtered_text: Prueba con otro mes o quita algún filtro.
       empty_filtered_title: Ningún movimiento coincide con los filtros
       empty_text: Los movimientos que registres este mes aparecerán aquí.
@@ -93,6 +105,13 @@ es:
       transfer: Transferencia
     new:
       title: Nuevo movimiento
+    receipt:
+      thumbnail_alt: Miniatura del recibo
+      view: Ver recibo
+      view_invoice: Ver factura
+    receipts:
+      destroy:
+        success: Recibo quitado.
     statuses:
       cleared: Conciliado
       pending: Pendiente

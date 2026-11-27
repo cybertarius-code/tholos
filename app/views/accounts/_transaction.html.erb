@@ -17,7 +17,7 @@
           <% end %>
         </span>
       <% else %>
-        <%= link_to transaction.payee.presence || transaction.category&.name || t("accounts.show.no_payee"),
+        <%= link_to transaction.adjustment? ? t("accounts.show.balance_adjustment") : transaction.payee.presence || transaction.category&.name || t("accounts.show.no_payee"),
               edit_transaction_path(transaction),
               class: "block break-words rounded-sm text-sm font-medium text-ink after:absolute after:inset-0 after:rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink" %>
       <% end %>

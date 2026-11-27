@@ -44,3 +44,6 @@ ignore_unused:
   - "categories.index.move_{up,down}"
   - "categories.new.title.*"
   - "transactions.{directions,statuses}.*"
+  # Claves dinámicas: t("imports.new.problems.#{problem}"), t("imports.row.kinds.#{kind}")
+  - "imports.new.problems.*"
+  - "imports.row.kinds.*"

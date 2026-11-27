@@ -4,9 +4,11 @@
      data-flash-delay-value="<%= style[:delay] %>"
      data-action="mouseenter->flash#pause mouseleave->flash#resume"
      data-turbo-temporary
+     <%# Aviso de un Turbo Stream seguido de un refresh: el morph no quita lo permanente %>
+     <% if local_assigns[:permanent] %>id="flash_<%= SecureRandom.hex(4) %>" data-turbo-permanent<% end %>
      class="pointer-events-auto flex items-start gap-3 rounded-[10px] border border-line border-l-4 <%= style[:border] %>
             bg-surface p-4 text-ink shadow-lg transition duration-200 motion-reduce:transition-none
-            data-[state=closed]:-translate-y-2 data-[state=closed]:opacity-0">
+            data-[state=closed]:-translate-y-2 sm:data-[state=closed]:translate-y-2 data-[state=closed]:opacity-0">
   <span class="<%= style[:icon] %>"><%= flash_icon(variant) %></span>
   <p class="flex-1 text-sm leading-5"><%= message %></p>
   <button type="button" data-action="flash#close" aria-label="Dismiss"

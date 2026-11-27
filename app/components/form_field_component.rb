@@ -7,10 +7,12 @@ class FormFieldComponent < ViewComponent::Base
     date: :date_field,
     select: :select,
     text_area: :text_area,
-    checkbox: :check_box
+    checkbox: :check_box,
+    file: :file_field
   }.freeze
 
   INPUT_CLASSES = "mt-2 block w-full rounded-md border border-line bg-surface px-3 py-2 text-base text-ink shadow-sm focus:outline-blue-600".freeze
+  FILE_CLASSES = "mt-2 block w-full text-base text-ink file:mr-3 file:min-h-11 file:rounded-md file:border file:border-line file:bg-surface file:px-3 file:text-sm file:font-medium file:text-ink".freeze
   CHECKBOX_CLASSES = "size-5 rounded border-line text-ink focus:outline-blue-600".freeze
 
   def initialize(form:, attribute:, label:, input_type: :text, help_text: nil, error: nil, choices: nil, input_options: {}, label_options: {})
@@ -43,7 +45,7 @@ class FormFieldComponent < ViewComponent::Base
   def input_html
     options = @input_options.except(:id, :aria, :class)
     options[:id] = @input_id
-    options[:class] = class_names(checkbox? ? CHECKBOX_CLASSES : INPUT_CLASSES, @input_options[:class])
+    options[:class] = class_names(base_classes, @input_options[:class])
 
     aria = (@input_options[:aria] || {}).dup
     described_by = [ aria[:describedby], help_id, error_id ].compact.join(" ")
@@ -67,6 +69,13 @@ class FormFieldComponent < ViewComponent::Base
   end
 
   private
+    def base_classes
+      return CHECKBOX_CLASSES if checkbox?
+      return FILE_CLASSES if @input_method == :file_field
+
+      INPUT_CLASSES
+    end
+
     def select?
       @input_method == :select
     end

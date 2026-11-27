@@ -1,0 +1,29 @@
+<section class="rounded-xl border border-line bg-surface p-6 dark:bg-slate-900">
+  <p><%= link_to t("imports.new.back", name: @account.name), account_path(@account), class: "text-sm text-accent underline hover:no-underline" %></p>
+  <div class="mt-2 flex flex-wrap items-start justify-between gap-4">
+    <div class="min-w-0">
+      <h1 class="text-2xl font-semibold text-ink dark:text-slate-100"><%= t(".title", name: @account.name) %></h1>
+      <p class="mt-1 break-words text-sm text-slate-600 dark:text-slate-400">
+        <%= @import.filename %> · <%= t(".rows", count: @rows.size) %>
+        <% if @import.confirmed? %>
+          <%= render BadgeComponent.new(variant: :success) do %><%= t(".committed") %><% end %>
+        <% end %>
+      </p>
+    </div>
+    <% if @import.staged? %>
+      <%= form_with url: import_commit_path(@import), method: :post do %>
+        <%= render ButtonComponent.new(type: "submit") do %><%= t(".commit") %><% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if @import.staged? %>
+    <p class="mt-4 text-sm text-slate-600 dark:text-slate-400"><%= t(".help") %></p>
+  <% end %>
+
+  <ol class="mt-4 divide-y divide-line" aria-label="<%= t(".rows_label") %>">
+    <% @rows.each do |row| %>
+      <li><%= render "imports/row", row: row %></li>
+    <% end %>
+  </ol>
+</section>

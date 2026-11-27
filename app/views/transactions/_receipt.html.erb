@@ -1,0 +1,11 @@
+<%# Miniatura del recibo (imagen) o enlace "Ver factura" (PDF), servidos por la app %>
+<% if transaction.receipt_image? %>
+  <%= link_to transaction_receipt_path(transaction), target: "_blank", rel: "noopener",
+        class: "inline-block rounded-md border border-line p-1 hover:border-accent" do %>
+    <%= image_tag transaction_receipt_path(transaction, size: "thumb"), alt: t("transactions.receipt.thumbnail_alt"),
+          class: "max-h-40 max-w-full rounded", loading: "lazy" %>
+  <% end %>
+<% else %>
+  <%= link_to t("transactions.receipt.view_invoice"), transaction_receipt_path(transaction), target: "_blank", rel: "noopener",
+        class: "text-accent underline hover:no-underline" %>
+<% end %>

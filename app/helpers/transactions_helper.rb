@@ -59,15 +59,32 @@ module TransactionsHelper
     [ [ t("transactions.index.any_status"), "" ] ] + transaction_status_options
   end
 
+  # Recibo ya guardado (US-0107). Uno recién elegido que no pasó la validación
+  # no cuenta: todavía no está subido
+  def transaction_receipt_saved?(transaction)
+    transaction.persisted? && transaction.receipt.attached? && !transaction.attachment_changes.key?("receipt")
+  end
+
+  # Duplicar desde la lista (US-0111), en el modal. Un ajuste no se duplica
+  def duplicate_movement_link(transaction, search)
+    return if transaction.adjustment?
+
+    link_to "⧉", new_transaction_duplicate_path(transaction), data: { turbo_frame: "modal" },
+      aria: { label: t("transactions.index.duplicate_named", name: movement_title(transaction, search)) },
+      title: t("transactions.duplicate"), class: "ml-1 inline-flex min-h-6 min-w-6 items-center justify-center text-slate-600 no-underline hover:text-ink dark:text-slate-400"
+  end
+
   # Enlace a la edición: un lado de una transferencia se edita en la transferencia
   def edit_movement_path(transaction)
     transaction.transfer? ? edit_transfer_path(transaction.transfer_id) : edit_transaction_path(transaction)
   end
 
-  # "Mercadona", "Alimentación", "Sin beneficiario" o "Transferencia a/desde"
+  # "Mercadona", "Alimentación", "Sin beneficiario", "Transferencia a/desde" o "Ajuste de saldo"
   def movement_title(transaction, search)
     if transaction.transfer?
       transaction.amount_cents.negative? ? t("accounts.show.transfer_to") : t("accounts.show.transfer_from")
+    elsif transaction.adjustment?
+      t("accounts.show.balance_adjustment")
     else
       transaction.payee.presence || movement_category(transaction, search)&.name || t("accounts.show.no_payee")
     end

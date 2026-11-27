@@ -47,6 +47,11 @@
               <% if (other = transfer_counterpart_account(transaction, search)) %>
                 <%= link_to other.name, transactions_path(account_id: other.id, month: search.month), class: "text-accent underline hover:no-underline" %>
               <% end %>
+              <% if transaction.receipt.attached? %>
+                <%= link_to "📎", transaction_receipt_path(transaction), target: "_blank", rel: "noopener",
+                      aria: { label: t("transactions.receipt.view") }, title: t("transactions.receipt.view"), class: "ml-1 no-underline" %>
+              <% end %>
+              <%= duplicate_movement_link(transaction, search) %>
               <span class="ml-1"><%= movement_badges(transaction) %></span>
               <% if transaction.notes.present? %>
                 <span class="block max-w-md truncate text-xs text-slate-600 dark:text-slate-400"><%= transaction.notes %></span>
@@ -90,6 +95,11 @@
                 <% if (other = transfer_counterpart_account(transaction, search)) %>
                   <%= link_to other.name, transactions_path(account_id: other.id, month: search.month), class: "text-accent underline hover:no-underline" %>
                 <% end %>
+                <% if transaction.receipt.attached? %>
+                  <%= link_to "📎", transaction_receipt_path(transaction), target: "_blank", rel: "noopener",
+                        aria: { label: t("transactions.receipt.view") }, title: t("transactions.receipt.view"), class: "ml-1 no-underline" %>
+                <% end %>
+                <%= duplicate_movement_link(transaction, search) %>
               </p>
               <p class="mt-0.5 break-words text-xs text-slate-600 dark:text-slate-400">
                 <%= [ movement_category(transaction, search)&.name, movement_account(transaction, search).name ].compact.join(" · ") %>

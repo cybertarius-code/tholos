@@ -30,6 +30,10 @@ module Tholos
     config.i18n.available_locales = [ :es, :en ]
     config.i18n.default_locale = :es
     config.time_zone = "Madrid"
+    # Sin las rutas públicas de Active Storage (/rails/active_storage/...): cualquiera
+    # con el enlace podría ver un recibo. Se sirven con Transactions::ReceiptsController,
+    # acotado al hogar (US-0107)
+    config.active_storage.draw_routes = false
 
     # Configuration for the application, engines, and railties goes here.
     #

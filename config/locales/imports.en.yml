@@ -1,0 +1,91 @@
+---
+en:
+  activerecord:
+    attributes:
+      import_row:
+        amount: Amount
+        category_id: Category
+        concept: Description
+        counter_account_id: Transfer account
+        date: Date
+        decision: Decision
+        matched_transaction_id: Already recorded movement
+    errors:
+      models:
+        import_row:
+          attributes:
+            amount:
+              cannot_be_zero: can't be zero
+            category_id:
+              archived: is archived
+            counter_account_id:
+              closed: is closed
+              currency_mismatch: has a different currency
+            matched_transaction_id:
+              mismatch: does not have the same amount or is more than 7 days away
+  imports:
+    commits:
+      create:
+        failed: No movement was created. Row %{line} is not valid; fix it and confirm again.
+        linked:
+          one: 1 already recorded movement was linked.
+          other: "%{count} already recorded movements were linked."
+        success:
+          one: Statement confirmed. 1 movement was created.
+          other: Statement confirmed. %{count} movements were created.
+        undecided: 'These rows still need a decision: %{lines}. No movement was created.'
+      errors:
+        already_linked: The movement chosen as "already recorded" is already linked to another row.
+    create:
+      closed_account: The account is closed. Reopen it to import movements.
+      success:
+        one: Statement loaded with 1 row. Review it and confirm; it doesn't count until then.
+        other: Statement loaded with %{count} rows. Review them and confirm; they don't count until then.
+    new:
+      back: "← %{name}"
+      cancel: Cancel
+      error_line: 'Line %{line}: %{message}'
+      errors_title:
+        one: Nothing was loaded. The file has 1 error
+        other: Nothing was loaded. The file has %{count} errors
+      file: Statement
+      file_help: The .txt that Sabadell online banking downloads ("Account movements"). It is not stored.
+      intro: Upload the statement, review each row and confirm. Nothing counts in the balance or the reports until you confirm.
+      problems:
+        missing_file: Choose the statement file.
+        too_big: The file is too big to be a statement.
+        wrong_format: This file doesn't look like a Sabadell statement (a .txt with fields separated by "|", in Windows-1252). Nothing was loaded.
+      submit: Load statement
+      title: Import a statement into %{name}
+    row:
+      already_recorded: Already recorded
+      already_recorded_group: Already recorded (same amount, ± 7 days)
+      amount: Amount
+      balance: 'Balance:'
+      before_cutoff: Before cutoff
+      concept: Description
+      date: Date
+      decision: It is…
+      duplicate: Duplicate
+      kinds:
+        expense: Expense
+        income: Income
+      line: Line %{line}
+      movement: Movement
+      save: Save
+      skip: Skip
+      transfer_from: Transfer from %{name}
+      transfer_from_group: Transfer from
+      transfer_movement: Transfer
+      transfer_to: Transfer to %{name}
+      transfer_to_group: Transfer to
+      undecided: Undecided
+    show:
+      commit: Confirm
+      committed: Confirmed
+      help: Fix the description, date or amount if needed and decide each row. Save each row and, when they are all done, confirm.
+      rows:
+        one: 1 row
+        other: "%{count} rows"
+      rows_label: Statement rows
+      title: "%{name} statement"

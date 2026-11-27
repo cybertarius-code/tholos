@@ -1,0 +1,32 @@
+<section class="rounded-xl border border-line bg-surface p-6 dark:bg-slate-900">
+  <p><%= link_to t(".back", name: @account.name), account_path(@account), class: "text-sm text-accent underline hover:no-underline" %></p>
+  <h1 class="mt-2 text-2xl font-semibold text-ink dark:text-slate-100"><%= t(".title", name: @account.name) %></h1>
+  <p class="mt-1 text-sm text-slate-600 dark:text-slate-400"><%= t(".intro") %></p>
+
+  <% if @result&.problem %>
+    <p class="mt-4 rounded-md border border-error p-3 text-sm text-error" role="alert"><%= t(".problems.#{@result.problem}") %></p>
+  <% elsif @result&.errors&.any? %>
+    <div class="mt-4 rounded-md border border-error p-3 text-sm" role="alert">
+      <p class="font-medium text-error"><%= t(".errors_title", count: @result.errors.size) %></p>
+      <ul class="mt-2 list-disc space-y-1 pl-5 text-ink">
+        <% @result.errors.each do |error| %>
+          <li><%= t(".error_line", line: error[:line], message: error[:message]) %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with url: account_imports_path(@account), multipart: true, class: "mt-4 max-w-xl" do |form| %>
+    <div class="mb-6">
+      <%= form.label :file, t(".file"), class: "block text-sm font-medium text-ink" %>
+      <%= form.file_field :file, required: true, accept: ".txt,.csv,text/plain", aria: { describedby: "file_help" },
+            class: "mt-2 block w-full text-sm text-ink file:mr-3 file:rounded-md file:border file:border-line file:bg-surface file:px-3 file:py-2 file:text-sm file:font-medium file:text-ink" %>
+      <p id="file_help" class="mt-2 text-sm text-slate-600 dark:text-slate-400"><%= t(".file_help") %></p>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <%= render ButtonComponent.new(type: "submit") do %><%= t(".submit") %><% end %>
+      <%= render ButtonComponent.new(variant: :secondary, href: account_path(@account)) do %><%= t(".cancel") %><% end %>
+    </div>
+  <% end %>
+</section>

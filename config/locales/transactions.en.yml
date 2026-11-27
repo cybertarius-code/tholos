@@ -8,8 +8,10 @@ en:
         category_id: Category
         currency: Currency
         date: Date
+        import_ref: Statement row
         notes: Notes
         payee: Payee
+        receipt: Receipt or invoice
         status: Status
     errors:
       models:
@@ -25,6 +27,9 @@ en:
               archived: is archived
             currency:
               mismatch: must be the account's currency
+            receipt:
+              content_type: must be a photo (JPEG, PNG or HEIC) or a PDF
+              too_large: cannot be larger than %{size} MB
     models:
       transaction:
         one: Movement
@@ -37,9 +42,12 @@ en:
     directions:
       expense: Expense
       income: Income
+    duplicate: Duplicate
     edit:
       destroy: Delete movement
       destroy_confirm: Delete this movement? This cannot be undone.
+      remove_receipt: Remove the receipt
+      remove_receipt_confirm: Remove the receipt from this transaction?
       title: Edit movement
     filters:
       account: Account
@@ -55,8 +63,11 @@ en:
       cancel: Cancel
       category_general: "%{name} (general)"
       choose_account: Choose an account
+      current_receipt: Receipt
       direction: Movement type
       no_category: No category
+      receipt_help: Photo or PDF, up to %{size} MB.
+      replace_receipt: Replace the receipt
       status_help: Only cleared movements count in the current balance; scheduled and pending ones count in the projected balance.
       submit: Save movement
     index:
@@ -78,6 +89,7 @@ en:
         one: 1 movement
         other: "%{count} movements"
       current_balance: "%{account} current balance:"
+      duplicate_named: Duplicate %{name}
       empty_filtered_text: Try another month or remove a filter.
       empty_filtered_title: No movements match the filters
       empty_text: Movements you record this month will appear here.
@@ -93,6 +105,13 @@ en:
       transfer: Transfer
     new:
       title: New movement
+    receipt:
+      thumbnail_alt: Receipt thumbnail
+      view: View receipt
+      view_invoice: View invoice
+    receipts:
+      destroy:
+        success: Receipt removed.
     statuses:
       cleared: Cleared
       pending: Pending

@@ -2,6 +2,8 @@ source "https://rubygems.org"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 
+# Recibos en Cloudflare R2, que habla S3 (ADR-0016)
+gem "aws-sdk-s3", "~> 1.0", require: false
 gem "bcrypt", "~> 3.1.7"
 gem "bootsnap", require: false
 gem "csv_importer", github: "cybertarius-code/csv_importer", tag: "v0.2.0"

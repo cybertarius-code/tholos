@@ -1,0 +1,28 @@
+<section class="rounded-xl border border-line bg-surface p-6 dark:bg-slate-900">
+  <h1 class="text-2xl font-semibold text-ink dark:text-slate-100"><%= t(".title", name: @account.name) %></h1>
+  <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+    <%= t(".intro") %>
+    <%= t(".current_balance") %> <%= render MoneyComponent.new(cents: @account.balance_cents, currency: @account.currency) %>
+  </p>
+
+  <%= form_with model: @adjustment, scope: :adjustment, url: account_adjustment_path(@account), class: "mt-4 max-w-xl" do |form| %>
+    <div class="grid gap-x-4 sm:grid-cols-2">
+      <%= render FormFieldComponent.new(
+        form: form, attribute: :amount_input,
+        label: @account.liability? ? t(".real_debt") : t(".real_balance"),
+        help_text: t(".amount_help"), error: @adjustment.errors[:amount_input].first,
+        input_options: { required: true, inputmode: "decimal", autocomplete: "off", placeholder: "0,00", autofocus: true }
+      ) %>
+
+      <%= render FormFieldComponent.new(
+        form: form, attribute: :date, label: t(".date"),
+        input_type: :date, error: @adjustment.errors[:date].first, input_options: { required: true }
+      ) %>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <%= render ButtonComponent.new(type: "submit") do %><%= t(".submit") %><% end %>
+      <%= render ButtonComponent.new(variant: :secondary, href: account_path(@account)) do %><%= t(".cancel") %><% end %>
+    </div>
+  <% end %>
+</section>

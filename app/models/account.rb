@@ -6,6 +6,7 @@ class Account < ApplicationRecord
 
   belongs_to :household
   has_many :transactions, dependent: :restrict_with_error
+  has_many :imports, dependent: :delete_all
 
   # La BD rechaza cambiar la moneda si hay movimientos (FK compuesta de transactions)
   constraint_error "transactions_account_currency_fk", :currency, :locked
@@ -44,6 +45,19 @@ class Account < ApplicationRecord
   # Saldo actual: saldo inicial + movimientos conciliados hasta la fecha (ADR-0005)
   def balance_cents(on: Date.current)
     opening_balance_cents + transactions.cleared.on_or_before(on).sum(:amount_cents)
+  end
+
+  # Ajuste de saldo (US-0108): un movimiento conciliado, sin categoría, por la
+  # diferencia entre el saldo real y el de la app en esa fecha (ADR-0014).
+  # Devuelve el movimiento, o nil si ya coincide. El bloqueo evita que dos
+  # ajustes a la vez calculen la diferencia sobre el mismo saldo.
+  def adjust_balance!(to_cents:, on:)
+    with_lock do
+      difference = to_cents - balance_cents(on: on)
+      next if difference.zero?
+
+      transactions.create!(household_id: household_id, amount_cents: difference, date: on, status: :cleared, adjustment: true)
+    end
   end
 
   # Saldo proyectado: incluye también lo programado y lo pendiente, con cualquier fecha

@@ -3,7 +3,9 @@
   <p class="mt-1 text-sm text-slate-600 dark:text-slate-400"><%= t(".intro") %></p>
   <%= render "form", transfer: @transfer %>
 
-  <div class="mt-8 border-t border-line pt-6">
+  <div class="mt-8 flex flex-wrap gap-3 border-t border-line pt-6">
+    <%= render ButtonComponent.new(variant: :secondary, href: new_transaction_duplicate_path(@transfer.outflow),
+          data: { turbo_frame: "modal" }) do %><%= t("transactions.duplicate") %><% end %>
     <%= form_with url: transfer_path(@transfer), method: :delete, data: { turbo_confirm: t(".destroy_confirm") } do %>
       <%= render ButtonComponent.new(variant: :danger, type: "submit") do %><%= t(".destroy") %><% end %>
     <% end %>

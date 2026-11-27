@@ -9,11 +9,18 @@ class Transaction < ApplicationRecord
 
   STATUSES = %w[ scheduled pending cleared ].freeze
   DIRECTIONS = %w[ expense income ].freeze
+  # Recibo o factura (US-0107, ADR-0016)
+  RECEIPT_CONTENT_TYPES = %w[ image/jpeg image/png image/heic application/pdf ].freeze
+  RECEIPT_MAX_SIZE = 10.megabytes
 
   belongs_to :household
   belongs_to :account
   belongs_to :category, optional: true
   belongs_to :transfer, optional: true, inverse_of: :legs
+
+  has_one_attached :receipt do |attachable|
+    attachable.variant :thumb, resize_to_limit: [ 200, 200 ]
+  end
 
   enum :status, STATUSES.index_with(&:itself), default: :cleared, validate: true
 
@@ -24,6 +31,8 @@ class Transaction < ApplicationRecord
   constraint_error "transactions_account_household_fk", :account_id, :invalid
   constraint_error "transactions_account_currency_fk", :currency, :mismatch
   constraint_error "transactions_category_household_fk", :category_id, :invalid
+  # Huella de una fila importada (US-0113): una fila del banco, un movimiento
+  constraint_error "index_transactions_on_import_ref", :import_ref, :taken
 
   normalizes :payee, with: ->(payee) { payee.squish.presence }
   normalizes :notes, with: ->(notes) { notes.strip.presence }
@@ -34,6 +43,7 @@ class Transaction < ApplicationRecord
   validate :account_is_valid
   validate :category_is_valid, if: :category_id?
   validate :one_kind_only
+  validate :receipt_is_valid
 
   before_validation :copy_currency_from_account, on: :create
   before_validation :apply_amount_input
@@ -60,6 +70,11 @@ class Transaction < ApplicationRecord
 
   def transfer?
     transfer_id.present?
+  end
+
+  # Imagen con miniatura; un PDF se enlaza sin vista previa (ADR-0016)
+  def receipt_image?
+    receipt.attached? && receipt.blob.image?
   end
 
   # Un lado de una transferencia no se borra solo: borra la transferencia
@@ -159,6 +174,19 @@ class Transaction < ApplicationRecord
         errors.add(:category_id, :invalid)
       elsif candidate.archived? && (new_record? || category_id_changed?)
         errors.add(:category_id, :archived)
+      end
+    end
+
+    # Solo el fichero recién elegido: el guardado ya se validó al subirlo. Sin gema:
+    # el tipo es el que Active Storage detecta por el contenido, no por la extensión
+    def receipt_is_valid
+      blob = attachment_changes["receipt"]&.attachment&.blob
+      return unless blob
+
+      if RECEIPT_CONTENT_TYPES.exclude?(blob.content_type)
+        errors.add(:receipt, :content_type)
+      elsif blob.byte_size > RECEIPT_MAX_SIZE
+        errors.add(:receipt, :too_large, size: RECEIPT_MAX_SIZE / 1.megabyte)
       end
     end
 
