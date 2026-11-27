@@ -42,6 +42,7 @@ es:
     directions:
       expense: Gasto
       income: Ingreso
+    duplicate: Duplicar
     edit:
       destroy: Borrar movimiento
       destroy_confirm: "¿Borrar este movimiento? No se puede deshacer."
@@ -88,6 +89,7 @@ es:
         one: 1 movimiento
         other: "%{count} movimientos"
       current_balance: 'Saldo actual de %{account}:'
+      duplicate_named: Duplicar %{name}
       empty_filtered_text: Prueba con otro mes o quita algún filtro.
       empty_filtered_title: Ningún movimiento coincide con los filtros
       empty_text: Los movimientos que registres este mes aparecerán aquí.

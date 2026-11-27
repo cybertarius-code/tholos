@@ -42,6 +42,7 @@ en:
     directions:
       expense: Expense
       income: Income
+    duplicate: Duplicate
     edit:
       destroy: Delete movement
       destroy_confirm: Delete this movement? This cannot be undone.
@@ -88,6 +89,7 @@ en:
         one: 1 movement
         other: "%{count} movements"
       current_balance: "%{account} current balance:"
+      duplicate_named: Duplicate %{name}
       empty_filtered_text: Try another month or remove a filter.
       empty_filtered_title: No movements match the filters
       empty_text: Movements you record this month will appear here.

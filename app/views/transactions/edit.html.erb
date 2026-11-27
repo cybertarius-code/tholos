@@ -8,6 +8,8 @@
         <%= render ButtonComponent.new(variant: :secondary, type: "submit") do %><%= t(".remove_receipt") %><% end %>
       <% end %>
     <% end %>
+    <%= render ButtonComponent.new(variant: :secondary, href: new_transaction_duplicate_path(@transaction),
+          data: { turbo_frame: "modal" }) do %><%= t("transactions.duplicate") %><% end %>
     <%= form_with url: transaction_path(@transaction), method: :delete, data: { turbo_confirm: t(".destroy_confirm") } do %>
       <%= render ButtonComponent.new(variant: :danger, type: "submit") do %><%= t(".destroy") %><% end %>
     <% end %>
