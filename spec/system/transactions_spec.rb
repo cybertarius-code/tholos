@@ -82,5 +82,20 @@ RSpec.describe "Transactions", type: :system do
         expect(overflowing).to be_empty, "#{path}: #{overflowing.first(3).inspect}"
       end
     end
+
+    it "adjunta la foto de un recibo y el movimiento muestra su miniatura (US-0107)" do
+      transaction = create(:transaction, account: account, payee: "Farmacia")
+      sign_in
+      visit edit_transaction_path(transaction)
+
+      expect(find_field(I18n.t("activerecord.attributes.transaction.receipt"))["accept"]).to eq("image/*,application/pdf")
+      attach_file I18n.t("activerecord.attributes.transaction.receipt"), file_fixture("recibo.jpg")
+      click_button I18n.t("transactions.form.submit")
+      expect(page).to have_content(I18n.t("transactions.update.success"))
+
+      visit edit_transaction_path(transaction)
+      thumbnail = find("img[alt='#{I18n.t('transactions.receipt.thumbnail_alt')}']")
+      expect(page.evaluate_script("arguments[0].naturalWidth", thumbnail)).to eq(200)
+    end
   end
 end

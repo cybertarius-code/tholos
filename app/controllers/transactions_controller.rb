@@ -56,7 +56,7 @@ class TransactionsController < ApplicationController
 
   private
     def set_transaction
-      @transaction = Current.household.transactions.find(params[:id])
+      @transaction = Current.household.transactions.with_attached_receipt.find(params[:id])
     end
 
     # Un lado de una transferencia se edita desde la transferencia, con los dos a la vez
@@ -69,6 +69,6 @@ class TransactionsController < ApplicationController
     end
 
     def transaction_params
-      params.expect(transaction: %i[ direction amount_input date account_id category_id status payee notes ])
+      params.expect(transaction: %i[ direction amount_input date account_id category_id status payee notes receipt ])
     end
 end

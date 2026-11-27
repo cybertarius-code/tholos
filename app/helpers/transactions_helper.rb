@@ -59,6 +59,12 @@ module TransactionsHelper
     [ [ t("transactions.index.any_status"), "" ] ] + transaction_status_options
   end
 
+  # Recibo ya guardado (US-0107). Uno recién elegido que no pasó la validación
+  # no cuenta: todavía no está subido
+  def transaction_receipt_saved?(transaction)
+    transaction.persisted? && transaction.receipt.attached? && !transaction.attachment_changes.key?("receipt")
+  end
+
   # Enlace a la edición: un lado de una transferencia se edita en la transferencia
   def edit_movement_path(transaction)
     transaction.transfer? ? edit_transfer_path(transaction.transfer_id) : edit_transaction_path(transaction)

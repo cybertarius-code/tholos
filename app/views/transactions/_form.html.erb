@@ -70,6 +70,21 @@
     input_type: :text_area, input_options: { rows: 3 }
   ) %>
 
+  <%# Recibo o factura (US-0107): en el móvil, accept ofrece la cámara %>
+  <% if transaction_receipt_saved?(transaction) %>
+    <div class="my-5">
+      <p class="text-sm font-medium text-ink"><%= t("transactions.form.current_receipt") %></p>
+      <div class="mt-2"><%= render "transactions/receipt", transaction: transaction %></div>
+    </div>
+  <% end %>
+  <%= render FormFieldComponent.new(
+    form: form, attribute: :receipt,
+    label: transaction_receipt_saved?(transaction) ? t("transactions.form.replace_receipt") : t("activerecord.attributes.transaction.receipt"),
+    input_type: :file, help_text: t("transactions.form.receipt_help", size: Transaction::RECEIPT_MAX_SIZE / 1.megabyte),
+    error: transaction.errors[:receipt].first,
+    input_options: { accept: "image/*,application/pdf" }
+  ) %>
+
   <div class="flex flex-wrap gap-3">
     <%= render ButtonComponent.new(type: "submit") do %><%= t("transactions.form.submit") %><% end %>
     <% if modal_request? %>

@@ -12,7 +12,9 @@ Rails.application.routes.draw do
     resources :imports, only: [ :new, :create, :show ], path: "importaciones", path_names: { new: "nueva" }
   end
   resources :transactions, path: "movimientos", except: :show,
-    path_names: { new: "nuevo", edit: "editar" }
+    path_names: { new: "nuevo", edit: "editar" } do
+    resource :receipt, only: [ :show, :destroy ], path: "recibo", module: :transactions
+  end
   resources :transfers, path: "transferencias", only: %i[ new create edit update destroy ],
     path_names: { new: "nueva", edit: "editar" }
   resources :import_rows, only: :update, path: "filas-importadas"
