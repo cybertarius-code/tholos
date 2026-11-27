@@ -16,7 +16,7 @@
       </button>
     </div>
 
-    <%= render "shared/movement_tabs", active: controller_name == "transfers" ? "transfer" : @transaction.direction %>
+    <%= render "shared/movement_tabs", active: @transfer ? "transfer" : @transaction.direction %>
 
     <%= yield %>
   </dialog>

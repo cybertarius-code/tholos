@@ -59,6 +59,15 @@ module TransactionsHelper
     [ [ t("transactions.index.any_status"), "" ] ] + transaction_status_options
   end
 
+  # Duplicar desde la lista (US-0111), en el modal. Un ajuste no se duplica
+  def duplicate_movement_link(transaction, search)
+    return if transaction.adjustment?
+
+    link_to "⧉", new_transaction_duplicate_path(transaction), data: { turbo_frame: "modal" },
+      aria: { label: t("transactions.index.duplicate_named", name: movement_title(transaction, search)) },
+      title: t("transactions.duplicate"), class: "ml-1 inline-flex min-h-6 min-w-6 items-center justify-center text-slate-600 no-underline hover:text-ink dark:text-slate-400"
+  end
+
   # Enlace a la edición: un lado de una transferencia se edita en la transferencia
   def edit_movement_path(transaction)
     transaction.transfer? ? edit_transfer_path(transaction.transfer_id) : edit_transaction_path(transaction)

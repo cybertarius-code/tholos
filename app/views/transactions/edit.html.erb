@@ -2,7 +2,9 @@
   <h1 class="text-2xl font-semibold text-ink dark:text-slate-100"><%= t(".title") %></h1>
   <%= render "form", transaction: @transaction %>
 
-  <div class="mt-8 border-t border-line pt-6">
+  <div class="mt-8 flex flex-wrap gap-3 border-t border-line pt-6">
+    <%= render ButtonComponent.new(variant: :secondary, href: new_transaction_duplicate_path(@transaction),
+          data: { turbo_frame: "modal" }) do %><%= t("transactions.duplicate") %><% end %>
     <%= form_with url: transaction_path(@transaction), method: :delete, data: { turbo_confirm: t(".destroy_confirm") } do %>
       <%= render ButtonComponent.new(variant: :danger, type: "submit") do %><%= t(".destroy") %><% end %>
     <% end %>
