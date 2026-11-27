@@ -34,6 +34,14 @@ class ImportRow < ApplicationRecord
     Digest::SHA256.hexdigest([ account_id, date.iso8601, amount_cents, concept.to_s.squish.upcase, balance_cents ].join("|"))
   end
 
+  # Datos de la huella tal como vinieron del banco; nil en filas cargadas antes
+  # de guardarlos y corregidas después (ver la migración AddFingerprintSource...)
+  def fingerprint_source
+    return unless original_date
+
+    { date: original_date, amount_cents: original_amount_cents, concept: original_concept, balance_cents: balance_cents }
+  end
+
   def locked?
     !proposal_none? || import.confirmed?
   end

@@ -59,10 +59,12 @@ module Imports
       end
 
       # after_map: línea (en modo atómico, si se guarda es que no ha fallado
-      # ninguna, así que el contador coincide) y huella con el concepto original
+      # ninguna, así que el contador coincide), huella con los valores
+      # originales y esos valores, para recalcularla si la cuenta cambia de id (KB-0006)
       def complete_row(attributes, _raw_row)
         attributes[:line] = (@line += 1)
         attributes[:import_ref] = ImportRow.fingerprint(account_id: @account.id, **attributes.slice(:date, :amount_cents, :concept, :balance_cents))
+        attributes.merge!(original_date: attributes[:date], original_amount_cents: attributes[:amount_cents], original_concept: attributes[:concept])
       end
 
       def mark_proposals(import)
